@@ -1,0 +1,21 @@
+.btn-active {
+    border: 1px solid #673de5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #673de5;
+}
+
+.btn-inactive {
+    border: 1px solid #909090;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #909090;
+}

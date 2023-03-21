@@ -1,0 +1,134 @@
+.wrapper-login {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 1px 5px 4px 1px rgba(0, 0, 0, 0.17);
+    z-index: 10px;
+    position: absolute;
+    right: 5%;
+    top: 10%;
+    bottom: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.btn-back {
+    background-color: #673de5;
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-stack {
+    width: 350px;
+    padding: 15px 0px;
+    border: 1px solid #673de5;
+    background-color: #fff;
+    color: #673de5;
+    border-radius: 10px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-stack:hover {
+    transition: all 0.3s;
+    background-color: #673de5;
+    color: #fff;
+    cursor: pointer;
+}
+
+.loader {
+    background-color: rgba(217, 217, 217, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: loader 0.3s ease-in-out 0s;
+    opacity: 1;
+    border-radius: 15px;
+}
+
+@keyframes loader {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.slide-left-in {
+    display: none;
+    animation: slideLeftIn 0.2s ease-out both;
+}
+
+@keyframes slideLeftIn {
+    0% {
+        transform: translateX(-200%);
+        display: none;
+    }
+    100% {
+        transform: translateX(0);
+        display: block;
+    }
+}
+
+.slide-left-out {
+    display: block;
+    animation: slideLeftOut 0.2s ease-out both;
+}
+
+@keyframes slideLeftOut {
+    0% {
+        transform: translateX(0);
+        display: block;
+    }
+    100% {
+        transform: translateX(-200%);
+        display: none;
+    }
+}
+
+.slide-right-in {
+    display: none;
+    animation: slideRightIn 0.2s ease-out both;
+}
+
+@keyframes slideRightIn {
+    0% {
+        transform: translateX(200%);
+        display: none;
+    }
+    100% {
+        transform: translateX(0);
+        display: block;
+    }
+}
+
+.slide-right-out {
+    display: block;
+    animation: slideRightOut 0.2s ease-out both;
+}
+
+@keyframes slideRightOut {
+    0% {
+        transform: translateX(0);
+        display: block;
+    }
+    100% {
+        transform: translateX(200%);
+        display: none;
+    }
+}

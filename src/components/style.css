@@ -1,0 +1,24 @@
+.active-nav {
+    padding: 15px 20px;
+    background-color: #ebe4ff;
+    color: #673de5;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    cursor: pointer;
+}
+
+.side-btn {
+    padding: 15px 20px;
+    background-color: #fff;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    cursor: pointer;
+    color: #909090;
+    transition: all 0.5s;
+}
+
+.side-btn:hover {
+    background-color: #ebe4ff;
+    color: #673de5;
+    transition: all 0.5s;
+}
