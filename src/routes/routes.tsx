@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Login from "../pages/login/login";
 import Dashboard from "../pages/SuperAdmin/dashboard/dashboard";
+import DashboardUser from "../pages/User/dashboard/dashboard";
 
 import DataUser from "../pages/SuperAdmin/dataUser/user";
 import UserForm from "../pages/SuperAdmin/dataUser/userForm";
@@ -22,6 +23,7 @@ const PageRouter = () => {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard-user" element={<DashboardUser />} />
                 <Route path="/user-data" element={<DataUser />} />
                 <Route path="/user-data/form-user" element={<UserForm />} />
                 <Route path="/store-data" element={<DataStore />} />
