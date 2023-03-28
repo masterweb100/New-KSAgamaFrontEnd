@@ -1,8 +1,8 @@
 export const Colors = {
-  primary: "#673de5",
+  primary: "#c42401",
   secondary: "#909090",
   success: "#04d300",
   error: "#fd3231",
   warning: "#ff9900",
-  inherit: "#ebe4ff",
+  inherit: "#ffe4e3",
 };

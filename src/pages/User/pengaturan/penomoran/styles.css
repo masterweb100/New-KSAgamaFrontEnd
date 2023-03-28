@@ -1,0 +1,15 @@
+.selection {
+    border: 1px solid #909090;
+    border-radius: 5px;
+    padding: 15px 0;
+    width: 12vw;
+    color: #000;
+    transition: all 0.3s;
+}
+
+.selection:hover {
+    transition: all 0.3s;
+    border: 1px solid #c42401;
+    background-color: #ffe4e3;
+    cursor: pointer;
+}

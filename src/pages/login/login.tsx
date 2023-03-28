@@ -68,7 +68,11 @@ const Login = () => {
     const PushUser = () => {
         setProgress(true)
         setTimeout(() => {
-            navigate('/dashboard')
+            if (user === 'User') {
+                navigate('/dashboard-user')
+            } else {
+                navigate('/dashboard')
+            }
             setProgress(false)
         }, 1000)
     }

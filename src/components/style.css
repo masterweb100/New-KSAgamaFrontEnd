@@ -1,7 +1,7 @@
 .active-nav {
     padding: 15px 20px;
-    background-color: #ebe4ff;
-    color: #673de5;
+    background-color: #ffe4e3;
+    color: #c42401;
     border-top-right-radius: 100px;
     border-bottom-right-radius: 100px;
     cursor: pointer;
@@ -18,7 +18,7 @@
 }
 
 .side-btn:hover {
-    background-color: #ebe4ff;
-    color: #673de5;
+    background-color: #ffe4e3;
+    color: #c42401;
     transition: all 0.5s;
 }

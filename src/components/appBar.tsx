@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Toolbar, AppBar, CssBaseline, Drawer, Stack, Avatar, Badge } from '@mui/material/';
+import { Box, Toolbar, AppBar, CssBaseline, Drawer, Stack, Avatar, Badge, Icon } from '@mui/material/';
 import { Dashboard, AdminPanelSettings, AccountBalance, Store, Notifications, PermContactCalendar, LockPerson, ChevronLeftRounded } from '@mui/icons-material/';
 import { useNavigate } from 'react-router-dom';
 import './style.css'
@@ -55,7 +55,7 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                         }
                         <Stack direction={'row'} alignItems={'center'} gap={5}>
                             <Badge badgeContent={100} color="secondary">
-                                <Notifications sx={{ color: '#909090', fontSize: 30 }} />
+                                <Notifications sx={{ color: Colors.secondary, fontSize: 30 }} />
                             </Badge>
                             <Avatar alt={'avatar'} src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'} sx={{ width: 50, height: 50 }}></Avatar>
                         </Stack>
@@ -89,20 +89,7 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                                 onClick={() => Routing(item.navigate)}
                             >
                                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                                    {
-                                        item.id === 1 ?
-                                            <Dashboard sx={{ color: indexSelect === index || indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }} />
-                                            : item.id === 2 ?
-                                                <AdminPanelSettings sx={{ color: indexSelect === index || indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }} />
-                                                : item.id === 3 ?
-                                                    <Store sx={{ color: indexSelect === index || indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }} />
-                                                    : item.id === 4 ?
-                                                        <PermContactCalendar sx={{ color: indexSelect === index || indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }} />
-                                                        : item.id === 5 ?
-                                                            <LockPerson sx={{ color: indexSelect === index || indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }} />
-                                                            :
-                                                            <AccountBalance sx={{ color: indexSelect === index || indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }} />
-                                    }
+                                    <Icon sx={{ color: indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }}>{item.icon}</Icon>
                                     <p style={{ fontSize: 16, margin: 0, fontWeight: 600 }}>{item.name}</p>
                                 </Stack>
                             </div>
@@ -117,7 +104,7 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
 const styles: StyleSheet = {
     title: {
         fontWeight: '700',
-        color: '#673de5',
+        color: Colors.primary,
         fontSize: 20,
         margin: 0
     },

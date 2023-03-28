@@ -4,7 +4,7 @@ import { Dashboard, AdminPanelSettings, AccountBalance, Store, Notifications, Pe
 import { useNavigate } from 'react-router-dom';
 import './style.css'
 import { Colors } from '../utils/colors';
-import { StyleSheet } from '../utils/stylesheet';
+import { CENTER, StyleSheet } from '../utils/stylesheet';
 import { ListAdmin, ListUser } from './data';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps, } from '@mui/material/AccordionSummary';
@@ -22,7 +22,7 @@ const Accordion = styled((props: AccordionProps) => (
         borderBottom: 0,
     },
     fontWeight: 700,
-    marginRight: 10,
+    width: '95%',
     color: Colors.secondary,
     '&:before': {
         display: 'none',
@@ -31,8 +31,8 @@ const Accordion = styled((props: AccordionProps) => (
         backgroundColor: Colors.inherit,
         color: Colors.primary,
         borderTopRightRadius: 100,
-        borderBottomRightRadius: 100
-    }
+        borderBottomRightRadius: 100,
+    },
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
@@ -41,12 +41,20 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
         {...props}
     />
 ))(({ theme }) => ({
+    transition: 'all 0.5s',
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
         transform: 'rotate(90deg)',
     },
     '& .MuiAccordionSummary-content': {
         padding: '3px 5px'
     },
+    '&:hover': {
+        transition: 'all 0.5s',
+        backgroundColor: Colors.inherit,
+        color: Colors.primary,
+        borderTopRightRadius: 100,
+        borderBottomRightRadius: 100,
+    }
 }));
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
@@ -55,21 +63,17 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     margin: 0
 }));
 
-const NavigationBarUser = ({ title, indexNav, isChild }: { title: string, indexNav: number, isChild: boolean }) => {
+const NavigationBarUser = ({ title, isChild, name, idPanel }: { title: string, isChild: boolean, name: string, idPanel: number }) => {
     const navigate = useNavigate()
 
-    const [indexSelect, setIndexSelect] = React.useState<any>(null)
-
-    const Routing = (param: number) => {
-        navigate(param)
-    }
-
-    const [expanded, setExpanded] = React.useState<string | false>('panel0');
+    const [expanded, setExpanded] = React.useState<string | false>(`panel${idPanel}`);
     const [panel, setPanel] = React.useState(0)
 
-    const handleClick = (panel: number, isExpand: boolean) => {
+    const handleClick = (panel: number, isExpand: boolean, nav: string) => {
         setPanel(panel)
         setExpanded(isExpand ? `panel${panel}` : false)
+        navigate(nav)
+        // console.log(nav)
     }
 
     return (
@@ -108,7 +112,7 @@ const NavigationBarUser = ({ title, indexNav, isChild }: { title: string, indexN
                         }
                         <Stack direction={'row'} alignItems={'center'} gap={5}>
                             <Badge badgeContent={100} color="secondary">
-                                <Notifications sx={{ color: '#909090', fontSize: 30 }} />
+                                <Notifications sx={{ color: Colors.secondary, fontSize: 30 }} />
                             </Badge>
                             <Avatar alt={'avatar'} src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'} sx={{ width: 50, height: 50 }}></Avatar>
                         </Stack>
@@ -127,10 +131,10 @@ const NavigationBarUser = ({ title, indexNav, isChild }: { title: string, indexN
                 variant="permanent"
                 anchor="left"
             >
-                <Toolbar>
+                <Toolbar sx={{ ...CENTER }}>
                     <img src={logo} style={styles.imgLogo} alt="" />
                 </Toolbar>
-                <Stack direction={'column'} gap={1}>
+                <Stack direction={'column'} gap={0.5}>
                     {
                         ListUser.map((item, index) => (
                             <>
@@ -138,35 +142,50 @@ const NavigationBarUser = ({ title, indexNav, isChild }: { title: string, indexN
                                     item.expandable === false ?
                                         <Stack
                                             key={index}
-                                            onClick={() => handleClick(index, item.expandable)}
+                                            onClick={() => handleClick(item.id, item.expandable, item.navigate)}
                                             direction={'row'}
                                             alignItems={'center'}
                                             gap={1}
-                                            style={{
+                                            sx={{
                                                 ...styles.tab,
                                                 padding: '15px 20px',
-                                                backgroundColor: index === panel ? Colors.inherit : '#fff',
-                                                color: index === panel ? Colors.primary : Colors.secondary,
-                                                marginTop: index === 0 ? 50 : 0
+                                                backgroundColor: name === item.name ? Colors.inherit : '#fff',
+                                                color: name === item.name ? Colors.primary : Colors.secondary,
+                                                marginTop: index === 0 ? 5 : 0,
+                                                "&:hover": { backgroundColor: Colors.inherit, color: Colors.primary },
+                                                width: '95%',
                                             }}>
-                                            <Icon sx={{ color: index === panel ? Colors.primary : Colors.secondary, ...styles.iconHover }}>{item.icon}</Icon>
+                                            <Icon sx={{ color: name === item.name ? Colors.primary : Colors.secondary, ...styles.iconHover }}>{item.icon}</Icon>
                                             <p style={{ fontSize: 16, margin: 0, fontWeight: 600 }}>{item.name}</p>
                                         </Stack>
                                         :
-                                        <Accordion key={index} expanded={expanded === `panel${index}`} onClick={() => handleClick(index, item.expandable)}>
-                                            <AccordionSummary>
+                                        <Accordion key={index} expanded={expanded === `panel${item.id}`}>
+                                            <AccordionSummary onClick={() => handleClick(item.id, item.expandable, '')}>
                                                 <Stack direction={'row'} alignItems={'center'} gap={1}>
-                                                    <Icon sx={{ color: index === panel ? Colors.primary : Colors.secondary, ...styles.iconHover }}>{item.icon}</Icon>
+                                                    <Icon sx={{ color: name === item.name ? Colors.primary : Colors.secondary, ...styles.iconHover }}>{item.icon}</Icon>
                                                     <p style={{ fontSize: 16, margin: 0, fontWeight: 600 }}>{item.name}</p>
                                                 </Stack>
                                             </AccordionSummary>
                                             <AccordionDetails sx={{ paddingLeft: 0 }}>
                                                 <Stack direction={'column'} gap={0.5}>
                                                     {
-                                                        item.children.map((item, index) => (
-                                                            <Stack key={index} direction={'row'} alignItems={'center'} gap={1} style={{ ...styles.tab, padding: '15px', paddingLeft: '50px' }}>
-                                                                <Icon sx={{ color: Colors.secondary, ...styles.iconHover }}>{item.icon}</Icon>
-                                                                <p style={{ fontSize: 14, margin: 0, fontWeight: 600, color: Colors.secondary }}>{item.name}</p>
+                                                        item.children.map((val, index) => (
+                                                            <Stack
+                                                                key={index}
+                                                                direction={'row'}
+                                                                alignItems={'center'}
+                                                                gap={1}
+                                                                onClick={() => handleClick(item.id, item.expandable, val.navigate)}
+                                                                sx={{
+                                                                    ...styles.tab, padding: '15px',
+                                                                    paddingLeft: '50px',
+                                                                    "&:hover": { backgroundColor: Colors.inherit, color: Colors.primary },
+                                                                    backgroundColor: name === val.name ? Colors.inherit : '#fff',
+                                                                    color: name === val.name ? Colors.primary : Colors.secondary,
+                                                                }}
+                                                            >
+                                                                <Icon sx={{ ...styles.iconHover }}>{val.icon}</Icon>
+                                                                <p style={{ fontSize: 14, margin: 0, fontWeight: 600 }}>{val.name}</p>
                                                             </Stack>
                                                         ))
                                                     }
@@ -186,26 +205,26 @@ const NavigationBarUser = ({ title, indexNav, isChild }: { title: string, indexN
 const styles: StyleSheet = {
     title: {
         fontWeight: '700',
-        color: '#673de5',
+        color: Colors.primary,
         fontSize: 20,
         margin: 0
     },
 
     iconHover: {
         fontSize: 20,
-        transition: 'all 0.3s'
+        color: 'inherit'
     },
 
     imgLogo: {
-        height: 70,
-        width: 'auto',
-        objectFit: 'contain'
+        height: 'auto',
+        width: '90%',
+        objectFit: 'contain',
     },
 
     tab: {
         borderTopRightRadius: 100,
         borderBottomRightRadius: 100,
-        marginRight: 10,
+        width: '95%',
         cursor: 'pointer',
         transition: 'all 0.3s'
     }

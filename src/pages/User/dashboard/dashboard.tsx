@@ -9,10 +9,10 @@ const DashboardUser = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Dashboard'} indexNav={0} isChild={false}></NavigationBarUser>
+            <NavigationBarUser title={'Dashboard User'} isChild={false} name={'Dashboard'} idPanel={1}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', py: 5, px: 10 }}
+                sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <Stack direction={'column'} gap={3}>
