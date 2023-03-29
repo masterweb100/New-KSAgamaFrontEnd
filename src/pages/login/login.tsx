@@ -23,7 +23,7 @@ const CustomTextField = styled(OutlinedInput)({
             borderColor: '#000',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#673de5',
+            borderColor: '#c42401',
         },
     },
 });
@@ -103,7 +103,7 @@ const Login = () => {
                         {
                             activePage === 0 ?
                                 <Stack className={`${page === 1 ? 'slide-left-out' : page === 0 ? 'slide-left-in' : ''}`} direction={'column'} gap={1.5}>
-                                    <p style={{ fontWeight: 700, fontSize: 18, color: '#673de5' }}>Login Form</p>
+                                    <p style={{ fontWeight: 700, fontSize: 18, color: '#c42401' }}>Login Form</p>
                                     <div className={'btn-stack'} onClick={() => onUser('Super Admin')}>
                                         <p style={{ fontSize: 16, fontWeight: '600', margin: 0 }}>Login Super Admin</p>
                                     </div>
@@ -124,7 +124,7 @@ const Login = () => {
                                         <div className='btn-back' onClick={() => onPage(0)}>
                                             <ChevronLeft sx={{ color: '#fff' }} />
                                         </div>
-                                        <p style={{ fontWeight: 700, fontSize: 18, color: '#673de5' }}>Login Form {user}</p>
+                                        <p style={{ fontWeight: 700, fontSize: 18, color: '#c42401' }}>Login Form {user}</p>
                                     </Stack>
                                     <div>
                                         <p style={{ fontWeight: 600, margin: 0 }}>Username</p>
@@ -152,7 +152,7 @@ const Login = () => {
                                         ></CustomTextField>
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', cursor: 'pointer' }} onClick={() => onPage(2)}>
-                                        <div style={{ padding: '10px 40px', backgroundColor: '#673de5', borderRadius: 10, display: 'flex', alignSelf: 'flex-start' }}>
+                                        <div style={{ padding: '10px 40px', backgroundColor: '#c42401', borderRadius: 10, display: 'flex', alignSelf: 'flex-start' }}>
                                             <p style={{ fontWeight: 600, color: '#fff', margin: 0 }}>Login</p>
                                         </div>
                                         <p style={{ fontWeight: 400, color: '#ababab', fontSize: 13 }}><i>Forgot password? Contact your Admin</i></p>
@@ -168,7 +168,7 @@ const Login = () => {
                                         <div className='btn-back' onClick={() => onPage(1)}>
                                             <ChevronLeft sx={{ color: '#fff' }} />
                                         </div>
-                                        <p style={{ fontWeight: 700, fontSize: 18, color: '#673de5' }}>{`Pilih Toko (${user})`}</p>
+                                        <p style={{ fontWeight: 700, fontSize: 18, color: '#c42401' }}>{`Pilih Toko (${user})`}</p>
                                     </Stack>
                                     <FormControl sx={{ width: 350 }} size="small">
                                         <InputLabel id="demo-select-small">Pilih Toko</InputLabel>
@@ -186,7 +186,7 @@ const Login = () => {
                                             }
                                         </Select>
                                     </FormControl>
-                                    <div onClick={PushUser} style={{ padding: '10px 40px', backgroundColor: '#673de5', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                                    <div onClick={PushUser} style={{ padding: '10px 40px', backgroundColor: '#c42401', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                                         <p style={{ fontWeight: 600, color: '#fff', margin: 0 }}>Select</p>
                                     </div>
                                 </Stack>

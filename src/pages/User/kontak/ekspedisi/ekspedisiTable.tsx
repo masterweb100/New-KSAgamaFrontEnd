@@ -22,15 +22,12 @@ import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 
 const columns = [
-    { id: "tanggal", label: "Tanggal" },
-    { id: "id", label: "ID INVOICE" },
-    { id: "nama", label: "Nama Pelanggan" },
-    { id: "jenis", label: "Jenis Penjualan" },
-    { id: "tempo", label: "Jatuh Tempo" },
-    { id: "status", label: "Status" },
-    { id: "sisa", label: "Sisa Tagihan" },
-    { id: "total", label: "Total" },
-    { id: "updatedBy", label: "Updated By" },
+    { id: "id", label: "ID Ekspedisi" },
+    { id: "nama", label: "Nama Ekspedisi" },
+    { id: "email", label: "Email" },
+    { id: "telepon", label: "Telepon" },
+    { id: "hutang", label: "Hutang" },
+    { id: "piutang", label: "Piutang" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -69,7 +66,7 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
     return stabilizedRowArray.map((el: any) => el[0]);
 };
 
-const PenjualanTable = (props: any) => {
+const EkspedisiTable = (props: any) => {
     const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
@@ -98,7 +95,7 @@ const PenjualanTable = (props: any) => {
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any) => n.name);
+            const newSelected = props.data.map((n: any) => n.name);
             setSelected(newSelected);
             return;
         }
@@ -113,20 +110,10 @@ const PenjualanTable = (props: any) => {
                 <div style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
-                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Penjualan</p>
+                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Ekspedisi</p>
                     </Stack>
                 </div>
-                <Stack direction={'row'} alignItems={'center'} gap={2}>
-                    <div style={{ ...CENTER, backgroundColor: Colors.success, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <span style={{ color: '#fff' }}>Set Lunas</span>
-                    </div>
-                    <div style={{ ...CENTER, backgroundColor: Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <Icon style={{ color: '#fff', fontSize: 25 }}>border_color</Icon>
-                    </div>
-                    <div style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <Icon style={{ color: '#fff', fontSize: 25 }}>delete_outline</Icon>
-                    </div>
-                </Stack>
+                <div></div>
             </Stack>
             <Stack
                 direction={"row"}
@@ -142,7 +129,7 @@ const PenjualanTable = (props: any) => {
             >
                 <Stack alignItems={"center"} gap={2} direction={"row"}>
                     <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                    <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Penjualan</p>
+                    <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Ekspedisi</p>
                 </Stack>
                 <TextField
                     type="search"
@@ -158,15 +145,14 @@ const PenjualanTable = (props: any) => {
                     }}
                 />
             </Stack>
-            <Box
-                sx={{
-                    overflow: "auto",
-                    bgcolor: "white",
-                    border: 1,
-                    borderColor: Colors.secondary,
-                    borderBottomLeftRadius: 5,
-                    borderBottomRightRadius: 5,
-                }}
+            <Box sx={{
+                overflow: "auto",
+                bgcolor: "white",
+                border: 1,
+                borderColor: Colors.secondary,
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+            }}
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
                     <TableContainer>
@@ -176,8 +162,8 @@ const PenjualanTable = (props: any) => {
                                     <StyledTableCell>
                                         <Checkbox
                                             color="primary"
-                                            indeterminate={selected.length > 0 && selected.length < props.data.content.length}
-                                            checked={props.data.content.length > 0 && selected.length === props.data.content.length}
+                                            indeterminate={selected.length > 0 && selected.length < props.data.length}
+                                            checked={props.data.length > 0 && selected.length === props.data.length}
                                             onChange={handleSelectAllClick}
                                         />
                                     </StyledTableCell>
@@ -205,9 +191,8 @@ const PenjualanTable = (props: any) => {
                             </TableHead>
 
                             <TableBody>
-                                {props.data.content !== undefined
-                                    ? sortedRowInformation(
-                                        props.data.content,
+                                {props.data !== undefined
+                                    ? sortedRowInformation(props.data,
                                         getComparator(orderdirection, valuetoorderby))
                                         .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                         .map((item: any, index: number) => {
@@ -230,15 +215,12 @@ const PenjualanTable = (props: any) => {
                                                             }}
                                                         />
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.nama}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.jenis}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tempo}</StyledTableCell>
-                                                    <StyledTableCell align="center" sx={{ color: Colors.success }}>Lunas</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.sisa}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.total}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
+                                                    <StyledTableCell align="center">{'EKS/00' + (index + 1)}</StyledTableCell>
+                                                    <StyledTableCell align="center">JNE</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.email}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.telepon}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.hutang}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.piutang}</StyledTableCell>
                                                 </TableRow>
                                             )
                                         })
@@ -247,22 +229,11 @@ const PenjualanTable = (props: any) => {
                         </Table>
                     </TableContainer>
                 </Box>
-                <Stack direction={'column'} gap={1} sx={{ backgroundColor: '#f8f8f8', border: '1px solid #909090' }} padding={3}>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={1} sx={{ backgroundColor: '#f8f8f8' }}>
-                        <span><b>Sub Total Barang Masuk</b></span>
-                        <span><b>8.960</b></span>
-                    </Stack>
-                    <div style={{ width: '100%', backgroundColor: '#000', height: 1 }}></div>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={1} sx={{ backgroundColor: '#f8f8f8' }}>
-                        <span><b>Total Barang Masuk</b></span>
-                        <span><b>18.960</b></span>
-                    </Stack>
-                </Stack>
-                {props.data.content !== undefined && (
+                {props.data !== undefined && (
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25, 100]}
                         component="div"
-                        count={props.data.content.length}
+                        count={props.data.length}
                         rowsPerPage={itemsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -274,4 +245,4 @@ const PenjualanTable = (props: any) => {
     );
 }
 
-export default PenjualanTable;
+export default EkspedisiTable;

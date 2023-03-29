@@ -84,12 +84,10 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                             <div
                                 key={item.id}
                                 className={`${indexNav === index ? 'active-nav' : 'side-btn'}`}
-                                onMouseEnter={() => setIndexSelect(index)}
-                                onMouseLeave={() => setIndexSelect(null)}
                                 onClick={() => Routing(item.navigate)}
                             >
                                 <Stack direction={'row'} gap={2} alignItems={'center'}>
-                                    <Icon sx={{ color: indexNav === index ? Colors.primary : Colors.secondary, ...styles.iconHover }}>{item.icon}</Icon>
+                                    <Icon sx={{ color: 'inherit', ...styles.iconHover }}>{item.icon}</Icon>
                                     <p style={{ fontSize: 16, margin: 0, fontWeight: 600 }}>{item.name}</p>
                                 </Stack>
                             </div>
@@ -111,13 +109,13 @@ const styles: StyleSheet = {
 
     iconHover: {
         fontSize: 25,
-        transition: 'all 0.5s'
+        transition: 'all 0.1s'
     },
 
     imgLogo: {
-        height: 70,
-        width: 'auto',
-        objectFit: 'contain'
+        height: 'auto',
+        width: '90%',
+        objectFit: 'contain',
     }
 }
 

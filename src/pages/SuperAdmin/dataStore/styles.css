@@ -1,12 +1,12 @@
 .btn-active {
-    border: 1px solid #673de5;
+    border: 1px solid #c42401;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
-    color: #673de5;
+    color: #c42401;
 }
 
 .btn-inactive {

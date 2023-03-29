@@ -57,29 +57,18 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const DataHasilOpnameTable = (props: any) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const [nomor, setNomor] = useState(null);
     const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
-
-    const handleClickMenu = (event: any, id: any) => {
-        setAnchorEl(event.currentTarget);
-        setNomor(id);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        setNomor(null);
-    };
+    const [page, setPage] = React.useState(0);
+    const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
     const handleChangePage = (event: any, newPage: any) => {
-        props.setPage(newPage);
+        setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event: any) => {
-        props.setItemsPerPage(+event.target.value);
-        props.setPage(0);
+        setItemsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
     };
 
     const [orderdirection, setOrderDirection] = useState("asc");
@@ -94,18 +83,7 @@ const DataHasilOpnameTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any) => n.name);
-            setSelected(newSelected);
-            return;
-        }
-        setSelected([]);
-    };
-
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-
-    const FormStore = () => navigate('/store-data/form-store')
 
     return (
         <div>
@@ -150,7 +128,7 @@ const DataHasilOpnameTable = (props: any) => {
                 }}
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                    <TableContainer sx={{ maxHeight: "75vh" }}>
+                    <TableContainer>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
                                 <TableRow>
@@ -181,40 +159,41 @@ const DataHasilOpnameTable = (props: any) => {
                                 {props.data.content !== undefined
                                     ? sortedRowInformation(
                                         props.data.content,
-                                        getComparator(orderdirection, valuetoorderby)
-                                    ).map((item: any, index: number) => {
-                                        const isItemSelected = isSelected(item.name);
-                                        const labelId = `enhanced-table-checkbox-${index}`;
+                                        getComparator(orderdirection, valuetoorderby))
+                                        .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
+                                        .map((item: any, index: number) => {
+                                            const isItemSelected = isSelected(item.name);
+                                            const labelId = `enhanced-table-checkbox-${index}`;
 
-                                        return (
-                                            <TableRow
-                                                role="checkbox"
-                                                tabIndex={-1}
-                                                key={index}
-                                                sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                                            // onClick={FormStore}
-                                            >
-                                                <StyledTableCell align="center">{item.date}</StyledTableCell >
-                                                <StyledTableCell align="center">P/00{item.id}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.brand}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.category}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.qty}</StyledTableCell>
-                                                <StyledTableCell align="center">90</StyledTableCell>
-                                                <StyledTableCell align="center">80</StyledTableCell>
-                                                <StyledTableCell align="center">{item.updatedby}</StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    <Stack direction={'row'} gap={2} width={'100%'}>
-                                                        <div style={{ backgroundColor: index % 2 === 1 ? Colors.error : Colors.success, padding: '3px 10px', borderRadius: 10, width: '80%', ...CENTER }}>
-                                                            <p style={{ margin: 0, color: '#fff' }}>{index % 2 === 1 ? "Deactive" : "Active"}</p>
-                                                        </div>
-                                                        <IconButton style={{ width: '15%' }}>
-                                                            <Icon style={{ color: Colors.primary, fontSize: 20 }}>chevron_right</Icon>
-                                                        </IconButton>
-                                                    </Stack>
-                                                </StyledTableCell>
-                                            </TableRow>
-                                        )
-                                    })
+                                            return (
+                                                <TableRow
+                                                    role="checkbox"
+                                                    tabIndex={-1}
+                                                    key={index}
+                                                    sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                                                // onClick={FormStore}
+                                                >
+                                                    <StyledTableCell align="center">{item.date}</StyledTableCell >
+                                                    <StyledTableCell align="center">P/00{item.id}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.brand}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.category}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.qty}</StyledTableCell>
+                                                    <StyledTableCell align="center">90</StyledTableCell>
+                                                    <StyledTableCell align="center">80</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.updatedby}</StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        <Stack direction={'row'} gap={2} width={'100%'}>
+                                                            <div style={{ backgroundColor: index % 2 === 1 ? Colors.error : Colors.success, padding: '3px 10px', borderRadius: 10, width: '80%', ...CENTER }}>
+                                                                <p style={{ margin: 0, color: '#fff' }}>{index % 2 === 1 ? "Deactive" : "Active"}</p>
+                                                            </div>
+                                                            <IconButton style={{ width: '15%' }}>
+                                                                <Icon style={{ color: Colors.primary, fontSize: 20 }}>chevron_right</Icon>
+                                                            </IconButton>
+                                                        </Stack>
+                                                    </StyledTableCell>
+                                                </TableRow>
+                                            )
+                                        })
                                     : null}
                             </TableBody>
                         </Table>
@@ -222,11 +201,11 @@ const DataHasilOpnameTable = (props: any) => {
                 </Box>
                 {props.data.content !== undefined && (
                     <TablePagination
-                        rowsPerPageOptions={[5, 25, 100]}
+                        rowsPerPageOptions={[5, 10, 25, 100]}
                         component="div"
-                        count={props.data.totalElements}
-                        rowsPerPage={props.data.size}
-                        page={props.data.number}
+                        count={props.data.content.length}
+                        rowsPerPage={itemsPerPage}
+                        page={page}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />

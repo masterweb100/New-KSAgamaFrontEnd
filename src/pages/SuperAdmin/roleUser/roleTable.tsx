@@ -59,29 +59,18 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const RoleTable = (props: any) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const [nomor, setNomor] = useState(null);
     const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
-
-    const handleClickMenu = (event: any, id: any) => {
-        setAnchorEl(event.currentTarget);
-        setNomor(id);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        setNomor(null);
-    };
+    const [page, setPage] = React.useState(0);
+    const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
     const handleChangePage = (event: any, newPage: any) => {
-        props.setPage(newPage);
+        setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event: any) => {
-        props.setItemsPerPage(+event.target.value);
-        props.setPage(0);
+        setItemsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
     };
 
     const [orderdirection, setOrderDirection] = useState("asc");
@@ -119,7 +108,7 @@ const RoleTable = (props: any) => {
             }}
         >
             <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                <TableContainer sx={{ maxHeight: "75vh" }}>
+                <TableContainer>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -158,32 +147,33 @@ const RoleTable = (props: any) => {
                             {props.data.content !== undefined
                                 ? sortedRowInformation(
                                     props.data.content,
-                                    getComparator(orderdirection, valuetoorderby)
-                                ).map((item: any, index: number) => {
-                                    const isItemSelected = isSelected(item.name);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                    getComparator(orderdirection, valuetoorderby))
+                                    .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
+                                    .map((item: any, index: number) => {
+                                        const isItemSelected = isSelected(item.name);
+                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                    return (
-                                        <TableRow
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={index}
-                                            sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                                        >
-                                            <StyledTableCell align="center" padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                            <StyledTableCell align="center">{item.role}</StyledTableCell>
-                                        </TableRow>
-                                    )
-                                })
+                                        return (
+                                            <TableRow
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={index}
+                                                sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                                            >
+                                                <StyledTableCell align="center" padding="checkbox">
+                                                    <Checkbox
+                                                        color="primary"
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby': labelId,
+                                                        }}
+                                                    />
+                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{item.id}</StyledTableCell>
+                                                <StyledTableCell align="center">{item.role}</StyledTableCell>
+                                            </TableRow>
+                                        )
+                                    })
                                 : null}
                         </TableBody>
                     </Table>
@@ -191,11 +181,11 @@ const RoleTable = (props: any) => {
             </Box>
             {props.data.content !== undefined && (
                 <TablePagination
-                    rowsPerPageOptions={[5, 25, 100]}
+                    rowsPerPageOptions={[5, 10, 25, 100]}
                     component="div"
-                    count={props.data.totalElements}
-                    rowsPerPage={props.data.size}
-                    page={props.data.number}
+                    count={props.data.content.length}
+                    rowsPerPage={itemsPerPage}
+                    page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />

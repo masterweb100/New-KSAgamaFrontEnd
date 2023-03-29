@@ -10,8 +10,8 @@
 }
 
 .box:hover {
-    border-color: #673de5;
-    color: #673de5;
-    border: 1px solid #673de5;
+    border-color: #c42401;
+    color: #c42401;
+    border: 1px solid #c42401;
     transition: all .2s;
 }

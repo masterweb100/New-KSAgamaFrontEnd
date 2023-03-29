@@ -66,25 +66,10 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const BrandTable = (props: any) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const [nomor, setNomor] = useState(null);
     const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
-
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * itemsPerPage - props.data.content.length) : 0;
-
-    const handleClickMenu = (event: any, id: any) => {
-        setAnchorEl(event.currentTarget);
-        setNomor(id);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        setNomor(null);
-    };
+    const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -117,10 +102,6 @@ const BrandTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-
-    const FormUser = () => {
-        navigate('/user-data/form-user')
-    }
 
     return (
         <div>
@@ -171,13 +152,13 @@ const BrandTable = (props: any) => {
                 />
             </Stack>
             <Box sx={{
-                    overflow: "auto",
-                    bgcolor: "white",
-                    border: 1,
-                    borderColor: Colors.secondary,
-                    borderBottomLeftRadius: 5,
-                    borderBottomRightRadius: 5,
-                }}
+                overflow: "auto",
+                bgcolor: "white",
+                border: 1,
+                borderColor: Colors.secondary,
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+            }}
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
                     <TableContainer>
@@ -221,46 +202,41 @@ const BrandTable = (props: any) => {
                                         getComparator(orderdirection, valuetoorderby))
                                         .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                         .map((item: any, index: number) => {
-                                        const isItemSelected = isSelected(item.name);
-                                        const labelId = `enhanced-table-checkbox-${index}`;
+                                            const isItemSelected = isSelected(item.name);
+                                            const labelId = `enhanced-table-checkbox-${index}`;
 
-                                        return (
-                                            <TableRow
-                                                role="checkbox"
-                                                tabIndex={-1}
-                                                key={index}
-                                                sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                            >
-                                                <StyledTableCell align="center" padding="checkbox">
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={isItemSelected}
-                                                        inputProps={{
-                                                            'aria-labelledby': labelId,
-                                                        }}
-                                                    />
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.brand}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.jenis}</StyledTableCell>
-                                                <StyledTableCell align="center">590</StyledTableCell>
-                                                <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
-                                            </TableRow>
-                                        )
-                                    })
+                                            return (
+                                                <TableRow
+                                                    role="checkbox"
+                                                    tabIndex={-1}
+                                                    key={index}
+                                                    sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                >
+                                                    <StyledTableCell align="center" padding="checkbox">
+                                                        <Checkbox
+                                                            color="primary"
+                                                            checked={isItemSelected}
+                                                            inputProps={{
+                                                                'aria-labelledby': labelId,
+                                                            }}
+                                                        />
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="center">{item.id}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.brand}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.jenis}</StyledTableCell>
+                                                    <StyledTableCell align="center">590</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
+                                                </TableRow>
+                                            )
+                                        })
                                     : null}
-                                {emptyRows > 0 && (
-                                    <TableRow>
-                                        <StyledTableCell align="center"></StyledTableCell>
-                                    </TableRow>
-                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>
                 </Box>
                 {props.data.content !== undefined && (
                     <TablePagination
-                        rowsPerPageOptions={[5, 25, 100]}
+                        rowsPerPageOptions={[5, 10, 25, 100]}
                         component="div"
                         count={props.data.content.length}
                         rowsPerPage={itemsPerPage}

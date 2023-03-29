@@ -14,7 +14,7 @@
 }
 
 .btn-back {
-    background-color: #673de5;
+    background-color: #c42401;
     width: 30px;
     height: 30px;
     border-radius: 50px;
@@ -27,9 +27,9 @@
 .btn-stack {
     width: 350px;
     padding: 15px 0px;
-    border: 1px solid #673de5;
+    border: 1px solid #c42401;
     background-color: #fff;
-    color: #673de5;
+    color: #c42401;
     border-radius: 10px;
     transition: all 0.3s;
     display: flex;
@@ -39,7 +39,7 @@
 
 .btn-stack:hover {
     transition: all 0.3s;
-    background-color: #673de5;
+    background-color: #c42401;
     color: #fff;
     cursor: pointer;
 }

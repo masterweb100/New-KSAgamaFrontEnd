@@ -20,7 +20,7 @@ const DashboardUser = () => {
                         [1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => (
                             <div className={'box'} onMouseEnter={() => setStoreActive(index)} key={index} onMouseLeave={() => setStoreActive(null)}>
                                 <Stack direction={'row'} gap={2}>
-                                    <Store sx={{ color: storeActive === index ? '#673de5' : '#909090', fontSize: 30, transition: 'all 0.2s' }}></Store>
+                                    <Store sx={{ color: storeActive === index ? '#c42401' : '#909090', fontSize: 30, transition: 'all 0.2s' }}></Store>
                                     <Stack direction={'column'} gap={1}>
                                         <h3 style={{ margin: 0 }}>Data Statistik Toko A</h3>
                                         <p style={{ margin: 0 }}>
