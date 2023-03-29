@@ -25,16 +25,11 @@ export const ListAdmin = [
   },
   {
     id: 5,
-    name: "Hak Akses",
+    name: "Peran",
     navigate: "/user-access",
     icon: "lock_person"
   },
-  {
-    id: 6,
-    name: "Data Bangkir",
-    navigate: "/bank-data",
-    icon: "account_balance"
-  },
+
 ];
 
 export const ListUser = [
