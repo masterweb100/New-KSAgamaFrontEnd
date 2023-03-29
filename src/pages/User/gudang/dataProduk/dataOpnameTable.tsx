@@ -56,7 +56,6 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 
 const DataOpnameTable = (props: any) => {
     const navigate = useNavigate();
-    const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
@@ -81,7 +80,9 @@ const DataOpnameTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const isSelected = (name: any) => selected.indexOf(name) !== -1;
+    const FormPage = React.useCallback(() => {
+        navigate('/gudang/data-produk/form-produk')
+    }, [])
 
     return (
         <div>
@@ -165,8 +166,8 @@ const DataOpnameTable = (props: any) => {
                                                     role="checkbox"
                                                     tabIndex={-1}
                                                     key={index}
-                                                    sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                                                // onClick={FormStore}
+                                                    sx={{ "&:hover": { bgcolor: Colors.inherit, cursor: 'pointer' } }}
+                                                    onClick={FormPage}
                                                 >
                                                     <StyledTableCell align="center">{item.date}</StyledTableCell >
                                                     <StyledTableCell align="center">P/00{item.id}</StyledTableCell>

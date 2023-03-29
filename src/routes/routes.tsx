@@ -22,8 +22,14 @@ import AccessUser from "../pages/SuperAdmin/accessUser/access";
 import DashboardUser from "../pages/User/dashboard/dashboard";
 
 import DataProduk from "../pages/User/gudang/dataProduk/dataProduk";
+import DataProdukForm from "../pages/User/gudang/dataProduk/dataOpnameForm";
 import Mutasi from "../pages/User/gudang/mutasi/mutasi";
+import MutasiForm from "../pages/User/gudang/mutasi/mutasiForm";
 import ListProduk from "../pages/User/gudang/listProduk/listProduk";
+import BrandForm from "../pages/User/gudang/listProduk/brandForm";
+import JenisForm from "../pages/User/gudang/listProduk/jenisForm";
+import KategoriForm from "../pages/User/gudang/listProduk/kategoriForm";
+import SatuanForm from "../pages/User/gudang/listProduk/satuanForm";
 
 import Penjualan from "../pages/User/penjualan/penjualan/penjualan";
 import ReturnPenjualan from "../pages/User/penjualan/returnPenjualan/returnPenjualan";
@@ -70,8 +76,14 @@ const PageRouter = () => {
                 <Route path="/dashboard-user" element={<DashboardUser />} />
 
                 <Route path="/gudang/data-produk" element={<DataProduk />} />
+                <Route path="/gudang/data-produk/form-produk" element={<DataProdukForm />} />
                 <Route path="/gudang/mutasi" element={<Mutasi />} />
+                <Route path="/gudang/mutasi/form-mutasi" element={<MutasiForm />} />
                 <Route path="/gudang/list-produk" element={<ListProduk />} />
+                <Route path="/gudang/list-produk/form-brand" element={<BrandForm />} />
+                <Route path="/gudang/list-produk/form-jenis" element={<JenisForm />} />
+                <Route path="/gudang/list-produk/form-kategori" element={<KategoriForm />} />
+                <Route path="/gudang/list-produk/form-satuan" element={<SatuanForm />} />
 
                 <Route path="/penjualan/penjualan" element={<Penjualan />} />
                 <Route path="/penjualan/return-penjualan" element={<ReturnPenjualan />} />
