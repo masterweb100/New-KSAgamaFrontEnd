@@ -22,10 +22,8 @@ import { Colors } from "../../../utils/colors";
 import { CENTER } from "../../../utils/stylesheet";
 
 const columns = [
-    { id: "kode", label: "Kode Akun" },
-    { id: "nama", label: "Nama Akun" },
-    { id: "kategori", label: "Kategori" },
-    { id: "saldo", label: "Brand" },
+    { id: "id", label: "ID Kategori" },
+    { id: "nama", label: "Nama Kategori" },
 ];
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -64,7 +62,7 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
     return stabilizedRowArray.map((el: any) => el[0]);
 };
 
-const AkunTable = (props: any) => {
+const KategoriTable = (props: any) => {
     const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
@@ -103,10 +101,7 @@ const AkunTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-
-    const FormPage = () => navigate('/akun/form-akun')
-    const KategoriPage = () => navigate('/akun/kategori-akun')
-    const DetailPage = () => navigate('/akun/detail-akun')
+    const FormPage = () => navigate('/akun/form-kategori')
 
     return (
         <div>
@@ -114,11 +109,8 @@ const AkunTable = (props: any) => {
                 <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
-                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Akun</p>
+                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Kategori Akun</p>
                     </Stack>
-                </div>
-                <div onClick={KategoriPage} style={{ ...CENTER, border: `1px solid ${Colors.primary}`, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
-                    <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: Colors.primary }}>List Kategori Akun</p>
                 </div>
             </Stack>
             <Stack
@@ -211,7 +203,6 @@ const AkunTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    onClick={DetailPage}
                                                 >
                                                     <StyledTableCell align="center" padding="checkbox">
                                                         <Checkbox
@@ -222,10 +213,8 @@ const AkunTable = (props: any) => {
                                                             }}
                                                         />
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.kode}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.id + (index + 1)}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.nama}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.kategori}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.saldo}</StyledTableCell>
                                                 </TableRow>
                                             )
                                         })
@@ -250,4 +239,4 @@ const AkunTable = (props: any) => {
     );
 }
 
-export default AkunTable;
+export default KategoriTable;

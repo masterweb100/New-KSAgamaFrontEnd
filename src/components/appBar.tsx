@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box, Toolbar, AppBar, CssBaseline, Drawer, Stack, Avatar, Badge, Icon } from '@mui/material/';
-import { Dashboard, AdminPanelSettings, AccountBalance, Store, Notifications, PermContactCalendar, LockPerson, ChevronLeftRounded } from '@mui/icons-material/';
+import { Notifications, ChevronLeftRounded } from '@mui/icons-material/';
 import { useNavigate } from 'react-router-dom';
 import './style.css'
 import { Colors } from '../utils/colors';

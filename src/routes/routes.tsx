@@ -39,6 +39,10 @@ import Pembelian from "../pages/User/pembelian/pembelian/pembelian";
 import Tracking from "../pages/User/pembelian/tracking/tracking";
 
 import Akun from "../pages/User/akun/akun";
+import AkunForm from "../pages/User/akun/akunForm";
+import KategoriAkun from "../pages/User/akun/kategori";
+import KategoriAkunForm from "../pages/User/akun/kategoriForm";
+import DetailAkun from "../pages/User/akun/akunDetail";
 
 import LapKeuangan from "../pages/User/laporan/keuangan/keuangan";
 import LapTransaksi from "../pages/User/laporan/transaksi/transaksi";
@@ -94,6 +98,10 @@ const PageRouter = () => {
                 <Route path="/pembelian/tracking" element={<Tracking />} />
 
                 <Route path="/akun" element={<Akun />} />
+                <Route path="/akun/form-akun" element={<AkunForm />} />
+                <Route path="/akun/detail-akun" element={<DetailAkun />} />
+                <Route path="/akun/kategori-akun" element={<KategoriAkun />} />
+                <Route path="/akun/form-kategori" element={<KategoriAkunForm />} />
 
                 <Route path="/laporan/keuangan" element={<LapKeuangan />} />
                 <Route path="/laporan/transaksi" element={<LapTransaksi />} />

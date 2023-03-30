@@ -8,16 +8,9 @@ import {
   Stack,
   Avatar,
   Badge,
-  Typography,
 } from "@mui/material/";
 import {
-  Dashboard,
-  AdminPanelSettings,
-  AccountBalance,
-  Store,
   Notifications,
-  PermContactCalendar,
-  LockPerson,
   ChevronLeftRounded,
   ArrowForwardIosSharp,
 } from "@mui/icons-material/";
@@ -25,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 import { Colors } from "../utils/colors";
 import { CENTER, StyleSheet } from "../utils/stylesheet";
-import { ListAdmin, ListUser } from "./data";
+import { ListUser } from "./data";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionSummary, {
   AccordionSummaryProps,
@@ -43,7 +36,7 @@ const Accordion = styled((props: AccordionProps) => (
   "&:not(:last-child)": {
     borderBottom: 0,
   },
-  fontWeight: 700,
+  fontWeight: 500,
   width: "95%",
   color: Colors.secondary,
   "&:before": {
