@@ -20,11 +20,10 @@ const CustomTab = styled(Tab)({
 })
 
 const Mutasi = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     const [value, setValue] = React.useState('mutasi');
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        event.preventDefault()
         setValue(newValue);
     };
 
@@ -48,17 +47,9 @@ const Mutasi = () => {
                     <div style={{ marginTop: 20 }}>
                         {
                             value === 'mutasi' ?
-                                <MutasiTable
-                                    data={mutasiTable}
-                                    setPage={setPage}
-                                    setItemsPerPage={setItemsPerPage}
-                                ></MutasiTable>
+                                <MutasiTable data={mutasiTable}></MutasiTable>
                                 :
-                                <ReturnTable
-                                    data={returnTable}
-                                    setPage={setPage}
-                                    setItemsPerPage={setItemsPerPage}
-                                ></ReturnTable>
+                                <ReturnTable data={returnTable}></ReturnTable>
                         }
                     </div>
                 </div>

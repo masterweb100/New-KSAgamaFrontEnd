@@ -17,7 +17,7 @@ const DashboardUser = () => {
                 <Toolbar />
                 <Stack direction={'column'} gap={3}>
                     {
-                        [1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => (
+                        [1, 1, 1, 1, 1, 1, 1, 1, 1].map((index) => (
                             <div className={'box'} onMouseEnter={() => setStoreActive(index)} key={index} onMouseLeave={() => setStoreActive(null)}>
                                 <Stack direction={'row'} gap={2}>
                                     <Store sx={{ color: storeActive === index ? '#c42401' : '#909090', fontSize: 30, transition: 'all 0.2s' }}></Store>

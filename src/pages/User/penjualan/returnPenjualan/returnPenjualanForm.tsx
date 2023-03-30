@@ -5,9 +5,14 @@ import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
 
-const DataProdukForm = () => {
-    const [status, setStatus] = React.useState('');
+const ReturnPenjualanForm = () => {
     const navigate = useNavigate()
+    const [invoice, setInvoice] = React.useState('');
+    const [status, setStatus] = React.useState('');
+
+    const handleChangeInvoice = (event: SelectChangeEvent) => {
+        setInvoice(event.target.value as string);
+    };
 
     const handleChangeStatus = (event: SelectChangeEvent) => {
         setStatus(event.target.value as string);
@@ -19,7 +24,7 @@ const DataProdukForm = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Detail Data Produk'} name={'Data Produk'} idPanel={2} isChild={true}></NavigationBarUser>
+            <NavigationBarUser title={'Form Return Penjualan'} isChild={true} name={'Return Penjualan'} idPanel={3}></NavigationBarUser>
             <Box
                 component="main"
                 sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
@@ -28,104 +33,106 @@ const DataProdukForm = () => {
                 <div style={{ flex: 1, ...CENTER }}>
                     <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                            <h2 style={{ color: '#000' }}>Form Stok Opname</h2>
+                            <h2 style={{ color: '#000' }}>Form Tambah Data Return</h2>
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
                             <Stack direction={'column'} gap={1}>
-                                <span>Tanggal</span>
-                                <TextField
-                                    type="text"
-                                    disabled
-                                    defaultValue={'09/04/2023'}
-                                    size="small"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
-                                />
-                            </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>ID Barang</span>
-                                <TextField
-                                    type="text"
-                                    disabled
-                                    size="small"
-                                    defaultValue={'8OI843SDKJ'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
-                                />
-                            </Stack>
-                        </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Nama Brand</span>
-                                <TextField
-                                    type="text"
-                                    disabled
-                                    defaultValue={'Sanex'}
-                                    size="small"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
-                                />
-                            </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Jenis Barang</span>
-                                <TextField
-                                    type="text"
-                                    size="small"
-                                    disabled
-                                    defaultValue={'Kipas Angin Mantap'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
-                                />
-                            </Stack>
-                        </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Barang Bagus</span>
-                                <TextField
-                                    type="text"
-                                    size="small"
-                                    defaultValue={'90'}
-                                    placeholder="Barang"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
-                                />
-                            </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Barang Rusak</span>
-                                <TextField
-                                    type="text"
-                                    size="small"
-                                    defaultValue={'200'}
-                                    placeholder="Barang"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
-                                />
-                            </Stack>
-                        </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Total Barang</span>
-                                <TextField
-                                    type="text"
-                                    size="small"
-                                    defaultValue={'400'}
-                                    placeholder="Total"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
-                                />
-                            </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Status</span>
+                                <span>ID Invoice</span>
                                 <Select
                                     size="small"
-                                    value={status}
+                                    value={invoice}
                                     displayEmpty
                                     sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
-                                    onChange={handleChangeStatus}
+                                    onChange={handleChangeInvoice}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
-                                            return <span style={{ color: '#a7a5a6' }}>Status</span>;
+                                            return <span style={{ color: '#a7a5a6' }}>Invoice</span>;
                                         }
                                         return selected
                                     }}
                                 >
-                                    <MenuItem value={'Aktif'}>Aktif</MenuItem>
-                                    <MenuItem value={'Nonaktif'}>TIdak Aktif</MenuItem>
+                                    {
+                                        [1, 1, 1, 1, 1].map((item, index) => (
+                                            <MenuItem key={index} value={'Invoice ' + (index + 1)}>{'Invoice ' + (index + 1)}</MenuItem>
+                                        ))
+                                    }
                                 </Select>
                             </Stack>
+                            <Stack direction={'column'} gap={1}>
+                                <span>Nama Pelanggan</span>
+                                <TextField
+                                    type="text"
+                                    size="small"
+                                    disabled
+                                    defaultValue={'Sucipto'}
+                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                />
+                            </Stack>
+                        </Stack>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                            <Stack direction={'column'} gap={1}>
+                                <span>Jenis Barang</span>
+                                <TextField
+                                    type="text"
+                                    disabled
+                                    defaultValue={'A09023'}
+                                    size="small"
+                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                />
+                            </Stack>
+                            <Stack direction={'column'} gap={1}>
+                                <span>Jumlah Barang</span>
+                                <TextField
+                                    type="text"
+                                    size="small"
+                                    disabled
+                                    defaultValue={'20'}
+                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                />
+                            </Stack>
+                        </Stack>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                            <Stack direction={'column'} gap={1}>
+                                <span>Jenis Penjualan</span>
+                                <TextField
+                                    type="text"
+                                    disabled
+                                    defaultValue={'A09023'}
+                                    size="small"
+                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                />
+                            </Stack>
+                            <Stack direction={'column'} gap={1}>
+                                <span>Jumlah Barang Return</span>
+                                <TextField
+                                    type="text"
+                                    size="small"
+                                    defaultValue={'20'}
+                                    sx={{ bgcolor: "#ffff", width: '25vw' }}
+                                />
+                            </Stack>
+                        </Stack>
+                        <Stack direction={'column'} gap={1}>
+                            <span>Status</span>
+                            <Select
+                                size="small"
+                                value={status}
+                                displayEmpty
+                                sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                onChange={handleChangeStatus}
+                                renderValue={(selected: any) => {
+                                    if (selected.length === 0) {
+                                        return <span style={{ color: '#a7a5a6' }}>Status</span>;
+                                    }
+                                    return selected
+                                }}
+                            >
+                                {
+                                    ['Return', 'Refund', 'Potongan Harga'].map((item, index) => (
+                                        <MenuItem key={index} value={item}>{item}</MenuItem>
+                                    ))
+                                }
+                            </Select>
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>
                             <div onClick={GoBack} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.primary}`, padding: '10px 30px', cursor: 'pointer' }}>
@@ -142,4 +149,4 @@ const DataProdukForm = () => {
     )
 }
 
-export default DataProdukForm;
+export default ReturnPenjualanForm;

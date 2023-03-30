@@ -31,7 +31,7 @@ const columns = [
     { id: "status", label: "Status" },
 ];
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
         // borderBottomWidth: 1,
@@ -89,6 +89,7 @@ const ReturnTable = (props: any) => {
     };
 
     const handleRequestSort = (event: any, property: any) => {
+        console.log(event)
         const isAscending = valuetoorderby === property && orderdirection === "asc";
         setValueToOrderBy(property);
         setOrderDirection(isAscending ? "desc" : "asc");

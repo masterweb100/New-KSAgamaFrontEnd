@@ -19,8 +19,6 @@ const dummyTable = {
 };
 
 const DataRole = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     const [isDeleteModal, setDeleteModal] = React.useState(false);
     const navigate = useNavigate()
 
@@ -82,11 +80,7 @@ const DataRole = () => {
                                 }}
                             />
                         </Stack>
-                        <RoleTable
-                            data={dummyTable}
-                            setPage={setPage}
-                            setItemsPerPage={setItemsPerPage}
-                        />
+                        <RoleTable data={dummyTable} />
                     </div>
                 </div>
                 <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />

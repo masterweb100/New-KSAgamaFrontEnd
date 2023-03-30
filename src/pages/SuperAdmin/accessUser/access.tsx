@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Toolbar } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 
 const AccessUser = () => {

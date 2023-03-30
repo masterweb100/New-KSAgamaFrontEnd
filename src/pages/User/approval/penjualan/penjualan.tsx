@@ -2,12 +2,10 @@ import { Box, Stack, Toolbar, InputAdornment, TextField, Icon } from '@mui/mater
 import React from 'react'
 import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
-import { approvalTable, penjualanDataTable } from '../dummy';
+import { penjualanDataTable } from '../dummy';
 import PenjualanTable from './penjualanTable';
 
 const AppPenjualan = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Return Penjualan'} isChild={false} name={'App. Penjualan'} idPanel={8}></NavigationBarUser>
@@ -43,11 +41,7 @@ const AppPenjualan = () => {
                         }}
                     />
                 </Stack>
-                <PenjualanTable
-                    data={penjualanDataTable}
-                    setPage={setPage}
-                    setItemsPerPage={setItemsPerPage}
-                />
+                <PenjualanTable data={penjualanDataTable} />
             </Box>
         </div>
     )

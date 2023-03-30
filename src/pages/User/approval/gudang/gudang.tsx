@@ -6,9 +6,6 @@ import { approvalTable } from '../dummy';
 import GudangTable from './gudangTable';
 
 const AppGudang = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
-    
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Mutasi Gudang'} isChild={false} name={'App. Gudang'} idPanel={8}></NavigationBarUser>
@@ -44,11 +41,7 @@ const AppGudang = () => {
                         }}
                     />
                 </Stack>
-                <GudangTable
-                    data={approvalTable}
-                    setPage={setPage}
-                    setItemsPerPage={setItemsPerPage}
-                />
+                <GudangTable data={approvalTable} />
             </Box>
         </div>
     )

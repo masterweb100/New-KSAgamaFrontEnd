@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, TextField, Toolbar, InputAdornment, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import { CENTER } from '../../../utils/stylesheet';
 import { Colors } from '../../../utils/colors';

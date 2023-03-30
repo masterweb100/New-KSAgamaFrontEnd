@@ -15,14 +15,13 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../utils/colors";
-import { CENTER } from "../../../utils/stylesheet";
 
 const columns = [
     { id: "id", label: "ID Role" },
     { id: "role", label: "Nama Role" },
 ];
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
         // borderBottomWidth: 1,
@@ -80,6 +79,7 @@ const RoleTable = (props: any) => {
     };
 
     const handleRequestSort = (event: any, property: any) => {
+        console.log(event)
         const isAscending = valuetoorderby === property && orderdirection === "asc";
         setValueToOrderBy(property);
         setOrderDirection(isAscending ? "desc" : "asc");

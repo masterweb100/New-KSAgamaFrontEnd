@@ -1,10 +1,9 @@
 import React from 'react';
-import { Box, Stack, TextField, Toolbar, InputAdornment, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import NavigationBar from '../../../../components/appBarUser';
+import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
-import { BorderColor } from '@mui/icons-material';
 
 const MutasiForm = () => {
     const navigate = useNavigate()
@@ -25,7 +24,7 @@ const MutasiForm = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBar title={'Form Tambah Mutasi'} isChild={true} name={'Mutasi & Return'} idPanel={2}></NavigationBar>
+            <NavigationBarUser title={'Form Tambah Mutasi'} isChild={true} name={'Mutasi & Return'} idPanel={2}></NavigationBarUser>
             <Box
                 component="main"
                 sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
@@ -75,8 +74,8 @@ const MutasiForm = () => {
                                     }}
                                 >
                                     {
-                                        [1, 1, 1, 1, 1].map((item, index) => (
-                                            <MenuItem value={'Jenis' + (index + 1)}>{'Jenis' + (index + 1)}</MenuItem>
+                                        [1, 1, 1, 1, 1].map((index) => (
+                                            <MenuItem key={index} value={'Jenis' + (index + 1)}>{'Jenis' + (index + 1)}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -120,7 +119,7 @@ const MutasiForm = () => {
                                 >
                                     {
                                         ['A', 'B', 'C', 'D', 'E'].map((item, index) => (
-                                            <MenuItem value={`Gudang ${item}`}>{`Gudang ${item}`}</MenuItem>
+                                            <MenuItem key={index} value={`Gudang ${item}`}>{`Gudang ${item}`}</MenuItem>
                                         ))
                                     }
                                 </Select>

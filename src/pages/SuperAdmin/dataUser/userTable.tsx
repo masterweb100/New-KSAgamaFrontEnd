@@ -25,7 +25,7 @@ const columns = [
     { id: "isActive", label: "Status" },
 ];
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
         // borderBottomWidth: 1,
@@ -69,6 +69,7 @@ const UserTable = (props: any) => {
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
+        console.log(event)
     };
 
     const handleChangeRowsPerPage = (event: any) => {
@@ -83,6 +84,7 @@ const UserTable = (props: any) => {
     };
 
     const handleRequestSort = (event: any, property: any) => {
+        console.log(event)
         const isAscending = valuetoorderby === property && orderdirection === "asc";
         setValueToOrderBy(property);
         setOrderDirection(isAscending ? "desc" : "asc");

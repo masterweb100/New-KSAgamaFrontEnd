@@ -19,7 +19,6 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
-import { CENTER } from "../../../../utils/stylesheet";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },

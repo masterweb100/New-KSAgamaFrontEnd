@@ -23,6 +23,7 @@ const Akun = () => {
     const [value, setValue] = React.useState('semua');
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        event.preventDefault()
         setValue(newValue);
     };
 

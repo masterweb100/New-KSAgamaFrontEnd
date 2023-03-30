@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
-import { CENTER } from "../../../../utils/stylesheet";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -28,7 +27,7 @@ const columns = [
     { id: "updatedBy", label: "Updated By" },
 ];
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
         // borderBottomWidth: 1,
@@ -71,6 +70,7 @@ const PenjualanTable = (props: any) => {
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
     const handleChangePage = (event: any, newPage: any) => {
+        console.log(event)
         setPage(newPage);
     };
 
@@ -86,6 +86,7 @@ const PenjualanTable = (props: any) => {
     };
 
     const handleRequestSort = (event: any, property: any) => {
+        console.log(event)
         const isAscending = valuetoorderby === property && orderdirection === "asc";
         setValueToOrderBy(property);
         setOrderDirection(isAscending ? "desc" : "asc");

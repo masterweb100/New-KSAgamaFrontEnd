@@ -33,7 +33,7 @@ const columns = [
     { id: "status", label: "Status" },
 ];
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
         // borderBottomWidth: 1,
@@ -76,6 +76,7 @@ const MutasiTable = (props: any) => {
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
     const handleChangePage = (event: any, newPage: any) => {
+        console.log(event)
         setPage(newPage);
     };
 
@@ -91,6 +92,7 @@ const MutasiTable = (props: any) => {
     };
 
     const handleRequestSort = (event: any, property: any) => {
+        console.log(event)
         const isAscending = valuetoorderby === property && orderdirection === "asc";
         setValueToOrderBy(property);
         setOrderDirection(isAscending ? "desc" : "asc");

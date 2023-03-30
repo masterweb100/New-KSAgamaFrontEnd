@@ -75,8 +75,6 @@ const dummyTable = {
 };
 
 const DataUser = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     const [isDeleteModal, setDeleteModal] = React.useState(false);
     const navigate = useNavigate()
 
@@ -152,11 +150,7 @@ const DataUser = () => {
                                 }}
                             />
                         </Stack>
-                        <UserTable
-                            data={dummyTable}
-                            setPage={setPage}
-                            setItemsPerPage={setItemsPerPage}
-                        />
+                        <UserTable data={dummyTable} />
                     </div>
                 </div>
                 <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />

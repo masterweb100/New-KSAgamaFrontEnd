@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Stack, TextField, Toolbar, InputAdornment, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import NavigationBar from '../../../../components/appBarUser';
+import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ const JenisForm = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBar title={'Form Data Kategori'} isChild={true} name={'List Produk'} idPanel={2}></NavigationBar>
+            <NavigationBarUser title={'Form Data Kategori'} isChild={true} name={'List Produk'} idPanel={2}></NavigationBarUser>
             <Box
                 component="main"
                 sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
@@ -68,7 +68,7 @@ const JenisForm = () => {
                             >
                                 {
                                     [1, 1, 1, 1, 1].map((item, index) => (
-                                        <MenuItem value={'Brand ' + (index + 1)}>{'Brand ' + (index + 1)}</MenuItem>
+                                        <MenuItem key={index} value={'Brand ' + (index + 1)}>{'Brand ' + (index + 1)}</MenuItem>
                                     ))
                                 }
                             </Select>

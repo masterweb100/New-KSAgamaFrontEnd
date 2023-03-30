@@ -7,7 +7,6 @@ import {
     Table,
     TableBody,
     TableContainer,
-    Checkbox,
     Stack,
     TextField,
     Icon,
@@ -69,7 +68,6 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 
 const DataProdukTable = (props: any) => {
     const navigate = useNavigate();
-    const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 

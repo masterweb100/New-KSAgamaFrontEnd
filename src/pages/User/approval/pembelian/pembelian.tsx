@@ -6,9 +6,6 @@ import { pembelianDataTable } from '../dummy';
 import PembelianTable from './pembelianTable';
 
 const AppPembelian = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
-
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Pembelian'} isChild={false} name={'App. Pembelian'} idPanel={8}></NavigationBarUser>
@@ -44,11 +41,7 @@ const AppPembelian = () => {
                         }}
                     />
                 </Stack>
-                <PembelianTable
-                    data={pembelianDataTable}
-                    setPage={setPage}
-                    setItemsPerPage={setItemsPerPage}
-                />
+                <PembelianTable data={pembelianDataTable} />
             </Box>
         </div>
     )

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Stack, TextField, Toolbar, InputAdornment, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import NavigationBar from '../../../../components/appBarUser';
+import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ const SatuanForm = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBar title={'Form Data Satuan'} isChild={true} name={'List Produk'} idPanel={2}></NavigationBar>
+            <NavigationBarUser title={'Form Data Satuan'} isChild={true} name={'List Produk'} idPanel={2}></NavigationBarUser>
             <Box
                 component="main"
                 sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
@@ -78,7 +78,7 @@ const SatuanForm = () => {
                                 >
                                     {
                                         [1, 1, 1, 1, 1].map((item, index) => (
-                                            <MenuItem value={'Brand ' + (index + 1)}>{'Brand ' + (index + 1)}</MenuItem>
+                                            <MenuItem key={index} value={'Brand ' + (index + 1)}>{'Brand ' + (index + 1)}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -102,7 +102,7 @@ const SatuanForm = () => {
                                 >
                                     {
                                         [1, 1, 1, 1, 1].map((item, index) => (
-                                            <MenuItem value={'Jenis ' + (index + 1)}>{'Jenis ' + (index + 1)}</MenuItem>
+                                            <MenuItem key={index} value={'Jenis ' + (index + 1)}>{'Jenis ' + (index + 1)}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -124,7 +124,7 @@ const SatuanForm = () => {
                                 >
                                     {
                                         [1, 1, 1, 1, 1].map((item, index) => (
-                                            <MenuItem value={'Supplier ' + (index + 1)}>{'Supplier ' + (index + 1)}</MenuItem>
+                                            <MenuItem key={index} value={'Supplier ' + (index + 1)}>{'Supplier ' + (index + 1)}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -208,7 +208,7 @@ const SatuanForm = () => {
                                 >
                                     {
                                         [1, 1, 1, 1, 1].map((item, index) => (
-                                            <MenuItem value={'Pembelian ' + (index + 1)}>{'Pembelian ' + (index + 1)}</MenuItem>
+                                            <MenuItem key={index} value={'Pembelian ' + (index + 1)}>{'Pembelian ' + (index + 1)}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -229,8 +229,8 @@ const SatuanForm = () => {
                                     }}
                                 >
                                     {
-                                        [1, 1, 1, 1, 1].map((item, index) => (
-                                            <MenuItem value={'Penjualan ' + (index + 1)}>{'Penjualan ' + (index + 1)}</MenuItem>
+                                        [1, 1, 1, 1, 1].map((index) => (
+                                            <MenuItem key={index} value={'Penjualan ' + (index + 1)}>{'Penjualan ' + (index + 1)}</MenuItem>
                                         ))
                                     }
                                 </Select>

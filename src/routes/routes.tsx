@@ -33,6 +33,7 @@ import SatuanForm from "../pages/User/gudang/listProduk/satuanForm";
 
 import Penjualan from "../pages/User/penjualan/penjualan/penjualan";
 import ReturnPenjualan from "../pages/User/penjualan/returnPenjualan/returnPenjualan";
+import ReturnPenjualanForm from "../pages/User/penjualan/returnPenjualan/returnPenjualanForm";
 
 import Pembelian from "../pages/User/pembelian/pembelian/pembelian";
 import Tracking from "../pages/User/pembelian/tracking/tracking";
@@ -87,6 +88,7 @@ const PageRouter = () => {
 
                 <Route path="/penjualan/penjualan" element={<Penjualan />} />
                 <Route path="/penjualan/return-penjualan" element={<ReturnPenjualan />} />
+                <Route path="/penjualan/return-penjualan/form-return" element={<ReturnPenjualanForm />} />
 
                 <Route path="/pembelian/pembelian" element={<Pembelian />} />
                 <Route path="/pembelian/tracking" element={<Tracking />} />
