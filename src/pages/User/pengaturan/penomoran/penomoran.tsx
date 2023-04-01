@@ -2,6 +2,7 @@ import { Box, Stack, Toolbar } from '@mui/material';
 import React from 'react'
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
+import PenomoranDialog from './penomoranDialog';
 import './styles.css'
 
 const dummyData = [
@@ -36,6 +37,16 @@ const dummyData = [
 ]
 
 const SetPenomoran = () => {
+    const [isDetail, setDetail] = React.useState(false)
+    const [activeContent, setActiveContent] = React.useState<any>({})
+
+    const DetailDialog = React.useCallback((title: string, subtitle: string) => {
+        setActiveContent({
+            title: title,
+            subtitle: subtitle
+        })
+        setDetail(true)
+    }, [])
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan'} isChild={false} name={'Pengaturan Penomoran'} idPanel={9}></NavigationBarUser>
@@ -48,11 +59,11 @@ const SetPenomoran = () => {
                                 <h3 style={{ color: '#000', fontWeight: 600, margin: 0 }}>{item.title}</h3>
                                 <Stack direction={'row'} alignItems={'center'} gap={2} flexWrap={'wrap'}>
                                     {
-                                        item.data.map((item, index) => (
-                                            <div key={index} className={'selection'} style={{ ...CENTER }}>
+                                        item.data.map((value, index) => (
+                                            <div onClick={() => DetailDialog(item.title, value.title)} key={index} className={'selection'} style={{ ...CENTER }}>
                                                 <Stack direction={'column'} alignItems={'center'} justifyContent={'center'}>
-                                                    <span style={{ fontSize: 13 }}>{item.title}</span>
-                                                    <span>{item.id}</span>
+                                                    <span style={{ fontSize: 13 }}>{value.title}</span>
+                                                    <span>{value.id}</span>
                                                 </Stack>
                                             </div>
                                         ))
@@ -63,6 +74,12 @@ const SetPenomoran = () => {
                     }
                 </Stack>
             </Box>
+            <PenomoranDialog
+                isOpen={isDetail}
+                setOpen={() => setDetail(false)}
+                title={activeContent.title}
+                subtitle={activeContent.subtitle}
+            ></PenomoranDialog>
         </div>
     )
 }

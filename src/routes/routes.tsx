@@ -48,8 +48,11 @@ import LapKeuangan from "../pages/User/laporan/keuangan/keuangan";
 import LapTransaksi from "../pages/User/laporan/transaksi/transaksi";
 
 import Pelanggan from "../pages/User/kontak/pelanggan/pelanggan";
+import PelangganForm from "../pages/User/kontak/pelanggan/pelangganForm";
 import Supplier from "../pages/User/kontak/supplier/supplier";
+import SupplierForm from "../pages/User/kontak/supplier/supplierForm";
 import Ekspedisi from "../pages/User/kontak/ekspedisi/ekspedisi";
+import EkspedisiForm from "../pages/User/kontak/ekspedisi/ekspedisiForm";
 
 import AppGudang from "../pages/User/approval/gudang/gudang";
 import AppPembelian from "../pages/User/approval/pembelian/pembelian";
@@ -107,8 +110,11 @@ const PageRouter = () => {
                 <Route path="/laporan/transaksi" element={<LapTransaksi />} />
 
                 <Route path="/kontak/pelanggan" element={<Pelanggan />} />
+                <Route path="/kontak/pelanggan/form-pelanggan" element={<PelangganForm />} />
                 <Route path="/kontak/supplier" element={<Supplier />} />
+                <Route path="/kontak/supplier/form-supplier" element={<SupplierForm />} />
                 <Route path="/kontak/ekspedisi" element={<Ekspedisi />} />
+                <Route path="/kontak/ekspedisi/form-ekspedisi" element={<EkspedisiForm />} />
 
                 <Route path="/approval/gudang" element={<AppGudang />} />
                 <Route path="/approval/pembelian" element={<AppPembelian />} />

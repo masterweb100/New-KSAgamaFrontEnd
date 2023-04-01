@@ -9,7 +9,7 @@ const AppPenjualan = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Return Penjualan'} isChild={false} name={'App. Penjualan'} idPanel={8}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <Stack
                     direction={"row"}

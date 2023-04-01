@@ -11,11 +11,11 @@ import {
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
+import GudangDialog from "./gudangDialog";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -66,10 +66,10 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const GudangTable = (props: any) => {
-    const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [isApprove, setApprove] = React.useState(false)
 
     const handleChangePage = (event: any, newPage: any) => {
         console.log(event)
@@ -104,6 +104,7 @@ const GudangTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
+    const ApproveDialog = React.useCallback(() => setApprove(true), [])
 
     return (
         <Box
@@ -168,6 +169,7 @@ const GudangTable = (props: any) => {
                                                 tabIndex={-1}
                                                 key={index}
                                                 sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                onClick={ApproveDialog}
                                             >
                                                 <StyledTableCell align="center" padding="checkbox">
                                                     <Checkbox
@@ -210,6 +212,7 @@ const GudangTable = (props: any) => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             )}
+            <GudangDialog isOpen={isApprove} setOpen={() => setApprove(false)}></GudangDialog>
         </Box>
     );
 }

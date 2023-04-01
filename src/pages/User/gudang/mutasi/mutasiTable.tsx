@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
+import MutasiDialog from "./mutasiDialog";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -74,6 +75,7 @@ const MutasiTable = (props: any) => {
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [isStatus, setStatus] = React.useState(false)
 
     const handleChangePage = (event: any, newPage: any) => {
         console.log(event)
@@ -109,9 +111,11 @@ const MutasiTable = (props: any) => {
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
 
-    const FormPage = React.useCallback(() => {
+    const FormPage = () => {
         navigate('/gudang/mutasi/form-mutasi')
-    }, [])
+    }
+
+    const StatusDialog = React.useCallback(() => setStatus(true), [])
 
     return (
         <div>
@@ -223,6 +227,7 @@ const MutasiTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                    onClick={StatusDialog}
                                                 >
                                                     <StyledTableCell align="center" padding="checkbox">
                                                         <Checkbox
@@ -265,6 +270,7 @@ const MutasiTable = (props: any) => {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 )}
+                <MutasiDialog isOpen={isStatus} setOpen={() => setStatus(false)}></MutasiDialog>
             </Box>
         </div>
     );

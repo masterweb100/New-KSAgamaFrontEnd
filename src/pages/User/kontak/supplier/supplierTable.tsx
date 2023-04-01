@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
+import SupplierDialog from "./supplierDialog";
 
 const columns = [
     { id: "id", label: "ID Supplier" },
@@ -72,6 +73,7 @@ const SupplierTable = (props: any) => {
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [isDetailOpen, setDetailOpen] = React.useState(false);
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -104,11 +106,15 @@ const SupplierTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
+    const FormPage = () => navigate('/kontak/supplier/form-supplier')
+    const DetailData = React.useCallback(() => {
+        setDetailOpen(true)
+    }, [])
 
     return (
         <div>
             <Stack direction={'row'} justifyContent={'space-between'}>
-                <div style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
+                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
                         <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Supplier</p>
@@ -206,6 +212,7 @@ const SupplierTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                    onClick={DetailData}
                                                 >
                                                     <StyledTableCell align="center" padding="checkbox">
                                                         <Checkbox
@@ -243,6 +250,7 @@ const SupplierTable = (props: any) => {
                     />
                 )}
             </Box>
+            <SupplierDialog isOpen={isDetailOpen} setOpen={() => setDetailOpen(false)} />
         </div>
     );
 }

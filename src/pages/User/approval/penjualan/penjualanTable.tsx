@@ -11,10 +11,10 @@ import {
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
+import PenjualanDialog from "./penjualanDialog";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -64,7 +64,7 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const PenjualanTable = (props: any) => {
-    const navigate = useNavigate();
+    const [isApprove, setApprove] = React.useState(false)
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
@@ -102,6 +102,7 @@ const PenjualanTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
+    const ApproveDialog = React.useCallback(() => setApprove(true), [])
 
     return (
         <Box
@@ -166,6 +167,7 @@ const PenjualanTable = (props: any) => {
                                                 tabIndex={-1}
                                                 key={index}
                                                 sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                onClick={ApproveDialog}
                                             >
                                                 <StyledTableCell align="center" padding="checkbox">
                                                     <Checkbox
@@ -203,6 +205,7 @@ const PenjualanTable = (props: any) => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             )}
+            <PenjualanDialog isOpen={isApprove} setOpen={() => setApprove(false)}></PenjualanDialog>
         </Box>
     );
 }
