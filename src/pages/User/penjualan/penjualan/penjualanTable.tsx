@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
+import PelunasanDialog from "./pelunasanDialog";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -74,6 +75,7 @@ const PenjualanTable = (props: any) => {
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [isLunasOpen, setLunasOpen] = React.useState(false)
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -106,11 +108,13 @@ const PenjualanTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
+    const FormPage = () => navigate('/penjualan/penjualan/form-penjualan')
+    const FormLunas = React.useCallback(() => setLunasOpen(true), [])
 
     return (
         <div>
             <Stack direction={'row'} justifyContent={'space-between'}>
-                <div style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
+                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
                         <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Penjualan</p>
@@ -220,6 +224,7 @@ const PenjualanTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                    onClick={FormLunas}
                                                 >
                                                     <StyledTableCell align="center" padding="checkbox">
                                                         <Checkbox
@@ -270,6 +275,7 @@ const PenjualanTable = (props: any) => {
                     />
                 )}
             </Box>
+            <PelunasanDialog isOpen={isLunasOpen} setOpen={() => setLunasOpen(false)} />
         </div>
     );
 }
