@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stack, TextField, Select, MenuItem, SelectChangeEvent, Dialog, DialogContent, DialogTitle, Icon } from '@mui/material';
-import { CENTER, StyleSheet } from '../../../../utils/stylesheet';
-import { Colors } from '../../../../utils/colors';
+import { CENTER, StyleSheet } from '../utils/stylesheet';
+import { Colors } from '../utils/colors';
 
 const PelunasanDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) => {
     const [metode, setMetode] = React.useState('');

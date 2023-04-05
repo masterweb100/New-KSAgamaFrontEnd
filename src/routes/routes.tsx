@@ -37,6 +37,9 @@ import ReturnPenjualan from "../pages/User/penjualan/returnPenjualan/returnPenju
 import ReturnPenjualanForm from "../pages/User/penjualan/returnPenjualan/returnPenjualanForm";
 
 import Pembelian from "../pages/User/pembelian/pembelian/pembelian";
+import PembelianForm from "../pages/User/pembelian/pembelian/pembelianForm";
+import PembelianDetail from "../pages/User/pembelian/pembelian/pembelianDetail";
+import PembelianDetailForm from "../pages/User/pembelian/pembelian/pembelianDetailForm";
 import Tracking from "../pages/User/pembelian/tracking/tracking";
 
 import Akun from "../pages/User/akun/akun";
@@ -47,6 +50,11 @@ import DetailAkun from "../pages/User/akun/akunDetail";
 
 import LapKeuangan from "../pages/User/laporan/keuangan/keuangan";
 import LapTransaksi from "../pages/User/laporan/transaksi/transaksi";
+import PenjualanDetailTable from "../pages/User/laporan/transaksi/penjualan/penjualanDetailTable";
+import UmurPiutangTable from "../pages/User/laporan/transaksi/penjualan/umurPuitangTable";
+import UmurPiutangDetailTable from "../pages/User/laporan/transaksi/penjualan/umurPiutangDetailTable";
+import PendapatanPelangganTable from "../pages/User/laporan/transaksi/penjualan/pendapatanPelangganTable";
+import PenjualanProdukTable from "../pages/User/laporan/transaksi/penjualan/penjualanProdukTable";
 
 import Pelanggan from "../pages/User/kontak/pelanggan/pelanggan";
 import PelangganForm from "../pages/User/kontak/pelanggan/pelangganForm";
@@ -63,6 +71,7 @@ import SetDataToko from "../pages/User/pengaturan/dataToko/dataToko";
 import SetPenomoran from "../pages/User/pengaturan/penomoran/penomoran";
 import SetProfil from "../pages/User/pengaturan/profil/profileku";
 import SetPeran from "../pages/User/pengaturan/peran/peran";
+import PeranSettings from "../pages/User/pengaturan/peran/peranSettings";
 
 const PageRouter = () => {
     return (
@@ -100,6 +109,9 @@ const PageRouter = () => {
                 <Route path="/penjualan/return-penjualan/form-return" element={<ReturnPenjualanForm />} />
 
                 <Route path="/pembelian/pembelian" element={<Pembelian />} />
+                <Route path="/pembelian/pembelian/form-pembelian" element={<PembelianForm />} />
+                <Route path="/pembelian/pembelian/detail" element={<PembelianDetail />} />
+                <Route path="/pembelian/pembelian/form-detail" element={<PembelianDetailForm />} />
                 <Route path="/pembelian/tracking" element={<Tracking />} />
 
                 <Route path="/akun" element={<Akun />} />
@@ -110,6 +122,11 @@ const PageRouter = () => {
 
                 <Route path="/laporan/keuangan" element={<LapKeuangan />} />
                 <Route path="/laporan/transaksi" element={<LapTransaksi />} />
+                <Route path="/laporan/transaksi/penjualan/detail" element={<PenjualanDetailTable />} />
+                <Route path="/laporan/transaksi/penjualan/piutang" element={<UmurPiutangTable />} />
+                <Route path="/laporan/transaksi/penjualan/piutang/detail" element={<UmurPiutangDetailTable />} />
+                <Route path="/laporan/transaksi/penjualan/income" element={<PendapatanPelangganTable />} />
+                <Route path="/laporan/transaksi/penjualan/produk" element={<PenjualanProdukTable />} />
 
                 <Route path="/kontak/pelanggan" element={<Pelanggan />} />
                 <Route path="/kontak/pelanggan/form-pelanggan" element={<PelangganForm />} />
@@ -126,6 +143,7 @@ const PageRouter = () => {
                 <Route path="/settings/penomoran" element={<SetPenomoran />} />
                 <Route path="/settings/profilku" element={<SetProfil />} />
                 <Route path="/settings/peran" element={<SetPeran />} />
+                <Route path="/settings/peran/set-peran" element={<PeranSettings />} />
             </Routes>
         </Router>
     )

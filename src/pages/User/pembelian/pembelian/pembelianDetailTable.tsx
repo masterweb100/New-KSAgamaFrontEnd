@@ -20,19 +20,15 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
-import PelunasanDialog from "../../../../components/pelunasanDialog";
 
 const columns = [
-    { id: "tanggal", label: "Tanggal" },
     { id: "id", label: "ID SKU" },
     { id: "brand", label: "Nama Brand" },
-    { id: "kategori", label: "Nama Kategori" },
-    { id: "supplier", label: "Nama Supplier" },
-    { id: "tempo", label: "Jatuh Tempo" },
-    { id: "sisa", label: "Sisa Tagihan" },
-    { id: "total", label: "Total" },
-    { id: "status", label: "Status" },
-    { id: "updatedBy", label: "Updated By" },
+    { id: "jenis", label: "Jenis Barang" },
+    { id: "satuan", label: "Satuan" },
+    { id: "qty", label: "Qty" },
+    { id: "harga", label: "Harga Satuan" },
+    { id: "total", label: "Harga Total" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -71,12 +67,11 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
     return stabilizedRowArray.map((el: any) => el[0]);
 };
 
-const PembelianTable = (props: any) => {
+const PembelianDetailTable = (props: any) => {
     const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
-    const [isLunasOpen, setLunasOpen] = React.useState(false)
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -109,9 +104,7 @@ const PembelianTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-    const FormPage = () => navigate('/pembelian/pembelian/form-pembelian')
-    const FormLunas = React.useCallback(() => setLunasOpen(true), [])
-    const DetailPage = () => navigate('/pembelian/pembelian/detail')
+    const FormPage = () => navigate('/pembelian/pembelian/form-detail')
 
     return (
         <div>
@@ -119,13 +112,10 @@ const PembelianTable = (props: any) => {
                 <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
-                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Pembelian</p>
+                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Produk</p>
                     </Stack>
                 </div>
                 <Stack direction={'row'} alignItems={'center'} gap={2}>
-                    <div onClick={FormLunas} style={{ ...CENTER, backgroundColor: Colors.success, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <span style={{ color: '#fff' }}>Set Lunas</span>
-                    </div>
                     <div style={{ ...CENTER, backgroundColor: Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
                         <Icon style={{ color: '#fff', fontSize: 25 }}>border_color</Icon>
                     </div>
@@ -148,7 +138,7 @@ const PembelianTable = (props: any) => {
             >
                 <Stack alignItems={"center"} gap={2} direction={"row"}>
                     <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                    <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Pembelian</p>
+                    <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Barang SKU/0032</p>
                 </Stack>
                 <TextField
                     type="search"
@@ -224,7 +214,6 @@ const PembelianTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    onClick={DetailPage}
                                                 >
                                                     <StyledTableCell align="center" padding="checkbox">
                                                         <Checkbox
@@ -235,16 +224,13 @@ const PembelianTable = (props: any) => {
                                                             }}
                                                         />
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.id}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.brand}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.kategori}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.supplier}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tempo}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.sisa}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.jenis}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.satuan}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.qty}</StyledTableCell>
+                                                    <StyledTableCell align="center">{item.harga}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.total}</StyledTableCell>
-                                                    <StyledTableCell align="center" sx={{ color: Colors.success }}>{item.status}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
                                                 </TableRow>
                                             )
                                         })
@@ -276,9 +262,8 @@ const PembelianTable = (props: any) => {
                     />
                 )}
             </Box>
-            <PelunasanDialog isOpen={isLunasOpen} setOpen={() => setLunasOpen(false)} />
         </div>
     );
 }
 
-export default PembelianTable;
+export default PembelianDetailTable;

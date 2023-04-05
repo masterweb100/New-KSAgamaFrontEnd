@@ -20,7 +20,7 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
-import PelunasanDialog from "./pelunasanDialog";
+import PelunasanDialog from "../../../../components/pelunasanDialog";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },

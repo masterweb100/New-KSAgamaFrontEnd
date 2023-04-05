@@ -1,25 +1,20 @@
 import { Box, Stack, Toolbar, InputAdornment, TextField, Icon } from '@mui/material';
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
-import { CENTER } from '../../../../utils/stylesheet';
 import './styles.css'
 
 const user = ['Admin', 'Staff Keuangan', 'Staff Gudang', 'Staff Penjualan', 'Staff Pembelian']
 const SetPeran = () => {
+    const navigate = useNavigate()
+
+    const SettingPage = () => navigate('/settings/peran/set-peran')
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan'} isChild={false} name={'Peran'} idPanel={9}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                    <div style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
-                        <Stack alignItems={'center'} direction={'row'} gap={1}>
-                            <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
-                            <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Pengguna</p>
-                        </Stack>
-                    </div>
-                </Stack>
                 <Stack
                     direction={"row"}
                     alignItems={"center"}
@@ -53,7 +48,7 @@ const SetPeran = () => {
                 <Stack direction={'column'} gap={0}>
                     {
                         user.map((item, index) => (
-                            <div key={index} className={'list'}>
+                            <div onClick={SettingPage} key={index} className={'list'}>
                                 <span>{item}</span>
                             </div>
                         ))

@@ -2,8 +2,12 @@ import { Box, Toolbar } from '@mui/material';
 import React from 'react'
 import NavigationBarUser from '../../../../components/appBarUser';
 import { laporanData } from '../dummy';
+import { useNavigate } from 'react-router-dom';
 
 const LapTransaksi = () => {
+    const navigate = useNavigate()
+    const NavigatePage = (param: string) => navigate(param)
+    
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Penjualan & Pembelian'} isChild={false} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
@@ -16,8 +20,8 @@ const LapTransaksi = () => {
                                 <h3>{item.title}</h3>
                                 {
                                     item.list.map((item, index) => (
-                                        <div key={index} className={'list'} style={{ color: '#000' }}>
-                                            <span>{item}</span>
+                                        <div key={index} onClick={() => NavigatePage(item.navigate)} className={'list'} style={{ color: '#000' }}>
+                                            <span>{item.label}</span>
                                         </div>
                                     ))
                                 }
