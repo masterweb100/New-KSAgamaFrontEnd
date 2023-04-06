@@ -15,7 +15,7 @@ const DetailAkun = () => {
             <NavigationBarUser title={'Detail Akun'} isChild={true} name={'Akun'} idPanel={5}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', py: 5, px: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div>

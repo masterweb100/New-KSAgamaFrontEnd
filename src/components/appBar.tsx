@@ -13,8 +13,6 @@ const logo = require('../assets/images/ksa-logo-purple.png')
 const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: number, isChild: boolean }) => {
     const navigate = useNavigate()
 
-    const [indexSelect, setIndexSelect] = React.useState<any>(null)
-
     const Routing = (param: number) => {
         navigate(param)
     }

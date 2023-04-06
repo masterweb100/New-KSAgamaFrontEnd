@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Toolbar } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 
 const DataBank = () => {
@@ -8,7 +8,7 @@ const DataBank = () => {
             <NavigationBar title={'Data Bankir'} indexNav={5} isChild={false}></NavigationBar>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
             </Box>

@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../utils/colors";
@@ -58,7 +57,6 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const RoleTable = (props: any) => {
-    const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);

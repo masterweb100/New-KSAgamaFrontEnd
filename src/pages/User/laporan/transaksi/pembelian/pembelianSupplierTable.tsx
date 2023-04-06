@@ -14,13 +14,13 @@ import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { penjualanData } from '../../dummy';
-import PendapatanPelangganChildTable from './pendapatanPelangganChildTable';
+import PembelianSupplierChildTable from './pembelianSupplierChildTable';
 
 const columns = [
-    { id: "pelanggan", label: "Pelanggan" },
+    { id: "pelanggan", label: "Nama Supplier" },
     { id: "perusahaan", label: "Perusahaan" },
     { id: "total", label: "Total Transaksi" },
-    { id: "pendapatan", label: "Pendapatan" },
+    { id: "pendapatan", label: "Total" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,7 +59,7 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
     return stabilizedRowArray.map((el: any) => el[0]);
 };
 
-const PendapatanPelangganTable = () => {
+const PembelianSupplierTable = () => {
     const [dateFrom, setDateFrom] = React.useState<any>(null);
     const [dateTo, setDateTo] = React.useState<any>(null);
     const [page, setPage] = React.useState(0);
@@ -98,7 +98,7 @@ const PendapatanPelangganTable = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Pendapatan Per Pelanggan'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
+            <NavigationBarUser title={'Pembelian Per Supplier'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
             <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
@@ -117,7 +117,7 @@ const PendapatanPelangganTable = () => {
                         </div>
                     </Stack>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
-                        <h2 style={{ margin: 0 }}>Pendapatan Per Pelanggan</h2>
+                        <h2 style={{ margin: 0 }}>Pembelian Per Supplier</h2>
                         <Stack direction={'row'} alignItems={'center'} gap={1}>
                             <DatePicker
                                 value={dateFrom}
@@ -148,7 +148,7 @@ const PendapatanPelangganTable = () => {
                     >
                         <Stack alignItems={"center"} gap={2} direction={"row"}>
                             <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                            <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Detail Pendapatan Per Pelanggan</p>
+                            <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Detail Pembelian Per Supplier</p>
                         </Stack>
                         <TextField
                             type="search"
@@ -215,7 +215,7 @@ const PendapatanPelangganTable = () => {
                                                             sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                             onClick={() => handleChangePanel(index)}
                                                         >
-                                                            <StyledTableCell align="center">Agung Adi</StyledTableCell>
+                                                            <StyledTableCell align="center">Jaya Abadi</StyledTableCell>
                                                             <StyledTableCell align="center">PT. Jaya Bahari</StyledTableCell>
                                                             <StyledTableCell align="center">30</StyledTableCell>
                                                             <StyledTableCell align="center">8.304.000</StyledTableCell>
@@ -231,7 +231,7 @@ const PendapatanPelangganTable = () => {
                                                                             padding: '3%',
                                                                         }}
                                                                     >
-                                                                        <PendapatanPelangganChildTable />
+                                                                        <PembelianSupplierChildTable />
                                                                     </StyledTableCell>
                                                                 </TableRow>
                                                                 :
@@ -268,4 +268,4 @@ const PendapatanPelangganTable = () => {
     )
 }
 
-export default PendapatanPelangganTable;
+export default PembelianSupplierTable;

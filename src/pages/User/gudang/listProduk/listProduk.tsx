@@ -33,7 +33,7 @@ const ListProduk = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'List Produk'} isChild={false} name={'List Produk'} idPanel={2}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

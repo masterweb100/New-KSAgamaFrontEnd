@@ -9,7 +9,7 @@ const Ekspedisi = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Ekspedisi'} idPanel={7}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} gap={2}>

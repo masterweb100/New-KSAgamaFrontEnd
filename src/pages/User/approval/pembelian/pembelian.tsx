@@ -9,7 +9,7 @@ const AppPembelian = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Pembelian'} isChild={false} name={'App. Pembelian'} idPanel={8}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <Stack
                     direction={"row"}

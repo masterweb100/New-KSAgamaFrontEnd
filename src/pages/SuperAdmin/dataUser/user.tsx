@@ -1,12 +1,11 @@
 import React from 'react';
-import { Box, Stack, TextField, Toolbar, InputAdornment, Slide } from '@mui/material';
+import { Box, Stack, TextField, Toolbar, InputAdornment } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import { CENTER } from '../../../utils/stylesheet';
 import { Colors } from '../../../utils/colors';
 import { Add, ViewList, Search, DeleteOutline } from '@mui/icons-material';
 import './styles.css'
 import UserTable from './userTable';
-import { TransitionProps } from '@mui/material/transitions';
 import DeleteModal from '../../../components/deleteModal';
 import { useNavigate } from "react-router-dom";
 
@@ -89,7 +88,7 @@ const DataUser = () => {
             <NavigationBar title={'Data Pengguna'} indexNav={1} isChild={false}></NavigationBar>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div>

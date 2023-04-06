@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
@@ -23,12 +24,13 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { piutangData } from "../../dummy";
 
 const columns = [
-    { id: 'jenis', label: 'Jenis Produk' },
-    { id: 'id', label: 'ID SKU' },
-    { id: 'harga', label: 'Harga Saat Ini' },
-    { id: 'jumlah', label: 'Jumlah Terjual' },
+    { id: 'pelanggan', label: 'Supplier' },
     { id: 'total', label: 'Total' },
-    { id: 'average', label: 'Rata - Rata' },
+    { id: 'less1bulan', label: '< 1 Bulan' },
+    { id: 'sebulan', label: '1 Bulan' },
+    { id: 'duabulan', label: '2 Bulan' },
+    { id: 'tigabulan', label: '3 Bulan' },
+    { id: 'more3bulan', label: '> 3 Bulan' },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -67,7 +69,8 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
     return stabilizedRowArray.map((el: any) => el[0]);
 };
 
-const PenjualanProdukTable = () => {
+const UmurHutangTable = (props: any) => {
+    const navigate = useNavigate();
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [dateFrom, setDateFrom] = React.useState<any>(null);
@@ -94,9 +97,11 @@ const PenjualanProdukTable = () => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
+    const DetailData = () => navigate('/laporan/transaksi/pembelian/hutang/detail')
+
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Penjualan Per Produk'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
+            <NavigationBarUser title={'Umur Hutang'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
             <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
@@ -115,7 +120,7 @@ const PenjualanProdukTable = () => {
                         </div>
                     </Stack>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
-                        <h2 style={{ margin: 0 }}>Penjualan Per Produk</h2>
+                        <h2 style={{ margin: 0 }}>Umur Hutang</h2>
                         <Stack direction={'row'} alignItems={'center'} gap={1}>
                             <DatePicker
                                 value={dateFrom}
@@ -145,7 +150,7 @@ const PenjualanProdukTable = () => {
                 >
                     <Stack alignItems={"center"} gap={2} direction={"row"}>
                         <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                        <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Detail Penjualan Per Produk</p>
+                        <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Umur Hutang</p>
                     </Stack>
                     <TextField
                         type="search"
@@ -210,13 +215,15 @@ const PenjualanProdukTable = () => {
                                                         tabIndex={-1}
                                                         key={index}
                                                         sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                        onClick={DetailData}
                                                     >
-                                                        <StyledTableCell align="center">Phlips 23 watt</StyledTableCell>
-                                                        <StyledTableCell align="center">CH/00{index}</StyledTableCell>
-                                                        <StyledTableCell align="center">50.400</StyledTableCell>
-                                                        <StyledTableCell align="center">900</StyledTableCell>
-                                                        <StyledTableCell align="center">4.500.000</StyledTableCell>
-                                                        <StyledTableCell align="center">600.000</StyledTableCell>
+                                                        <StyledTableCell align="center">PT. Sinar Mas</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.total}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.less1bulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.sebulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.duabulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.tigabulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.more3bulan}</StyledTableCell>
                                                     </TableRow>
                                                 )
                                             })
@@ -242,4 +249,4 @@ const PenjualanProdukTable = () => {
     );
 }
 
-export default PenjualanProdukTable;
+export default UmurHutangTable;

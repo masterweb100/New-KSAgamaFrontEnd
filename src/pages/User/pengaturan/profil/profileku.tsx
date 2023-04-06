@@ -8,7 +8,7 @@ const SetProfil = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan'} isChild={false} name={'Profilku'} idPanel={9}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
                     <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>

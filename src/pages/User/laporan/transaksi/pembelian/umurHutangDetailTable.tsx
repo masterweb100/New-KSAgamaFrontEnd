@@ -23,12 +23,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { piutangData } from "../../dummy";
 
 const columns = [
-    { id: 'jenis', label: 'Jenis Produk' },
-    { id: 'id', label: 'ID SKU' },
-    { id: 'harga', label: 'Harga Saat Ini' },
-    { id: 'jumlah', label: 'Jumlah Terjual' },
-    { id: 'total', label: 'Total' },
-    { id: 'average', label: 'Rata - Rata' },
+    { id: 'tanggal', label: 'Tanggal' },
+    { id: 'jatuhtempo', label: 'Tanggal Jatuh Tempo' },
+    { id: 'id', label: 'ID Pembelian' },
+    { id: 'less1bulan', label: '< 1 Bulan' },
+    { id: 'sebulan', label: '1 Bulan' },
+    { id: 'duabulan', label: '2 Bulan' },
+    { id: 'tigabulan', label: '3 Bulan' },
+    { id: 'more3bulan', label: '> 3 Bulan' },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -67,9 +69,9 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
     return stabilizedRowArray.map((el: any) => el[0]);
 };
 
-const PenjualanProdukTable = () => {
+const UmurHutangDetailTable = (props: any) => {
     const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     const [dateFrom, setDateFrom] = React.useState<any>(null);
     const [dateTo, setDateTo] = React.useState<any>(null);
 
@@ -96,7 +98,7 @@ const PenjualanProdukTable = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Penjualan Per Produk'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
+            <NavigationBarUser title={'Detail Umur Hutang'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
             <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
@@ -115,7 +117,7 @@ const PenjualanProdukTable = () => {
                         </div>
                     </Stack>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
-                        <h2 style={{ margin: 0 }}>Penjualan Per Produk</h2>
+                        <h2 style={{ margin: 0 }}>Umur Hutang</h2>
                         <Stack direction={'row'} alignItems={'center'} gap={1}>
                             <DatePicker
                                 value={dateFrom}
@@ -131,6 +133,7 @@ const PenjualanProdukTable = () => {
                         </Stack>
                     </Stack>
                 </div>
+                <h3 style={{ margin: '20px 0' }}>PT. Sinar Maju Jaya</h3>
                 <Stack
                     direction={"row"}
                     alignItems={"center"}
@@ -145,7 +148,7 @@ const PenjualanProdukTable = () => {
                 >
                     <Stack alignItems={"center"} gap={2} direction={"row"}>
                         <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                        <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Detail Penjualan Per Produk</p>
+                        <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Detail Overview Umur Hutang</p>
                     </Stack>
                     <TextField
                         type="search"
@@ -206,21 +209,32 @@ const PenjualanProdukTable = () => {
                                             .map((item: any, index: number) => {
                                                 return (
                                                     <TableRow
-                                                        role="checkbox"
-                                                        tabIndex={-1}
                                                         key={index}
                                                         sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                     >
-                                                        <StyledTableCell align="center">Phlips 23 watt</StyledTableCell>
-                                                        <StyledTableCell align="center">CH/00{index}</StyledTableCell>
-                                                        <StyledTableCell align="center">50.400</StyledTableCell>
-                                                        <StyledTableCell align="center">900</StyledTableCell>
-                                                        <StyledTableCell align="center">4.500.000</StyledTableCell>
-                                                        <StyledTableCell align="center">600.000</StyledTableCell>
+                                                        <StyledTableCell align="center">22/03/2021</StyledTableCell>
+                                                        <StyledTableCell align="center">31/03/2022</StyledTableCell>
+                                                        <StyledTableCell align="center">INV/00{index + 1}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.less1bulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.sebulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.duabulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.tigabulan}</StyledTableCell>
+                                                        <StyledTableCell align="center">{item.more3bulan}</StyledTableCell>
                                                     </TableRow>
                                                 )
                                             })
                                         : null}
+                                    <TableRow sx={{ backgroundColor: '#f8f8f8' }}>
+                                        <StyledTableCell align="left">Total</StyledTableCell>
+                                        <StyledTableCell align="center">{' '}</StyledTableCell>
+                                        <StyledTableCell align="center">{' '}</StyledTableCell>
+                                        <StyledTableCell align="center">3.200.000</StyledTableCell>
+                                        <StyledTableCell align="center">1.500.000</StyledTableCell>
+                                        <StyledTableCell align="center">800.000</StyledTableCell>
+                                        <StyledTableCell align="center">200.000</StyledTableCell>
+                                        <StyledTableCell align="center">0</StyledTableCell>
+                                        <StyledTableCell align="center">0</StyledTableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
@@ -242,4 +256,4 @@ const PenjualanProdukTable = () => {
     );
 }
 
-export default PenjualanProdukTable;
+export default UmurHutangDetailTable;

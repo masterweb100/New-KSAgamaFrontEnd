@@ -14,13 +14,13 @@ import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { penjualanData } from '../../dummy';
-import PendapatanPelangganChildTable from './pendapatanPelangganChildTable';
+import PembelianDetailChildTable from './pembelianDetailChildTable';
 
 const columns = [
-    { id: "pelanggan", label: "Pelanggan" },
-    { id: "perusahaan", label: "Perusahaan" },
-    { id: "total", label: "Total Transaksi" },
-    { id: "pendapatan", label: "Pendapatan" },
+    { id: "id", label: "ID Pembelian" },
+    { id: "tanggal", label: "Tanggal" },
+    { id: "nama", label: "Nama Supplier" },
+    { id: "total", label: "Total" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,7 +59,7 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
     return stabilizedRowArray.map((el: any) => el[0]);
 };
 
-const PendapatanPelangganTable = () => {
+const PembelianDetailTable = () => {
     const [dateFrom, setDateFrom] = React.useState<any>(null);
     const [dateTo, setDateTo] = React.useState<any>(null);
     const [page, setPage] = React.useState(0);
@@ -98,7 +98,7 @@ const PendapatanPelangganTable = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Pendapatan Per Pelanggan'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
+            <NavigationBarUser title={'Detail Pembelian'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
             <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
@@ -117,7 +117,7 @@ const PendapatanPelangganTable = () => {
                         </div>
                     </Stack>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
-                        <h2 style={{ margin: 0 }}>Pendapatan Per Pelanggan</h2>
+                        <h2 style={{ margin: 0 }}>Detail Pembelian</h2>
                         <Stack direction={'row'} alignItems={'center'} gap={1}>
                             <DatePicker
                                 value={dateFrom}
@@ -148,7 +148,7 @@ const PendapatanPelangganTable = () => {
                     >
                         <Stack alignItems={"center"} gap={2} direction={"row"}>
                             <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                            <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Detail Pendapatan Per Pelanggan</p>
+                            <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Detail Pembelian</p>
                         </Stack>
                         <TextField
                             type="search"
@@ -215,10 +215,10 @@ const PendapatanPelangganTable = () => {
                                                             sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                             onClick={() => handleChangePanel(index)}
                                                         >
-                                                            <StyledTableCell align="center">Agung Adi</StyledTableCell>
-                                                            <StyledTableCell align="center">PT. Jaya Bahari</StyledTableCell>
-                                                            <StyledTableCell align="center">30</StyledTableCell>
-                                                            <StyledTableCell align="center">8.304.000</StyledTableCell>
+                                                            <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
+                                                            <StyledTableCell align="center">{item.id}</StyledTableCell>
+                                                            <StyledTableCell align="center">PT. Sinar Maju Jaya</StyledTableCell>
+                                                            <StyledTableCell align="center">{item.total}</StyledTableCell>
                                                         </TableRow>
                                                         {
                                                             expanded[0] === index && expanded[1] === true ?
@@ -231,7 +231,7 @@ const PendapatanPelangganTable = () => {
                                                                             padding: '3%',
                                                                         }}
                                                                     >
-                                                                        <PendapatanPelangganChildTable />
+                                                                        <PembelianDetailChildTable />
                                                                     </StyledTableCell>
                                                                 </TableRow>
                                                                 :
@@ -241,15 +241,48 @@ const PendapatanPelangganTable = () => {
                                                 )
                                             })
                                         : null}
-                                    <TableRow sx={{ backgroundColor: '#f8f8f8' }}>
-                                        <TableCell align="left">Total</TableCell>
-                                        <TableCell align="center">{' '}</TableCell>
-                                        <TableCell align="center">{' '}</TableCell>
-                                        <TableCell align="center"><b>5.200.000</b></TableCell>
-                                    </TableRow>
                                 </Table>
                             </TableContainer>
                         </Box>
+                        <div style={{ backgroundColor: '#f8f8f8', padding: 20 }}>
+                            <Stack direction={'row'} justifyContent={'space-between'}>
+                                <div></div>
+                                <Stack direction={'column'} gap={1}>
+                                    <h3 style={{ margin: 0, textAlign: 'right' }}>Total Halaman Ini</h3>
+                                    <Stack direction={'row'} gap={8}>
+                                        <Stack direction={'column'} alignSelf={'flex-start'} gap={1}>
+                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>Total</h3></u>
+                                            <span style={{ textAlign: 'left' }}><b>Total Dibayar</b></span>
+                                            <span style={{ textAlign: 'left' }}><b>Sisa Tagihan</b></span>
+                                        </Stack>
+                                        <Stack direction={'column'} alignSelf={'flex-start'} gap={1}>
+                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>2.600.000</h3></u>
+                                            <span style={{ textAlign: 'left' }}><b>2.400.000</b></span>
+                                            <span style={{ textAlign: 'left' }}><b>100.000</b></span>
+                                        </Stack>
+                                    </Stack>
+                                </Stack>
+                            </Stack>
+                            <div style={{ width: '100%', backgroundColor: '#000', height: 1, margin: '10px 0' }}></div>
+                            <Stack direction={'row'} justifyContent={'space-between'}>
+                                <div></div>
+                                <Stack direction={'column'} gap={1}>
+                                    <h3 style={{ margin: 0, textAlign: 'right' }}>Total Semua Halaman</h3>
+                                    <Stack direction={'row'} gap={8}>
+                                        <Stack direction={'column'} alignSelf={'flex-start'} gap={1}>
+                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>Total</h3></u>
+                                            <span style={{ textAlign: 'left' }}><b>Total Dibayar</b></span>
+                                            <span style={{ textAlign: 'left' }}><b>Sisa Tagihan</b></span>
+                                        </Stack>
+                                        <Stack direction={'column'} alignSelf={'flex-start'} gap={1}>
+                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>2.600.000</h3></u>
+                                            <span style={{ textAlign: 'left' }}><b>2.400.000</b></span>
+                                            <span style={{ textAlign: 'left' }}><b>100.000</b></span>
+                                        </Stack>
+                                    </Stack>
+                                </Stack>
+                            </Stack>
+                        </div>
                         {penjualanData !== undefined && (
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, 100]}
@@ -268,4 +301,4 @@ const PendapatanPelangganTable = () => {
     )
 }
 
-export default PendapatanPelangganTable;
+export default PembelianDetailTable;

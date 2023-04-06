@@ -17,7 +17,7 @@ const EkspedisiForm = () => {
             <NavigationBarUser title={'Form Tambah Data Ekspedisi'} isChild={true} name={'Ekspedisi'} idPanel={7}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', py: 5, px: 10, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>

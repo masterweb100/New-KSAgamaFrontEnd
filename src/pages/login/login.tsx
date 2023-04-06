@@ -14,6 +14,7 @@ import "./style.css";
 import { styled } from "@mui/material/styles";
 import { Visibility, VisibilityOff, ChevronLeft } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { isMobile } from "react-device-detect";
 
 const topBg = require("../../assets/images/top-login.png");
 const redCircle = require("../../assets/images/circle-red.png");
@@ -89,100 +90,64 @@ const Login = () => {
 
   return (
     <div>
-      <img
-        src={topBg}
-        style={{
-          width: "100%",
-          position: "absolute",
-          top: -30,
-          right: 0,
-          left: 0,
-          zIndex: 0,
-        }}
-        alt=""
-      />
-      <p
-        style={{
-          position: "absolute",
-          top: "5%",
-          left: "7%",
-          fontSize: 35,
-          fontWeight: 400,
-          color: "#fff",
-          whiteSpace: "pre-line",
-        }}
-      >
-        Welcome!{"\n"}KSA Project Accounting {"&"} Distribution
-      </p>
-      <img
-        src={redCircle}
-        className={"circle-anim"}
-        style={{
-          width: 40,
-          height: 40,
-          position: "absolute",
-          left: "2%",
-          top: "35%",
-        }}
-        alt=""
-      />
-      <img
-        src={redCircle}
-        className={"circle-anim"}
-        style={{
-          width: 90,
-          height: 90,
-          position: "absolute",
-          left: "4%",
-          top: "38%",
-        }}
-        alt=""
-      />
-      <img
-        src={redCircle}
-        className={"circle-anim"}
-        style={{
-          width: 80,
-          height: 80,
-          position: "absolute",
-          left: "40%",
-          top: "-6%",
-        }}
-        alt=""
-      />
-      <img
-        src={redCircle}
-        className={"circle-anim"}
-        style={{
-          width: 190,
-          height: 190,
-          position: "absolute",
-          left: "40%",
-          top: "40%",
-        }}
-        alt=""
-      />
-      <img
-        src={redBird}
-        className={"circle-anim"}
-        style={{
-          width: "auto",
-          height: "70%",
-          position: "absolute",
-          left: "0%",
-          bottom: "0%",
-          objectFit: "contain",
-        }}
-        alt=""
-      />
+      {
+        isMobile ?
+          null
+          :
+          <>
+            <img
+              src={topBg}
+              style={{ width: "100%", position: "absolute", top: -30, right: 0, left: 0, zIndex: 0, }}
+              alt=""
+            />
+            <p style={{ position: "absolute", top: "5%", left: "7%", fontSize: 35, fontWeight: 400, color: "#fff", whiteSpace: "pre-line", }}>
+              Welcome!{"\n"}KSA Project Accounting {"&"} Distribution
+            </p>
+            <img
+              src={redCircle}
+              className={"circle-anim"}
+              style={{ width: 40, height: 40, position: "absolute", left: "2%", top: "35%", }}
+              alt=""
+            />
+            <img
+              src={redCircle}
+              className={"circle-anim"}
+              style={{ width: 90, height: 90, position: "absolute", left: "4%", top: "38%", }}
+              alt=""
+            />
+            <img
+              src={redCircle}
+              className={"circle-anim"}
+              style={{ width: 80, height: 80, position: "absolute", left: "40%", top: "-6%", }}
+              alt=""
+            />
+            <img
+              src={redCircle}
+              className={"circle-anim"}
+              style={{ width: 190, height: 190, position: "absolute", left: "40%", top: "40%", }}
+              alt=""
+            />
+            <img
+              src={redBird}
+              className={"circle-anim"}
+              style={{ width: "auto", height: "70%", position: "absolute", left: "0%", bottom: "0%", objectFit: "contain", }}
+              alt=""
+            />
+          </>
+      }
+      {progress === true && isMobile === true ? (
+        <div className="loader">
+          <CircularProgress color="secondary" />
+        </div>
+      ) : null}
       <div className="wrapper-login">
         <div style={{ position: "relative", flex: 1, overflow: "hidden" }}>
-          {progress === true ? (
+          {progress === true && isMobile === false ? (
             <div className="loader">
               <CircularProgress color="secondary" />
             </div>
           ) : null}
-          <div style={{ padding: "30px 50px", position: "relative" }}>
+          <div style={{ padding: isMobile === true ? "30px 10px" : "30px 50px", position: "relative" }}>
             <div
               style={{
                 display: "flex",
@@ -196,33 +161,29 @@ const Login = () => {
             </div>
             {activePage === 0 ? (
               <Stack
-                className={`${
-                  page === 1
-                    ? "slide-left-out"
-                    : page === 0
+                className={`${page === 1
+                  ? "slide-left-out"
+                  : page === 0
                     ? "slide-left-in"
                     : ""
-                }`}
+                  }`}
                 direction={"column"}
                 gap={1.5}
               >
                 <p style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}>
                   Login Form
                 </p>
-                <div
-                  className={"btn-stack"}
-                  onClick={() => onUser("Super Admin")}
-                >
+                <div className={"btn-stack"} style={{width: isMobile ? '80vw' : '350px'}} onClick={() => onUser("Super Admin")}>
                   <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
                     Login Super Admin
                   </p>
                 </div>
-                <div className={"btn-stack"} onClick={() => onUser("Admin")}>
+                <div className={"btn-stack"} style={{width: isMobile ? '80vw' : '350px'}} onClick={() => onUser("Admin")}>
                   <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
                     Login Admin
                   </p>
                 </div>
-                <div className={"btn-stack"} onClick={() => onUser("User")}>
+                <div className={"btn-stack"} style={{width: isMobile ? '80vw' : '350px'}} onClick={() => onUser("User")}>
                   <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
                     Login User
                   </p>
@@ -231,15 +192,14 @@ const Login = () => {
             ) : null}
             {activePage === 1 ? (
               <Stack
-                className={`${
-                  page === 1
-                    ? "slide-right-in"
-                    : page === 0
+                className={`${page === 1
+                  ? "slide-right-in"
+                  : page === 0
                     ? "slide-right-out"
                     : page === 2
-                    ? "slide-left-out"
-                    : ""
-                }`}
+                      ? "slide-left-out"
+                      : ""
+                  }`}
                 direction={"column"}
                 gap={3}
               >
@@ -258,7 +218,7 @@ const Login = () => {
                   <CustomTextField
                     placeholder="Masukkan username anda"
                     size={"small"}
-                    sx={{ width: 350 }}
+                    sx={{ width: isMobile ? '80vw' : 350 }}
                   ></CustomTextField>
                 </div>
                 <div>
@@ -266,7 +226,7 @@ const Login = () => {
                   <CustomTextField
                     placeholder="Masukkan password anda"
                     size={"small"}
-                    sx={{ width: 350 }}
+                    sx={{ width: isMobile ? '80vw' : 350 }}
                     type={isPassword ? "password" : "text"}
                     endAdornment={
                       <InputAdornment position="end">
@@ -314,13 +274,12 @@ const Login = () => {
             ) : null}
             {activePage === 2 ? (
               <Stack
-                className={`${
-                  page === 2
-                    ? "slide-right-in"
-                    : page === 1
+                className={`${page === 2
+                  ? "slide-right-in"
+                  : page === 1
                     ? "slide-right-out"
                     : ""
-                }`}
+                  }`}
                 direction={"column"}
                 gap={3}
               >
@@ -332,7 +291,7 @@ const Login = () => {
                     style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}
                   >{`Pilih Toko (${user})`}</p>
                 </Stack>
-                <FormControl sx={{ width: 350 }} size="small">
+                <FormControl sx={{ width: isMobile ? '80vw' : 350 }} size="small">
                   <InputLabel id="demo-select-small">Pilih Toko</InputLabel>
                   <Select
                     labelId="demo-select-small"

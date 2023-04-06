@@ -55,6 +55,11 @@ import UmurPiutangTable from "../pages/User/laporan/transaksi/penjualan/umurPuit
 import UmurPiutangDetailTable from "../pages/User/laporan/transaksi/penjualan/umurPiutangDetailTable";
 import PendapatanPelangganTable from "../pages/User/laporan/transaksi/penjualan/pendapatanPelangganTable";
 import PenjualanProdukTable from "../pages/User/laporan/transaksi/penjualan/penjualanProdukTable";
+import PembelianDetailTable from "../pages/User/laporan/transaksi/pembelian/pembelianDetailTable";
+import UmurHutangTable from "../pages/User/laporan/transaksi/pembelian/umurHutangTable";
+import UmurHutangDetailTable from "../pages/User/laporan/transaksi/pembelian/umurHutangDetailTable";
+import PembelianSupplierTable from "../pages/User/laporan/transaksi/pembelian/pembelianSupplierTable";
+import PembelianProdukTable from "../pages/User/laporan/transaksi/pembelian/pembelianProdukTable";
 
 import Pelanggan from "../pages/User/kontak/pelanggan/pelanggan";
 import PelangganForm from "../pages/User/kontak/pelanggan/pelangganForm";
@@ -127,6 +132,11 @@ const PageRouter = () => {
                 <Route path="/laporan/transaksi/penjualan/piutang/detail" element={<UmurPiutangDetailTable />} />
                 <Route path="/laporan/transaksi/penjualan/income" element={<PendapatanPelangganTable />} />
                 <Route path="/laporan/transaksi/penjualan/produk" element={<PenjualanProdukTable />} />
+                <Route path="/laporan/transaksi/pembelian/detail" element={<PembelianDetailTable />} />
+                <Route path="/laporan/transaksi/pembelian/hutang" element={<UmurHutangTable />} />
+                <Route path="/laporan/transaksi/pembelian/hutang/detail" element={<UmurHutangDetailTable />} />
+                <Route path="/laporan/transaksi/pembelian/outcome" element={<PembelianSupplierTable />} />
+                <Route path="/laporan/transaksi/pembelian/produk" element={<PembelianProdukTable />} />
 
                 <Route path="/kontak/pelanggan" element={<Pelanggan />} />
                 <Route path="/kontak/pelanggan/form-pelanggan" element={<PelangganForm />} />

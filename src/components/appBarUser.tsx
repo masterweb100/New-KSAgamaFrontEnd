@@ -94,10 +94,8 @@ const NavigationBarUser = ({
   const [expanded, setExpanded] = React.useState<string | false>(
     `panel${idPanel}`
   );
-  const [panel, setPanel] = React.useState(0);
 
   const handleClick = (panel: number, isExpand: boolean, nav: string) => {
-    setPanel(panel);
     setExpanded(isExpand ? `panel${panel}` : false);
     navigate(nav);
     // console.log(nav)

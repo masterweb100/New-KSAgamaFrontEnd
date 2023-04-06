@@ -70,19 +70,19 @@ export const laporanData = [
     list: [
       {
         label: "Detail Pembelian",
-        navigate: "#",
+        navigate: "/laporan/transaksi/pembelian/detail",
       },
       {
         label: "Umur Hutang",
-        navigate: "#",
+        navigate: "/laporan/transaksi/pembelian/hutang",
       },
       {
-        label: "Pendapatan Per Produk",
-        navigate: "#",
+        label: "Pembelian Per Supplier",
+        navigate: "/laporan/transaksi/pembelian/outcome",
       },
       {
-        label: "Pembelain Per Supplier",
-        navigate: "#",
+        label: "Pembelian Per Produk",
+        navigate: "/laporan/transaksi/pembelian/produk",
       },
     ],
   },
