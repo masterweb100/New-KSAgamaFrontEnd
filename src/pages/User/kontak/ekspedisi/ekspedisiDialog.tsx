@@ -19,6 +19,9 @@ import { Colors } from '../../../../utils/colors';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from "@mui/material/styles";
 import { detailData } from '../dummy';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
+import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -45,6 +48,15 @@ const StyledTableRow = styled(TableRow)(() => ({
     },
 }));
 
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) => {
 
     const handleClose = () => {
@@ -66,6 +78,8 @@ const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
             open={isOpen}
             onClose={handleClose}
             scroll={'body'}
+            TransitionComponent={Transition}
+            fullScreen={isMobile}
             PaperProps={{ style: { maxWidth: '100vw' } }}
         >
             <DialogTitle>

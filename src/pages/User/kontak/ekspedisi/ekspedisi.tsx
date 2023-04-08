@@ -4,19 +4,25 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
 import { kontakData } from '../dummy';
 import EkspedisiTable from './ekspedisiTable';
+import { isMobile } from 'react-device-detect';
 
 const Ekspedisi = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Ekspedisi'} idPanel={7}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} gap={2}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={isMobile ? 'space-between' : 'flex-end'} gap={2}>
                         <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.primary}` }}>
                             <Stack direction={'row'} alignItems={'center'} gap={1}>
                                 <Icon sx={{ color: Colors.primary, fontSize: 20 }}>file_upload</Icon>
-                                <span style={{ fontSize: 13, color: Colors.primary }}>Import Data Kontak</span>
+                                {
+                                    isMobile ?
+                                    <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
+                                    :
+                                    <span style={{ fontSize: 13, color: Colors.primary }}>Import Data Kontak</span>
+                                }
                             </Stack>
                         </div>
                         <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.error}` }}>

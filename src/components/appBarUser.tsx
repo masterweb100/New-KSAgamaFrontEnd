@@ -26,9 +26,12 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { styled } from "@mui/material/styles";
 import Icon from "@mui/material/Icon";
+import { isMobile } from "react-device-detect";
 
 const drawerWidth = 240;
 const logo = require("../assets/images/ksa-logo-purple.png");
+
+interface IDrawer { title: string; isChild: boolean; name: string; idPanel: number; }
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -43,7 +46,6 @@ const Accordion = styled((props: AccordionProps) => (
     display: "none",
   },
   "& .Mui-expanded": {
-    backgroundColor: Colors.inherit,
     color: Colors.primary,
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
@@ -78,18 +80,9 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   margin: 0,
 }));
 
-const NavigationBarUser = ({
-  title,
-  isChild,
-  name,
-  idPanel,
-}: {
-  title: string;
-  isChild: boolean;
-  name: string;
-  idPanel: number;
-}) => {
+const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
   const navigate = useNavigate();
+  const [isDrawer, setDrawer] = React.useState(false)
 
   const [expanded, setExpanded] = React.useState<string | false>(
     `panel${idPanel}`
@@ -101,14 +94,16 @@ const NavigationBarUser = ({
     // console.log(nav)
   };
 
+  const toggleDrawer = () => setDrawer(!isDrawer)
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
-          width: `calc(100% - ${drawerWidth}px)`,
-          ml: `${drawerWidth}px`,
+          width: isMobile ? '100%' : `calc(100% - ${drawerWidth}px)`,
+          ml: isMobile ? 0 : `${drawerWidth}px`,
           backgroundColor: "#fff",
         }}
       >
@@ -119,42 +114,50 @@ const NavigationBarUser = ({
             justifyContent={"space-between"}
             width={"100%"}
           >
-            {isChild ? (
-              <Stack
-                onClick={() => navigate(-1)}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: Colors.inherit,
+            <Stack direction={'row'} alignItems={'center'} gap={2}>
+              {
+                isMobile ?
+                  <Icon sx={{ color: Colors.secondary, fontSize: 25, cursor: 'pointer' }} onClick={toggleDrawer}>menu</Icon>
+                  :
+                  null
+              }
+              {isChild ? (
+                <Stack
+                  onClick={() => navigate(-1)}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: Colors.inherit,
+                      borderRadius: 2,
+                      transition: "all 0.3s",
+                      cursor: "pointer",
+                    },
                     borderRadius: 2,
+                    padding: isMobile ? "10px 2px" : "10px",
                     transition: "all 0.3s",
-                    cursor: "pointer",
-                  },
-                  borderRadius: 2,
-                  padding: "10px",
-                  transition: "all 0.3s",
-                }}
-                alignItems={"center"}
-                gap={1}
-                direction={"row"}
-              >
-                <ChevronLeftRounded
-                  style={{ color: Colors.secondary, fontSize: 30 }}
-                ></ChevronLeftRounded>
+                  }}
+                  alignItems={"center"}
+                  gap={1}
+                  direction={"row"}
+                >
+                  <ChevronLeftRounded
+                    style={{ color: Colors.secondary, fontSize: 30 }}
+                  ></ChevronLeftRounded>
+                  <p style={styles.title}>{title}</p>
+                </Stack>
+              ) : (
                 <p style={styles.title}>{title}</p>
-              </Stack>
-            ) : (
-              <p style={styles.title}>{title}</p>
-            )}
-            <Stack direction={"row"} alignItems={"center"} gap={5}>
+              )}
+            </Stack>
+            <Stack direction={"row"} alignItems={"center"} gap={3}>
               <Badge badgeContent={100} color="secondary">
-                <Notifications sx={{ color: Colors.secondary, fontSize: 30 }} />
+                <Notifications sx={{ color: Colors.secondary, fontSize: isMobile ? 25 : 30 }} />
               </Badge>
               <Avatar
                 alt={"avatar"}
                 src={
                   "https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg"
                 }
-                sx={{ width: 50, height: 50 }}
+                sx={{ width: isMobile ? 30 : 50, height: isMobile ? 30 : 50 }}
               ></Avatar>
             </Stack>
           </Stack>
@@ -162,15 +165,17 @@ const NavigationBarUser = ({
       </AppBar>
       <Drawer
         sx={{
-          width: drawerWidth,
+          width: isMobile ? '100%' : drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
           },
         }}
-        variant="permanent"
+        variant={isMobile ? "temporary" : "permanent"}
         anchor="left"
+        open={isMobile ? isDrawer : true}
+        onClose={toggleDrawer}
       >
         <Toolbar sx={{ ...CENTER }}>
           <img src={logo} style={styles.imgLogo} alt="" />
@@ -211,7 +216,7 @@ const NavigationBarUser = ({
                   >
                     {item.icon}
                   </Icon>
-                  <p style={{ fontSize: 16, margin: 0, fontWeight: 600 }}>
+                  <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
                     {item.name}
                   </p>
                 </Stack>
@@ -235,7 +240,7 @@ const NavigationBarUser = ({
                       >
                         {item.icon}
                       </Icon>
-                      <p style={{ fontSize: 16, margin: 0, fontWeight: 600 }}>
+                      <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
                         {item.name}
                       </p>
                     </Stack>
@@ -253,8 +258,9 @@ const NavigationBarUser = ({
                           }
                           sx={{
                             ...styles.tab,
-                            padding: "15px",
-                            paddingLeft: "50px",
+                            padding: "10px",
+                            paddingLeft: "30px",
+                            borderLeft: name === val.name ? `3px solid ${Colors.primary}` : 'none',
                             "&:hover": {
                               backgroundColor: Colors.inherit,
                               color: Colors.primary,
@@ -268,9 +274,7 @@ const NavigationBarUser = ({
                           }}
                         >
                           <Icon sx={{ ...styles.iconHover }}>{val.icon}</Icon>
-                          <p
-                            style={{ fontSize: 14, margin: 0, fontWeight: 600 }}
-                          >
+                          <p style={{ fontSize: 13, margin: 0, fontWeight: 500 }}>
                             {val.name}
                           </p>
                         </Stack>
@@ -291,7 +295,7 @@ const styles: StyleSheet = {
   title: {
     fontWeight: "700",
     color: Colors.primary,
-    fontSize: 20,
+    fontSize: isMobile ? 16 : 20,
     margin: 0,
   },
 
@@ -307,8 +311,8 @@ const styles: StyleSheet = {
   },
 
   tab: {
-    borderTopRightRadius: 100,
-    borderBottomRightRadius: 100,
+    // borderTopRightRadius: 100,
+    // borderBottomRightRadius: 100,
     width: "95%",
     cursor: "pointer",
     transition: "all 0.3s",

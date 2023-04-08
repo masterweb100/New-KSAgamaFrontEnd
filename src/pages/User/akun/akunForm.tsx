@@ -4,18 +4,14 @@ import NavigationBarUser from '../../../components/appBarUser';
 import { CENTER } from '../../../utils/stylesheet';
 import { Colors } from '../../../utils/colors';
 import { useNavigate } from "react-router-dom";
+import { isMobile } from 'react-device-detect';
 
 const AkunForm = () => {
     const navigate = useNavigate()
     const [kategori, setKategori] = React.useState('');
-    const [status, setStatus] = React.useState('');
 
     const handleChangeKategori = (event: SelectChangeEvent) => {
         setKategori(event.target.value as string);
-    };
-
-    const handleChangeStatus = (event: SelectChangeEvent) => {
-        setStatus(event.target.value as string);
     };
 
     const GoBack = () => {
@@ -27,7 +23,7 @@ const AkunForm = () => {
             <NavigationBarUser title={'Form Tambah Data Akun'} isChild={true} name={'Akun'} idPanel={5}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
@@ -35,14 +31,14 @@ const AkunForm = () => {
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <h2 style={{ color: '#000' }}>Form Tambah Data Akun</h2>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>*Nama Akun</span>
                                 <TextField
                                     type="text"
                                     size="small"
                                     defaultValue={'Sucipto'}
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -51,7 +47,7 @@ const AkunForm = () => {
                                     size="small"
                                     value={kategori}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeKategori}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -74,7 +70,7 @@ const AkunForm = () => {
                                 type="text"
                                 defaultValue={'A09023'}
                                 size="small"
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>

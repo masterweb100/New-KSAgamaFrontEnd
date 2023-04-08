@@ -21,6 +21,7 @@ import { Colors } from "../../../../../utils/colors";
 import NavigationBarUser from '../../../../../components/appBarUser';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { piutangData } from "../../dummy";
+import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: 'tanggal', label: 'Tanggal' },
@@ -99,7 +100,7 @@ const UmurHutangDetailTable = (props: any) => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Detail Umur Hutang'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} gap={2}>
@@ -116,28 +117,29 @@ const UmurHutangDetailTable = (props: any) => {
                             </Stack>
                         </div>
                     </Stack>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
-                        <h2 style={{ margin: 0 }}>Umur Hutang</h2>
-                        <Stack direction={'row'} alignItems={'center'} gap={1}>
+                    <Stack direction={isMobile ? 'column' : 'row'} gap={3} alignItems={isMobile ? 'flex-start' : 'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
+                        <h2 style={{ margin: 0, width: '100%' }}>Umur Hutang</h2>
+                        <Stack direction={'row'} alignItems={'center'} gap={1} justifyContent={isMobile ? 'space-between' : 'flex-end'} width={'100%'}> 
                             <DatePicker
                                 value={dateFrom}
                                 onChange={(date) => setDateFrom(date)}
-                                sx={{ bgcolor: "white", borderRadius: 1, width: '15vw' }}
+                                sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                             <Icon sx={{ color: Colors.secondary, fontSize: 25 }}>east</Icon>
                             <DatePicker
                                 value={dateTo}
                                 onChange={(date) => setDateTo(date)}
-                                sx={{ bgcolor: "white", borderRadius: 1, width: '15vw' }}
+                                sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                         </Stack>
                     </Stack>
                 </div>
                 <h3 style={{ margin: '20px 0' }}>PT. Sinar Maju Jaya</h3>
                 <Stack
-                    direction={"row"}
+                    direction={isMobile ? "column" : "row"}
                     alignItems={"center"}
-                    justifyContent={"space-between"}
+                    gap={3}
+                    justifyContent={isMobile ? "center" : "space-between"}
                     sx={{
                         marginTop: 3,
                         paddingX: 4,
@@ -154,7 +156,7 @@ const UmurHutangDetailTable = (props: any) => {
                         type="search"
                         size="small"
                         placeholder="Pencarian by ID"
-                        sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                        sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">

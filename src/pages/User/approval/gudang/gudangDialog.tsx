@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Colors } from '../../../../utils/colors';
 import { CENTER } from '../../../../utils/stylesheet';
+import { isMobile } from 'react-device-detect';
 
 const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) => {
     const [status, setStatus] = React.useState('');
@@ -44,7 +45,7 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
         >
             <DialogTitle>
                 <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} marginBottom={3}>
-                    <b>Form Approval Data Mutasi Gudang</b>
+                    <b>Form Approval Mutasi Gudang</b>
                     <div onClick={handleClose} style={{ cursor: 'pointer' }}>
                         <Icon style={{ color: Colors.secondary, fontSize: 25 }}>close</Icon>
                     </div>
@@ -52,7 +53,7 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
             </DialogTitle>
             <DialogContent>
                 <Stack direction={'column'} gap={3}>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>Tanggal</span>
                             <TextField
@@ -60,7 +61,7 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                                 size="small"
                                 disabled
                                 defaultValue={'14/03/2023'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -70,11 +71,11 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                                 size="small"
                                 disabled
                                 defaultValue={'M/02303'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                     </Stack>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>Jenis Barang</span>
                             <TextField
@@ -82,7 +83,7 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                                 size="small"
                                 disabled
                                 defaultValue={'Philips'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -92,11 +93,11 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                                 size="small"
                                 disabled
                                 defaultValue={'403'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                     </Stack>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>Gudang Asal</span>
                             <TextField
@@ -104,7 +105,7 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                                 size="small"
                                 disabled
                                 defaultValue={'Gudang A4'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -114,7 +115,7 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                                 size="small"
                                 disabled
                                 defaultValue={'Gudang B2'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                     </Stack>
@@ -124,7 +125,7 @@ const GudangDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                             size="small"
                             value={status}
                             displayEmpty
-                            sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                            sx={{ bgcolor: "white", width: isMobile ? '30vw' : '25vw', color: '#000' }}
                             onChange={handleChangeStatus}
                             renderValue={(selected: any) => {
                                 if (selected.length === 0) {

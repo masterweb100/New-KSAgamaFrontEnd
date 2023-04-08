@@ -18,6 +18,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { Colors } from '../../../../utils/colors';
 import { CENTER } from '../../../../utils/stylesheet';
+import { isMobile } from 'react-device-detect';
 
 const CustomRadio = styled(Radio)(() => ({
     color: Colors.secondary,
@@ -70,7 +71,7 @@ const PenomoranDialog = ({ isOpen, setOpen, title, subtitle }: { isOpen: boolean
             </DialogTitle>
             <DialogContent>
                 <Stack direction={'column'} gap={3}>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>*Format Penomoran</span>
                             <TextField
@@ -81,12 +82,19 @@ const PenomoranDialog = ({ isOpen, setOpen, title, subtitle }: { isOpen: boolean
                                 inputProps={{ maxLength: 3 }}
                                 InputProps={{
                                     endAdornment: (
-                                        <InputAdornment position={'end'}>
-                                            <span>{'/[NUMBER]'}</span>
-                                        </InputAdornment>
+                                        <>
+                                            {
+                                                isMobile ?
+                                                    null
+                                                    :
+                                                    <InputAdornment position={'end'}>
+                                                        <span>{'/[NUMBER]'}</span>
+                                                    </InputAdornment>
+                                            }
+                                        </>
                                     )
                                 }}
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -95,7 +103,7 @@ const PenomoranDialog = ({ isOpen, setOpen, title, subtitle }: { isOpen: boolean
                                 size="small"
                                 value={status}
                                 displayEmpty
-                                sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '30vw' : '25vw', color: '#000' }}
                                 onChange={handleChangeStatus}
                                 renderValue={(selected: any) => {
                                     if (selected.length === 0) {
@@ -123,7 +131,7 @@ const PenomoranDialog = ({ isOpen, setOpen, title, subtitle }: { isOpen: boolean
                             type="text"
                             size="small"
                             defaultValue={'0023'}
-                            sx={{ bgcolor: "#fff", width: '25vw' }}
+                            sx={{ bgcolor: "#fff", width: isMobile ? '30vw' : '25vw' }}
                         />
                     </Stack>
                     <Stack direction={'column'} gap={1}>

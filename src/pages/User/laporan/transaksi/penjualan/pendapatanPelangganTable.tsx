@@ -15,6 +15,8 @@ import { Colors } from "../../../../../utils/colors";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { penjualanData } from '../../dummy';
 import PendapatanPelangganChildTable from './pendapatanPelangganChildTable';
+import { isMobile } from 'react-device-detect';
+import { CENTER } from '../../../../../utils/stylesheet';
 
 const columns = [
     { id: "pelanggan", label: "Pelanggan" },
@@ -99,7 +101,7 @@ const PendapatanPelangganTable = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pendapatan Per Pelanggan'} isChild={true} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} gap={2}>
@@ -116,28 +118,29 @@ const PendapatanPelangganTable = () => {
                             </Stack>
                         </div>
                     </Stack>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
-                        <h2 style={{ margin: 0 }}>Pendapatan Per Pelanggan</h2>
-                        <Stack direction={'row'} alignItems={'center'} gap={1}>
+                    <Stack direction={isMobile ? 'column' : 'row'} gap={3} alignItems={isMobile ? 'flex-start' : 'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
+                        <h2 style={{ margin: 0, width: '100%' }}>Pendapatan Per Pelanggan</h2>
+                        <Stack direction={'row'} alignItems={'center'} gap={1} justifyContent={isMobile ? 'space-between' : 'flex-end'} width={'100%'}>
                             <DatePicker
                                 value={dateFrom}
                                 onChange={(date) => setDateFrom(date)}
-                                sx={{ bgcolor: "white", borderRadius: 1, width: '15vw' }}
+                                sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                             <Icon sx={{ color: Colors.secondary, fontSize: 25 }}>east</Icon>
                             <DatePicker
                                 value={dateTo}
                                 onChange={(date) => setDateTo(date)}
-                                sx={{ bgcolor: "white", borderRadius: 1, width: '15vw' }}
+                                sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                         </Stack>
                     </Stack>
                 </div>
                 <div>
                     <Stack
-                        direction={"row"}
+                        direction={isMobile ? "column" : "row"}
                         alignItems={"center"}
-                        justifyContent={"space-between"}
+                        gap={3}
+                        justifyContent={isMobile ? "center" : "space-between"}
                         sx={{
                             marginTop: 3,
                             paddingX: 4,
@@ -154,7 +157,7 @@ const PendapatanPelangganTable = () => {
                             type="search"
                             size="small"
                             placeholder="Pencarian by ID"
-                            sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                            sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -179,6 +182,7 @@ const PendapatanPelangganTable = () => {
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
+                                            <StyledTableCell></StyledTableCell>
                                             {columns.map((column: any) => (
                                                 <StyledTableCell key={column.id}>
                                                     <TableSortLabel
@@ -212,9 +216,19 @@ const PendapatanPelangganTable = () => {
                                                         <TableRow
                                                             role="checkbox"
                                                             tabIndex={-1}
-                                                            sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                            sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer', backgroundColor: expanded[0] === index && expanded[1] === true ? Colors.inherit : '#fff' }}
                                                             onClick={() => handleChangePanel(index)}
                                                         >
+                                                            <StyledTableCell align="center">
+                                                                <div style={{ width: 30, height: 30, border: '2px solid #ababab', borderRadius: 10, ...CENTER }}>
+                                                                    {
+                                                                        expanded[0] === index && expanded[1] === true ?
+                                                                            <Icon sx={{ fontSize: 25, color: '#909090' }}>remove</Icon>
+                                                                            :
+                                                                            <Icon sx={{ fontSize: 25, color: '#909090' }}>add</Icon>
+                                                                    }
+                                                                </div>
+                                                            </StyledTableCell>
                                                             <StyledTableCell align="center">Agung Adi</StyledTableCell>
                                                             <StyledTableCell align="center">PT. Jaya Bahari</StyledTableCell>
                                                             <StyledTableCell align="center">30</StyledTableCell>
@@ -225,7 +239,7 @@ const PendapatanPelangganTable = () => {
                                                                 <TableRow>
                                                                     <StyledTableCell
                                                                         align="center"
-                                                                        colSpan={4}
+                                                                        colSpan={5}
                                                                         sx={{
                                                                             backgroundColor: '#f8f8f8',
                                                                             padding: '3%',
@@ -243,6 +257,7 @@ const PendapatanPelangganTable = () => {
                                         : null}
                                     <TableRow sx={{ backgroundColor: '#f8f8f8' }}>
                                         <TableCell align="left">Total</TableCell>
+                                        <TableCell align="center">{' '}</TableCell>
                                         <TableCell align="center">{' '}</TableCell>
                                         <TableCell align="center">{' '}</TableCell>
                                         <TableCell align="center"><b>5.200.000</b></TableCell>

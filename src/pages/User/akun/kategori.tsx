@@ -3,6 +3,7 @@ import React from 'react'
 import NavigationBarUser from '../../../components/appBarUser';
 import { kategoriData } from './dummy';
 import KategoriTable from './kategoriTable';
+import { isMobile } from 'react-device-detect';
 
 const KategoriAkun = () => {
     return (
@@ -10,7 +11,7 @@ const KategoriAkun = () => {
             <NavigationBarUser title={'List Kategori Akun'} isChild={true} name={'Akun'} idPanel={5}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div>

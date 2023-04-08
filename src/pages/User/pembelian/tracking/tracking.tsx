@@ -4,6 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
 import { pembelianData } from '../dummy';
 import TrackingTable from './trackingTable';
+import { isMobile } from 'react-device-detect';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -29,7 +30,7 @@ const Tracking = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Tracking'} isChild={false} name={'Tracking'} idPanel={4}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -38,6 +39,9 @@ const Tracking = () => {
                             onChange={handleChange}
                             textColor="secondary"
                             indicatorColor="secondary"
+                            variant={isMobile ? 'scrollable' : 'standard'}
+                            scrollButtons={isMobile ? true : false}
+                            allowScrollButtonsMobile={isMobile ? true : false}
                         >
                             <CustomTab value="semua" label="Semua" />
                             <CustomTab value="pending" label="Pending" />

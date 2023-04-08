@@ -3,6 +3,7 @@ import React from 'react'
 import DataHasilOpnameTable from './dataHasilOpnameTable';
 import DataOpnameTable from './dataOpnameTable';
 import { opnameTable } from '../dummy';
+import { isMobile } from 'react-device-detect';
 
 const StyledTabs = styled(Tabs)({
     "& .MuiTabs-fixed": {
@@ -12,6 +13,7 @@ const StyledTabs = styled(Tabs)({
         alignSelf: "flex-start",
     },
     "& .MuiTabs-flexContainer": {
+        width: isMobile ? '100vw' : 'auto',
         backgroundColor: "#f4f4f4",
         borderRadius: 100,
         padding: "0px 10px",
@@ -41,8 +43,6 @@ const StyledTab = styled(Tab)({
 });
 
 const DataOpnameTabs = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     const [value, setValue] = React.useState('stok');
 
     const handleChange = (event: any, newValue: any) => {
@@ -57,17 +57,9 @@ const DataOpnameTabs = () => {
             </StyledTabs>
             {
                 value === 'stok' ?
-                    <DataOpnameTable
-                        data={opnameTable}
-                        setPage={setPage}
-                        setItemsPerPage={setItemsPerPage}
-                    ></DataOpnameTable>
+                    <DataOpnameTable data={opnameTable}></DataOpnameTable>
                     :
-                    <DataHasilOpnameTable
-                        data={opnameTable}
-                        setPage={setPage}
-                        setItemsPerPage={setItemsPerPage}
-                    ></DataHasilOpnameTable>
+                    <DataHasilOpnameTable data={opnameTable}></DataHasilOpnameTable>
             }
         </div>
 

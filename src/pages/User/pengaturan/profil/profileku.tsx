@@ -3,12 +3,13 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { Box, Stack, TextField, Toolbar, Icon } from '@mui/material';
+import { isMobile } from 'react-device-detect';
 
 const SetProfil = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan'} isChild={false} name={'Profilku'} idPanel={9}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
                     <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
@@ -19,7 +20,7 @@ const SetProfil = () => {
                                 border: '1px dashed #909090',
                                 borderRadius: '5px',
                                 padding: '7% 0',
-                                width: '25vw',
+                                width: isMobile ? '100%' : '25vw',
                                 ...CENTER
                             }}>
                                 <Stack direction={'column'} alignItems={'center'} justifyContent={'center'} gap={2}>
@@ -29,14 +30,14 @@ const SetProfil = () => {
                             </div>
                             <span style={{ color: '#909090', fontSize: 13 }}>*Ukuran File Maksimal 1 MB</span>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>*Nama Lengkap</span>
                                 <TextField
                                     type="text"
                                     size="small"
                                     placeholder="Nama"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -45,7 +46,7 @@ const SetProfil = () => {
                                     type="text"
                                     size="small"
                                     placeholder="Email"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
@@ -55,7 +56,7 @@ const SetProfil = () => {
                                 type="text"
                                 size="small"
                                 placeholder="Telp"
-                                sx={{ bgcolor: "white", width: '25vw' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                         <h2 style={{ color: '#000', margin: 0 }}>Ganti Password</h2>
@@ -65,7 +66,7 @@ const SetProfil = () => {
                                 type="text"
                                 size="small"
                                 placeholder="Password Lama"
-                                sx={{ bgcolor: "white", width: '25vw' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '60vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -74,7 +75,7 @@ const SetProfil = () => {
                                 type="text"
                                 size="small"
                                 placeholder="Password Baru"
-                                sx={{ bgcolor: "white", width: '25vw' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '60vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -83,7 +84,7 @@ const SetProfil = () => {
                                 type="text"
                                 size="small"
                                 placeholder="Ulangi Password Baru"
-                                sx={{ bgcolor: "white", width: '25vw' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '60vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>

@@ -3,22 +3,21 @@ import React from 'react'
 import NavigationBarUser from '../../../components/appBarUser';
 import { Store } from '@mui/icons-material/';
 import './style.css'
+import { isMobile } from 'react-device-detect';
 
 const DashboardUser = () => {
-    const [storeActive, setStoreActive] = React.useState<any>(null)
-
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Dashboard User'} isChild={false} name={'Dashboard'} idPanel={1}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <Stack direction={'column'} gap={3}>
                     {
-                        [1, 1, 1, 1, 1, 1, 1, 1, 1].map((index) => (
-                            <div className={'box'} onMouseEnter={() => setStoreActive(index)} key={index} onMouseLeave={() => setStoreActive(null)}>
+                        [...Array(20)].map((item, index) => (
+                            <div className={'box'} key={index}>
                                 <Stack direction={'row'} gap={2}>
                                     <Store sx={{ color: 'inherit', fontSize: 30, transition: 'all 0.1s' }}></Store>
                                     <Stack direction={'column'} gap={1}>

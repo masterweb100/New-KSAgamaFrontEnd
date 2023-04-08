@@ -4,6 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
 import { pembelianData } from '../dummy';
 import PembelianTable from './pembelianTable';
+import { isMobile } from 'react-device-detect';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -29,7 +30,7 @@ const Pembelian = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pembelian'} isChild={false} name={'Pembelian'} idPanel={4}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -38,6 +39,9 @@ const Pembelian = () => {
                             onChange={handleChange}
                             textColor="secondary"
                             indicatorColor="secondary"
+                            variant={isMobile ? 'scrollable' : 'standard'}
+                            scrollButtons={isMobile ? true : false}
+                            allowScrollButtonsMobile={isMobile ? true : false}
                         >
                             <CustomTab value="semua" label="Semua" />
                             <CustomTab value="pending" label="Pending" />

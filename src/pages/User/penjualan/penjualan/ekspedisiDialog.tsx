@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack, TextField, Dialog, DialogContent, DialogTitle, Icon, InputAdornment } from '@mui/material';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
+import { isMobile } from 'react-device-detect';
 
 const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) => {
     const handleClose = () => {
@@ -13,6 +14,7 @@ const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
             open={isOpen}
             onClose={handleClose}
             scroll={'body'}
+            fullScreen={isMobile}
             PaperProps={{ style: { maxWidth: '100vw' } }}
         >
             <DialogTitle>
@@ -25,7 +27,7 @@ const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
             </DialogTitle>
             <DialogContent>
                 <Stack direction={'column'} gap={3} marginTop={5}>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>*Tipe Kontak</span>
                             <TextField
@@ -33,7 +35,7 @@ const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                                 size="small"
                                 disabled
                                 defaultValue={'Ekspedisi'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -43,18 +45,18 @@ const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                                 size="small"
                                 disabled
                                 defaultValue={'432IJKJL'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                     </Stack>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>Nama Ekspedisi</span>
                             <TextField
                                 type="text"
                                 size="small"
                                 placeholder='Nama Ekspedisi'
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -63,18 +65,18 @@ const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                                 type="text"
                                 size="small"
                                 placeholder='No Telp'
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                     </Stack>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>Alamat Ekspedisi</span>
                             <TextField
                                 type="text"
                                 size="small"
                                 placeholder={'Alamat Ekspedisi'}
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -90,7 +92,7 @@ const EkspedisiDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                                         </InputAdornment>
                                     )
                                 }}
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                     </Stack>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack, TextField, Select, MenuItem, SelectChangeEvent, Dialog, DialogContent, DialogTitle, Icon } from '@mui/material';
 import { CENTER, StyleSheet } from '../utils/stylesheet';
 import { Colors } from '../utils/colors';
+import { isMobile } from 'react-device-detect';
 
 const PelunasanDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) => {
     const [metode, setMetode] = React.useState('');
@@ -25,7 +26,7 @@ const PelunasanDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                 <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                     <Stack direction={'row'} alignItems={'center'} gap={2}>
                         <Icon style={{ color: Colors.secondary, fontSize: 25 }}>payments_outlined</Icon>
-                        <span>Pelunasan Pembayaran</span>
+                        <span style={{fontSize: isMobile ? 17 : 20 }}>Pelunasan Pembayaran</span>
                     </Stack>
                     <div onClick={handleClose} style={{ cursor: 'pointer' }}>
                         <Icon style={{ color: Colors.secondary, fontSize: 25 }}>close</Icon>
@@ -48,8 +49,8 @@ const PelunasanDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                         <TextField
                             type="text"
                             size="small"
-                            placeholder='Masukkan Jumlah Pebayaran'
-                            sx={{ bgcolor: "#fff", width: '15vw' }}
+                            placeholder='Masukkan Jumlah Pembayaran'
+                            sx={{ bgcolor: "#fff", width: isMobile ? '25vw' : '15vw' }}
                         />
                     </Stack>
                     <Stack direction={'row'} gap={5} style={{ ...styles.cell, border: 'none' }}>
@@ -58,7 +59,7 @@ const PelunasanDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                             size="small"
                             value={metode}
                             displayEmpty
-                            sx={{ bgcolor: "white", width: '15vw', color: '#000' }}
+                            sx={{ bgcolor: "white", width: isMobile ? '25vw' : '15vw', color: '#000' }}
                             onChange={handleChangeMetode}
                             renderValue={(selected: any) => {
                                 if (selected.length === 0) {

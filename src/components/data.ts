@@ -63,7 +63,7 @@ export const ListUser = [
       {
         id: 2.2,
         name: "List Produk",
-        icon: "sync_alt",
+        icon: "widgets",
         navigate: "/gudang/list-produk",
       },
     ],
@@ -161,7 +161,7 @@ export const ListUser = [
       {
         id: 7.3,
         name: "Ekspedisi",
-        icon: "LocalShipping",
+        icon: "local_shipping",
         navigate: "/kontak/ekspedisi",
       },
     ],
@@ -176,19 +176,19 @@ export const ListUser = [
       {
         id: 8.1,
         name: "App. Gudang",
-        icon: "local_convenience_store",
+        icon: "warehouse",
         navigate: "/approval/gudang",
       },
       {
         id: 8.1,
         name: "App. Penjualan",
-        icon: "local_convenience_store",
+        icon: "price_check",
         navigate: "/approval/penjualan",
       },
       {
         id: 8.1,
         name: "App. Pembelian",
-        icon: "local_convenience_store",
+        icon: "add_shopping_cart",
         navigate: "/approval/pembelian",
       },
     ],

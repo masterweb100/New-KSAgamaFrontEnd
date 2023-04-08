@@ -1,12 +1,11 @@
-import { Box, Stack, Toolbar, Icon, TextField, InputAdornment, Tabs, Tab, styled } from '@mui/material';
+import { Box, Toolbar, Tabs, Tab, styled } from '@mui/material';
 import React from 'react'
 import NavigationBarUser from '../../../../components/appBarUser';
-import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import DataProdukTable from './dataProdukTable';
-import DataOpnameTable from './dataOpnameTable';
 import DataOpnameTabs from './dataOpnameTabs';
 import { produkTable } from '../dummy';
+import { isMobile } from 'react-device-detect';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -22,8 +21,6 @@ const CustomTab = styled(Tab)({
 })
 
 const DataProduk = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     const [value, setValue] = React.useState('barang');
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -35,7 +32,7 @@ const DataProduk = () => {
             <NavigationBarUser title={'Detail Data Produk'} isChild={false} name={'Data Produk'} idPanel={2}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', py: 3, px: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div>
@@ -53,11 +50,7 @@ const DataProduk = () => {
                     <div style={{ marginTop: 20 }}>
                         {
                             value === 'barang' ?
-                                <DataProdukTable
-                                    data={produkTable}
-                                    setPage={setPage}
-                                    setItemsPerPage={setItemsPerPage}
-                                />
+                                <DataProdukTable data={produkTable} />
                                 :
                                 <DataOpnameTabs></DataOpnameTabs>
                         }

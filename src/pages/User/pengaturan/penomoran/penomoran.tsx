@@ -4,6 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import PenomoranDialog from './penomoranDialog';
 import './styles.css'
+import { isMobile } from 'react-device-detect';
 
 const dummyData = [
     {
@@ -47,10 +48,11 @@ const SetPenomoran = () => {
         })
         setDetail(true)
     }, [])
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan'} isChild={false} name={'Pengaturan Penomoran'} idPanel={9}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <Stack direction={'column'} gap={3}>
                     {
@@ -60,7 +62,7 @@ const SetPenomoran = () => {
                                 <Stack direction={'row'} alignItems={'center'} gap={2} flexWrap={'wrap'}>
                                     {
                                         item.data.map((value, index) => (
-                                            <div onClick={() => DetailDialog(item.title, value.title)} key={index} className={'selection'} style={{ ...CENTER }}>
+                                            <div onClick={() => DetailDialog(item.title, value.title)} key={index} className={'selection'} style={{ ...CENTER, width: isMobile ? '40vw' : '12vw' }}>
                                                 <Stack direction={'column'} alignItems={'center'} justifyContent={'center'}>
                                                     <span style={{ fontSize: 13 }}>{value.title}</span>
                                                     <span>{value.id}</span>

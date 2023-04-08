@@ -3,6 +3,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
+import { isMobile } from 'react-device-detect';
 import './styles.css'
 
 const user = ['Admin', 'Staff Keuangan', 'Staff Gudang', 'Staff Penjualan', 'Staff Pembelian']
@@ -13,12 +14,13 @@ const SetPeran = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan'} isChild={false} name={'Peran'} idPanel={9}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <Stack
-                    direction={"row"}
+                    direction={isMobile ? "column" : "row"}
                     alignItems={"center"}
-                    justifyContent={"space-between"}
+                    gap={3}
+                    justifyContent={isMobile ? "center" : "space-between"}
                     sx={{
                         marginTop: 3,
                         paddingX: 4,
@@ -35,7 +37,7 @@ const SetPeran = () => {
                         type="search"
                         size="small"
                         placeholder="Pencarian by Name"
-                        sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                        sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">

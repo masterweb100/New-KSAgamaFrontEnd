@@ -4,7 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
-
+import { isMobile } from 'react-device-detect';
 const ReturnPenjualanForm = () => {
     const navigate = useNavigate()
     const [invoice, setInvoice] = React.useState('');
@@ -27,7 +27,7 @@ const ReturnPenjualanForm = () => {
             <NavigationBarUser title={'Form Return Penjualan'} isChild={true} name={'Return Penjualan'} idPanel={3}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
@@ -35,14 +35,14 @@ const ReturnPenjualanForm = () => {
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <h2 style={{ color: '#000' }}>Form Tambah Data Return</h2>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>ID Invoice</span>
                                 <Select
                                     size="small"
                                     value={invoice}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeInvoice}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -65,11 +65,11 @@ const ReturnPenjualanForm = () => {
                                     size="small"
                                     disabled
                                     defaultValue={'Sucipto'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Jenis Barang</span>
                                 <TextField
@@ -77,7 +77,7 @@ const ReturnPenjualanForm = () => {
                                     disabled
                                     defaultValue={'A09023'}
                                     size="small"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -87,11 +87,11 @@ const ReturnPenjualanForm = () => {
                                     size="small"
                                     disabled
                                     defaultValue={'20'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Jenis Penjualan</span>
                                 <TextField
@@ -99,7 +99,7 @@ const ReturnPenjualanForm = () => {
                                     disabled
                                     defaultValue={'A09023'}
                                     size="small"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -108,7 +108,7 @@ const ReturnPenjualanForm = () => {
                                     type="text"
                                     size="small"
                                     defaultValue={'20'}
-                                    sx={{ bgcolor: "#ffff", width: '25vw' }}
+                                    sx={{ bgcolor: "#ffff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
@@ -118,7 +118,7 @@ const ReturnPenjualanForm = () => {
                                 size="small"
                                 value={status}
                                 displayEmpty
-                                sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                 onChange={handleChangeStatus}
                                 renderValue={(selected: any) => {
                                     if (selected.length === 0) {

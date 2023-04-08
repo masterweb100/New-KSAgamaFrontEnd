@@ -7,6 +7,7 @@ import { Add, ViewList, Search, DeleteOutline } from '@mui/icons-material';
 import StoreTable from './storeTable';
 import { useNavigate } from "react-router-dom";
 import DeleteModal from '../../../components/deleteModal';
+import { isMobile } from 'react-device-detect';
 
 const dummyTable = {
     content: [
@@ -79,26 +80,27 @@ const DataStore = () => {
             <NavigationBar title={'Data Toko'} indexNav={2} isChild={false}></NavigationBar>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div>
                     <Stack direction={'row'} justifyContent={'space-between'}>
-                        <div onClick={FormStore} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
+                        <div onClick={FormStore} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '12px 15px' : '10px 30px', alignSelf: 'flex-start' }}>
                             <Stack alignItems={'center'} direction={'row'} gap={1}>
                                 <Add style={{ color: '#fff', fontSize: 17 }}></Add>
-                                <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Toko</p>
+                                <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: '#ffff' }}>Tambah Data Toko</p>
                             </Stack>
                         </div>
                         <div onClick={handleDelete} style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                            <DeleteOutline style={{ color: '#fff', fontSize: 25 }}></DeleteOutline>
+                            <DeleteOutline style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}></DeleteOutline>
                         </div>
                     </Stack>
                     <div style={{ marginTop: 10 }}>
                         <Stack
-                            direction={"row"}
+                            direction={isMobile ? "column" : "row"}
                             alignItems={"center"}
-                            justifyContent={"space-between"}
+                            gap={3}
+                            justifyContent={isMobile ? "center" : "space-between"}
                             sx={{
                                 paddingX: 4,
                                 paddingY: 2,
@@ -114,7 +116,7 @@ const DataStore = () => {
                                 type="search"
                                 size="small"
                                 placeholder="Pencarian by ID"
-                                sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                                sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">

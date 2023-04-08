@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { TablePagination, Box, TableSortLabel, TableHead, Table, TableBody, TableContainer, IconButton, Stack, TextField, Icon, InputAdornment } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
+import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "data", label: "Tanggal" },
@@ -57,8 +57,6 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const DataHasilOpnameTable = (props: any) => {
-    const navigate = useNavigate();
-    const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
@@ -83,14 +81,13 @@ const DataHasilOpnameTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
-    const isSelected = (name: any) => selected.indexOf(name) !== -1;
-
     return (
         <div>
             <Stack
-                direction={"row"}
+                direction={isMobile ? "column" : "row"}
                 alignItems={"center"}
-                justifyContent={"space-between"}
+                gap={3}
+                justifyContent={isMobile ? "center" : "space-between"}
                 sx={{
                     marginTop: 3,
                     paddingX: 4,
@@ -107,7 +104,7 @@ const DataHasilOpnameTable = (props: any) => {
                     type="search"
                     size="small"
                     placeholder="Pencarian by ID"
-                    sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -162,8 +159,6 @@ const DataHasilOpnameTable = (props: any) => {
                                         getComparator(orderdirection, valuetoorderby))
                                         .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                         .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(item.name);
-                                            const labelId = `enhanced-table-checkbox-${index}`;
 
                                             return (
                                                 <TableRow

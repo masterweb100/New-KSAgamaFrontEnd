@@ -4,6 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
+import { isMobile } from 'react-device-detect';
 
 const MutasiForm = () => {
     const navigate = useNavigate()
@@ -27,7 +28,7 @@ const MutasiForm = () => {
             <NavigationBarUser title={'Form Tambah Mutasi'} isChild={true} name={'Mutasi & Return'} idPanel={2}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
@@ -35,7 +36,7 @@ const MutasiForm = () => {
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <h2 style={{ color: '#000' }}>Form Tambah Mutasi</h2>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Tanggal</span>
                                 <TextField
@@ -43,7 +44,7 @@ const MutasiForm = () => {
                                     disabled
                                     defaultValue={'09/04/2023'}
                                     size="small"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -53,18 +54,18 @@ const MutasiForm = () => {
                                     disabled
                                     size="small"
                                     defaultValue={'8OI843SDKJ'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Jenis Barang</span>
                                 <Select
                                     size="small"
                                     value={jenis}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeJenis}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -86,11 +87,11 @@ const MutasiForm = () => {
                                     type="text"
                                     size="small"
                                     defaultValue={'20'}
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Gudang Asal</span>
                                 <TextField
@@ -99,7 +100,7 @@ const MutasiForm = () => {
                                     disabled
                                     defaultValue={'Gudang A'}
                                     placeholder="Barang"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -108,7 +109,7 @@ const MutasiForm = () => {
                                     size="small"
                                     value={tujuan}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeTujuan}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {

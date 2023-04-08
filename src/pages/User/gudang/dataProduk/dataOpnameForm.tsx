@@ -4,6 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
+import { isMobile } from 'react-device-detect';
 
 const DataProdukForm = () => {
     const [status, setStatus] = React.useState('');
@@ -22,7 +23,7 @@ const DataProdukForm = () => {
             <NavigationBarUser title={'Detail Data Produk'} name={'Data Produk'} idPanel={2} isChild={true}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
@@ -30,7 +31,7 @@ const DataProdukForm = () => {
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <h2 style={{ color: '#000' }}>Form Stok Opname</h2>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Tanggal</span>
                                 <TextField
@@ -38,7 +39,7 @@ const DataProdukForm = () => {
                                     disabled
                                     defaultValue={'09/04/2023'}
                                     size="small"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -48,11 +49,11 @@ const DataProdukForm = () => {
                                     disabled
                                     size="small"
                                     defaultValue={'8OI843SDKJ'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Nama Brand</span>
                                 <TextField
@@ -60,7 +61,7 @@ const DataProdukForm = () => {
                                     disabled
                                     defaultValue={'Sanex'}
                                     size="small"
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -70,11 +71,11 @@ const DataProdukForm = () => {
                                     size="small"
                                     disabled
                                     defaultValue={'Kipas Angin Mantap'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Barang Bagus</span>
                                 <TextField
@@ -82,7 +83,7 @@ const DataProdukForm = () => {
                                     size="small"
                                     defaultValue={'90'}
                                     placeholder="Barang"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -92,11 +93,11 @@ const DataProdukForm = () => {
                                     size="small"
                                     defaultValue={'200'}
                                     placeholder="Barang"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Total Barang</span>
                                 <TextField
@@ -104,7 +105,7 @@ const DataProdukForm = () => {
                                     size="small"
                                     defaultValue={'400'}
                                     placeholder="Total"
-                                    sx={{ bgcolor: "white", width: '25vw' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -113,7 +114,7 @@ const DataProdukForm = () => {
                                     size="small"
                                     value={status}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeStatus}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {

@@ -5,6 +5,7 @@ import { Colors } from '../../../utils/colors';
 import DetailAkunTable from './akunDetailTable';
 import { detailData } from './dummy';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { isMobile } from 'react-device-detect';
 
 const DetailAkun = () => {
     const [dateFrom, setDateFrom] = React.useState<any>(null);
@@ -15,7 +16,7 @@ const DetailAkun = () => {
             <NavigationBarUser title={'Detail Akun'} isChild={true} name={'Akun'} idPanel={5}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div>
@@ -33,22 +34,22 @@ const DetailAkun = () => {
                             </Stack>
                         </div>
                     </Stack>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} sx={{ marginTop: 3 }}>
-                        <div>
+                    <Stack direction={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'flex-start' : 'center'} justifyContent={'space-between'} gap={4} sx={{ marginTop: 3, width: '100%' }}>
+                        <div style={{width: '100%'}}>
                             <h1 style={{ margin: 0 }}>Transaksi Kas</h1>
                             <h2 style={{ margin: 0 }}>1 - 10000</h2>
                         </div>
-                        <Stack direction={'row'} alignItems={'center'} gap={1}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={isMobile ? 'space-between' : 'flex-end'} width={'100%'} gap={1}>
                             <DatePicker
                                 value={dateFrom}
                                 onChange={(date) => setDateFrom(date)}
-                                sx={{ bgcolor: "white", borderRadius: 1, width: '15vw' }}
+                                sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '35vw' : '15vw' }}
                             />
                             <Icon sx={{ color: Colors.secondary, fontSize: 25 }}>east</Icon>
                             <DatePicker
                                 value={dateTo}
                                 onChange={(date) => setDateTo(date)}
-                                sx={{ bgcolor: "white", borderRadius: 1, width: '15vw' }}
+                                sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '35vw' : '15vw' }}
                             />
                         </Stack>
                     </Stack>

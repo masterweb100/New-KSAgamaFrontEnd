@@ -6,6 +6,7 @@ import { Colors } from '../../../utils/colors';
 import './styles.css'
 import { useNavigate } from "react-router-dom";
 import { BorderColor } from '@mui/icons-material';
+import { isMobile } from 'react-device-detect';
 
 const UserForm = () => {
     const [toko, setToko] = React.useState('');
@@ -33,18 +34,23 @@ const UserForm = () => {
             <NavigationBar title={'Form Tambah Data Pengguna'} indexNav={1} isChild={true}></NavigationBar>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
                     <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                            <h2 style={{ color: '#000' }}>Form Tambah Data Pengguna</h2>
+                            {
+                                isMobile ?
+                                    <h3 style={{ color: '#000' }}>Form Tambah Data Pengguna</h3>
+                                    :
+                                    <h2 style={{ color: '#000' }}>Form Tambah Data Pengguna</h2>
+                            }
                             <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
                                 <BorderColor style={{ color: '#fff', fontSize: 20 }}></BorderColor>
                             </div>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>ID Pengguna</span>
                                 <TextField
@@ -53,7 +59,7 @@ const UserForm = () => {
                                     defaultValue={'8OI843SDKJ'}
                                     size="small"
                                     placeholder="ID"
-                                    sx={{ bgcolor: "#f4f4f4", width: 300 }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -62,18 +68,18 @@ const UserForm = () => {
                                     type="text"
                                     size="small"
                                     placeholder="Nama"
-                                    sx={{ bgcolor: "white", width: 300 }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Nama Toko</span>
                                 <Select
                                     size="small"
                                     value={toko}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: 300, color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeToko}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -95,7 +101,7 @@ const UserForm = () => {
                                     size="small"
                                     value={role}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: 300, color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeRole}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -118,7 +124,7 @@ const UserForm = () => {
                                 size="small"
                                 value={status}
                                 displayEmpty
-                                sx={{ bgcolor: "white", width: 300, color: '#000' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                 onChange={handleChangeStatus}
                                 renderValue={(selected: any) => {
                                     if (selected.length === 0) {

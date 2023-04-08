@@ -4,6 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
+import { isMobile } from 'react-device-detect';
 
 const PembelianDetailForm = () => {
     const navigate = useNavigate()
@@ -27,7 +28,7 @@ const PembelianDetailForm = () => {
             <NavigationBarUser title={'Form Tambah Produk SKU/0032'} isChild={true} name={'Pembelian'} idPanel={4}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
@@ -35,7 +36,7 @@ const PembelianDetailForm = () => {
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'}>
                             <h2 style={{ color: '#000' }}>Form Tambah Data Pembelian Barang</h2>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>ID Barang</span>
                                 <TextField
@@ -43,7 +44,7 @@ const PembelianDetailForm = () => {
                                     size="small"
                                     disabled
                                     defaultValue={'SKU/0032'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -53,18 +54,18 @@ const PembelianDetailForm = () => {
                                     size="small"
                                     disabled
                                     defaultValue={'Sanyo'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Jenis Barang</span>
                                 <Select
                                     size="small"
                                     value={jenis}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeJenis}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -86,7 +87,7 @@ const PembelianDetailForm = () => {
                                     size="small"
                                     value={satuan}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeSatuan}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -103,7 +104,7 @@ const PembelianDetailForm = () => {
                                 </Select>
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                                     <span>Qty / Jumlah</span>
@@ -115,7 +116,7 @@ const PembelianDetailForm = () => {
                                     type="text"
                                     size="small"
                                     placeholder='Jumlah Produk'
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -124,7 +125,7 @@ const PembelianDetailForm = () => {
                                     type="text"
                                     size="small"
                                     placeholder='Harga Produk'
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
@@ -134,10 +135,10 @@ const PembelianDetailForm = () => {
                                 type="text"
                                 size="small"
                                 placeholder='Harga Total'
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={2}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={isMobile ? 'space-around' : 'flex-start'} gap={2}>
                             <div style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.success, padding: '10px 30px', cursor: 'pointer' }}>
                                 <span style={{ fontSize: 13, color: '#fff' }}>Tambah Barang</span>
                             </div>

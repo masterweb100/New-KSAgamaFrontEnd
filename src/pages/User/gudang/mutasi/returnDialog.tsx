@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { Colors } from '../../../../utils/colors';
 import { CENTER } from '../../../../utils/stylesheet';
+import { isMobile } from 'react-device-detect';
 
 const ReturnDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) => {
     const [status, setStatus] = React.useState('');
@@ -57,7 +58,7 @@ const ReturnDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) =>
                             size="small"
                             value={status}
                             displayEmpty
-                            sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                            sx={{ bgcolor: "white", width: isMobile ? '70vw' : '25vw', color: '#000' }}
                             onChange={handleChangeStatus}
                             renderValue={(selected: any) => {
                                 if (selected.length === 0) {

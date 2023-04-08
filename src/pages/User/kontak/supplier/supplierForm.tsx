@@ -4,6 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { useNavigate } from "react-router-dom";
+import { isMobile } from 'react-device-detect';
 
 const SupplierForm = () => {
     const navigate = useNavigate()
@@ -32,7 +33,7 @@ const SupplierForm = () => {
             <NavigationBarUser title={'Form Tambah Data Supplier'} isChild={true} name={'Supplier'} idPanel={7}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>
@@ -40,7 +41,7 @@ const SupplierForm = () => {
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <h2 style={{ color: '#000' }}>Form Tambah Data Supplier</h2>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>*Tipe Kontak</span>
                                 <TextField
@@ -48,7 +49,7 @@ const SupplierForm = () => {
                                     size="small"
                                     disabled
                                     defaultValue={'Supplier'}
-                                    sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -57,18 +58,18 @@ const SupplierForm = () => {
                                     type="text"
                                     size="small"
                                     defaultValue={'Sucipto'}
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>*Nama Perusahaan</span>
                                 <TextField
                                     type="text"
                                     size="small"
                                     placeholder='Nama Perusahaan'
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -77,7 +78,7 @@ const SupplierForm = () => {
                                     type="text"
                                     size="small"
                                     placeholder='Alamat'
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
@@ -87,17 +88,17 @@ const SupplierForm = () => {
                                 type="text"
                                 size="small"
                                 defaultValue={'Indonesia'}
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Provinsi</span>
                                 <Select
                                     size="small"
                                     value={provinsi}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeProvinsi}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -119,7 +120,7 @@ const SupplierForm = () => {
                                     size="small"
                                     value={kota}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeKota}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -136,14 +137,14 @@ const SupplierForm = () => {
                                 </Select>
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Email</span>
                                 <TextField
                                     type="text"
                                     size="small"
                                     placeholder={'Alamat Email'}
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                             <Stack direction={'column'} gap={1}>
@@ -152,18 +153,18 @@ const SupplierForm = () => {
                                     type="text"
                                     size="small"
                                     defaultValue={'0893409329'}
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Tipe Kartu Identitas {'(Opsional)'}</span>
                                 <Select
                                     size="small"
                                     value={idCard}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     onChange={handleChangeIdCard}
                                     renderValue={(selected: any) => {
                                         if (selected.length === 0) {
@@ -185,7 +186,7 @@ const SupplierForm = () => {
                                     type="text"
                                     size="small"
                                     defaultValue={'Sucipto'}
-                                    sx={{ bgcolor: "#fff", width: '25vw' }}
+                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
@@ -195,7 +196,7 @@ const SupplierForm = () => {
                                 type="text"
                                 placeholder='NPWP'
                                 size="small"
-                                sx={{ bgcolor: "#fff", width: '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>

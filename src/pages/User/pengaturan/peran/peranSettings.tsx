@@ -3,6 +3,7 @@ import React from 'react'
 import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
 import { GudangList, PenjualanList, PembelianList, LaporanList, KontakList, PengaturanList } from '../dummy';
+import { isMobile } from 'react-device-detect';
 
 const PeranSettings = () => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
@@ -63,12 +64,13 @@ const PeranSettings = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan Peran'} isChild={true} name={'Peran'} idPanel={9}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <Stack
-                    direction={"row"}
+                    direction={isMobile ? "column" : "row"}
                     alignItems={"center"}
-                    justifyContent={"space-between"}
+                    gap={3}
+                    justifyContent={isMobile ? "center" : "space-between"}
                     sx={{
                         marginTop: 3,
                         paddingX: 4,

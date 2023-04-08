@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
+import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "id", label: "ID Jenis Produk" },
@@ -65,9 +66,6 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const JenisTable = (props: any) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const [nomor, setNomor] = useState(null);
     const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
@@ -109,25 +107,26 @@ const JenisTable = (props: any) => {
     return (
         <div>
             <Stack direction={'row'} justifyContent={'space-between'}>
-                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
+                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '12px 15px' : '10px 30px', alignSelf: 'flex-start' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
-                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Jenis Produk</p>
+                        <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: '#fff' }}>Tambah Data Jenis Produk</p>
                     </Stack>
                 </div>
-                <Stack direction={'row'} alignItems={'center'} gap={2}>
+                <Stack direction={'row'} alignItems={'center'} gap={isMobile ? 1 : 2}>
                     <div style={{ ...CENTER, backgroundColor: Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <Icon style={{ color: '#fff', fontSize: 25 }}>border_color</Icon>
+                        <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>border_color</Icon>
                     </div>
                     <div style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <Icon style={{ color: '#fff', fontSize: 25 }}>delete_outline</Icon>
+                        <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>delete_outline</Icon>
                     </div>
                 </Stack>
             </Stack>
             <Stack
-                direction={"row"}
+                direction={isMobile ? "column" : "row"}
                 alignItems={"center"}
-                justifyContent={"space-between"}
+                gap={3}
+                justifyContent={isMobile ? "center" : "space-between"}
                 sx={{
                     marginTop: 3,
                     paddingX: 4,
@@ -144,7 +143,7 @@ const JenisTable = (props: any) => {
                     type="search"
                     size="small"
                     placeholder="Pencarian by ID"
-                    sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

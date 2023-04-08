@@ -3,6 +3,7 @@ import React from "react";
 import NavigationBar from "../../../components/appBar";
 import { Store } from "@mui/icons-material/";
 import "./style.css";
+import { isMobile } from 'react-device-detect';
 
 const Dashboard = () => {
   const [storeActive, setStoreActive] = React.useState<any>(null);
@@ -14,10 +15,10 @@ const Dashboard = () => {
         indexNav={0}
         isChild={false}
       ></NavigationBar>
-      <Box component="main" sx={{ bgcolor: "#f4f5ff", py: 5, px: 10 }}>
+      <Box component="main" sx={{ bgcolor: "#f4f5ff", p: isMobile ? 3 : 5 }}>
         <Toolbar />
         <Stack direction={"column"} gap={3}>
-          {[1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => (
+          {[...Array(20)].map((item, index) => (
             <div
               className={"box"}
               onMouseEnter={() => setStoreActive(index)}

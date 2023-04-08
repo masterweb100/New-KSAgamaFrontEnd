@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../utils/colors";
 import { CENTER } from "../../../utils/stylesheet";
+import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "kode", label: "Kode Akun" },
@@ -110,21 +111,22 @@ const AkunTable = (props: any) => {
 
     return (
         <div>
-            <Stack direction={'row'} justifyContent={'flex-start'} alignItems={'center'} gap={2}>
-                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
+            <Stack direction={isMobile ? 'column' : 'row'} justifyContent={'flex-start'} alignItems={'center'} gap={2}>
+                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start', width: isMobile ? '100%' : 'auto' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
                         <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Akun</p>
                     </Stack>
                 </div>
-                <div onClick={KategoriPage} style={{ ...CENTER, border: `1px solid ${Colors.primary}`, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
+                <div onClick={KategoriPage} style={{ ...CENTER, border: `1px solid ${Colors.primary}`, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start', width: isMobile ? '100%' : 'auto' }}>
                     <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: Colors.primary }}>List Kategori Akun</p>
                 </div>
             </Stack>
             <Stack
-                direction={"row"}
+                direction={isMobile ? "column" : "row"}
                 alignItems={"center"}
-                justifyContent={"space-between"}
+                gap={3}
+                justifyContent={isMobile ? "center" : "space-between"}
                 sx={{
                     marginTop: 3,
                     paddingX: 4,
@@ -141,7 +143,7 @@ const AkunTable = (props: any) => {
                     type="search"
                     size="small"
                     placeholder="Pencarian by ID"
-                    sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

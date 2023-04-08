@@ -3,6 +3,7 @@ import React from 'react'
 import NavigationBarUser from '../../../../components/appBarUser';
 import { laporanData } from '../dummy';
 import { useNavigate } from 'react-router-dom';
+import { isMobile } from 'react-device-detect';
 
 const LapTransaksi = () => {
     const navigate = useNavigate()
@@ -11,7 +12,7 @@ const LapTransaksi = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Penjualan & Pembelian'} isChild={false} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     {

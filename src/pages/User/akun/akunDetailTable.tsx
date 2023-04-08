@@ -15,11 +15,10 @@ import {
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../utils/colors";
-import { CENTER } from "../../../utils/stylesheet";
+import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -68,7 +67,6 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const DetailAkunTable = (props: any) => {
-    const navigate = useNavigate();
     const [selected, setSelected] = useState<readonly string[]>([])
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
@@ -106,15 +104,14 @@ const DetailAkunTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-    const FormPage = () => navigate('/akun/form-akun')
-    const KategoriPage = () => navigate('/akun/kategori-akun')
 
     return (
         <div>
             <Stack
-                direction={"row"}
+                direction={isMobile ? "column" : "row"}
                 alignItems={"center"}
-                justifyContent={"space-between"}
+                gap={3}
+                justifyContent={isMobile ? "center" : "space-between"}
                 sx={{
                     marginTop: 3,
                     paddingX: 4,
@@ -131,7 +128,7 @@ const DetailAkunTable = (props: any) => {
                     type="search"
                     size="small"
                     placeholder="Pencarian by ID"
-                    sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

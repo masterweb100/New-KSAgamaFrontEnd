@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Colors } from '../../../../utils/colors';
 import { CENTER } from '../../../../utils/stylesheet';
+import { isMobile } from 'react-device-detect';
 
 const PembelianDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any }) => {
     const [status, setStatus] = React.useState('');
@@ -52,7 +53,7 @@ const PembelianDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
             </DialogTitle>
             <DialogContent>
                 <Stack direction={'column'} gap={3}>
-                    <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={3}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={isMobile ? 'space-between' : 'flex-start'} gap={isMobile ? 2 : 3}>
                         <Stack direction={'column'} gap={1}>
                             <span>ID SKU</span>
                             <TextField
@@ -60,7 +61,7 @@ const PembelianDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                                 size="small"
                                 disabled
                                 defaultValue={'PBL/0129'}
-                                sx={{ bgcolor: "#f4f4f4", width: '25vw' }}
+                                sx={{ bgcolor: "#f4f4f4", width: isMobile ? '30vw' : '25vw' }}
                             />
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -69,7 +70,7 @@ const PembelianDialog = ({ isOpen, setOpen }: { isOpen: boolean, setOpen: any })
                                 size="small"
                                 value={status}
                                 displayEmpty
-                                sx={{ bgcolor: "white", width: '25vw', color: '#000' }}
+                                sx={{ bgcolor: "white", width: isMobile ? '30vw' : '25vw', color: '#000' }}
                                 onChange={handleChangeStatus}
                                 renderValue={(selected: any) => {
                                     if (selected.length === 0) {

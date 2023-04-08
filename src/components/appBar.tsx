@@ -6,56 +6,76 @@ import './style.css'
 import { Colors } from '../utils/colors';
 import { StyleSheet } from '../utils/stylesheet';
 import { ListAdmin } from './data';
+import { isMobile } from 'react-device-detect';
 
 const drawerWidth = 240;
 const logo = require('../assets/images/ksa-logo-purple.png')
 
 const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: number, isChild: boolean }) => {
     const navigate = useNavigate()
+    const [isDrawer, setDrawer] = React.useState(false)
 
     const Routing = (param: number) => {
         navigate(param)
     }
+
+    const toggleDrawer = () => setDrawer(!isDrawer)
 
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar
                 position="fixed"
-                sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`, backgroundColor: '#fff' }}
+                sx={{
+                    width: isMobile ? '100%' : `calc(100% - ${drawerWidth}px)`,
+                    ml: isMobile ? 0 : `${drawerWidth}px`,
+                    backgroundColor: '#fff'
+                }}
             >
                 <Toolbar>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} width={'100%'}>
-                        {
-                            isChild ?
-                                <Stack
-                                    onClick={() => navigate(-1)}
-                                    sx={{
-                                        "&:hover": {
-                                            backgroundColor: Colors.inherit,
+                        <Stack direction={'row'} alignItems={'center'} gap={2}>
+                            {
+                                isMobile ?
+                                    <Icon sx={{ color: Colors.secondary, fontSize: 25, cursor: 'pointer' }} onClick={toggleDrawer}>menu</Icon>
+                                    :
+                                    null
+                            }
+                            {
+                                isChild ?
+                                    <Stack
+                                        onClick={() => navigate(-1)}
+                                        sx={{
+                                            "&:hover": {
+                                                backgroundColor: Colors.inherit,
+                                                borderRadius: 2,
+                                                transition: 'all 0.3s',
+                                                cursor: 'pointer',
+                                            },
                                             borderRadius: 2,
+                                            padding: '10px',
                                             transition: 'all 0.3s',
-                                            cursor: 'pointer',
-                                        },
-                                        borderRadius: 2,
-                                        padding: '10px',
-                                        transition: 'all 0.3s',
-                                    }}
-                                    alignItems={'center'}
-                                    gap={1}
-                                    direction={'row'}
-                                >
-                                    <ChevronLeftRounded style={{ color: Colors.secondary, fontSize: 30 }}></ChevronLeftRounded>
+                                        }}
+                                        alignItems={'center'}
+                                        gap={1}
+                                        direction={'row'}
+                                    >
+                                        <ChevronLeftRounded style={{ color: Colors.secondary, fontSize: 30 }}></ChevronLeftRounded>
+                                        <p style={styles.title}>{title}</p>
+                                    </Stack>
+                                    :
                                     <p style={styles.title}>{title}</p>
-                                </Stack>
-                                :
-                                <p style={styles.title}>{title}</p>
-                        }
-                        <Stack direction={'row'} alignItems={'center'} gap={5}>
+                            }
+                        </Stack>
+                        <Stack direction={'row'} alignItems={'center'} gap={3}>
                             <Badge badgeContent={100} color="secondary">
-                                <Notifications sx={{ color: Colors.secondary, fontSize: 30 }} />
+                                <Notifications sx={{ color: Colors.secondary, fontSize: isMobile ? 25 : 30 }} />
                             </Badge>
-                            <Avatar alt={'avatar'} src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'} sx={{ width: 50, height: 50 }}></Avatar>
+                            <Avatar
+                                alt={'avatar'}
+                                src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'}
+                                sx={{ width: isMobile ? 30 : 50, height: isMobile ? 30 : 50 }}
+                            ></Avatar>
                         </Stack>
                     </Stack>
                 </Toolbar>
@@ -69,8 +89,10 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                         boxSizing: 'border-box',
                     },
                 }}
-                variant="permanent"
+                variant={isMobile ? "temporary" : "permanent"}
                 anchor="left"
+                open={isMobile ? isDrawer : true}
+                onClose={toggleDrawer}
             >
                 <Toolbar>
                     <img src={logo} style={styles.imgLogo} alt="" />
@@ -101,7 +123,7 @@ const styles: StyleSheet = {
     title: {
         fontWeight: '700',
         color: Colors.primary,
-        fontSize: 20,
+        fontSize: isMobile ? 16 : 20,
         margin: 0
     },
 

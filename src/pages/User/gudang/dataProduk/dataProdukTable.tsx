@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
+import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "date", label: "Tanggal" },
@@ -67,7 +67,6 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 };
 
 const DataProdukTable = (props: any) => {
-    const navigate = useNavigate();
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
@@ -95,10 +94,12 @@ const DataProdukTable = (props: any) => {
     return (
         <div>
             <Stack
-                direction={"row"}
+                direction={isMobile ? "column" : "row"}
                 alignItems={"center"}
-                justifyContent={"space-between"}
+                gap={3}
+                justifyContent={isMobile ? "center" : "space-between"}
                 sx={{
+                    marginTop: 3,
                     paddingX: 4,
                     paddingY: 2,
                     backgroundColor: Colors.primary,
@@ -113,7 +114,7 @@ const DataProdukTable = (props: any) => {
                     type="search"
                     size="small"
                     placeholder="Pencarian by ID"
-                    sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

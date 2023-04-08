@@ -5,6 +5,7 @@ import { Colors } from '../../../../utils/colors';
 import { mutasiTable, returnTable } from '../dummy';
 import MutasiTable from './mutasiTable';
 import ReturnTable from './returnTable';
+import { isMobile } from 'react-device-detect';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -30,7 +31,7 @@ const Mutasi = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Mutasi & Return'} isChild={false} name={'Mutasi & Return'} idPanel={2}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

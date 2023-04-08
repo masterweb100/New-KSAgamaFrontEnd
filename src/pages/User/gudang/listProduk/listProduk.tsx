@@ -7,6 +7,7 @@ import BrandTable from './brandTable';
 import KategoriTable from './kategoriTable';
 import JenisTable from './jenisTable';
 import SatuanTable from './satuanTable';
+import { isMobile } from 'react-device-detect';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -22,8 +23,6 @@ const CustomTab = styled(Tab)({
 })
 
 const ListProduk = () => {
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
     const [value, setValue] = React.useState('brand');
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -33,7 +32,7 @@ const ListProduk = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'List Produk'} isChild={false} name={'List Produk'} idPanel={2}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <div>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -42,6 +41,9 @@ const ListProduk = () => {
                             onChange={handleChange}
                             textColor="secondary"
                             indicatorColor="secondary"
+                            variant={isMobile ? 'scrollable' : 'standard'}
+                            scrollButtons={isMobile ? true : false}
+                            allowScrollButtonsMobile={isMobile ? true : false}
                         >
                             <CustomTab value="brand" label="Nama Brand" />
                             <CustomTab value="kategori" label="Kategori Produk" />
@@ -55,24 +57,12 @@ const ListProduk = () => {
                                 <BrandTable data={listProdukTable}></BrandTable>
                                 :
                                 value === 'kategori' ?
-                                    <KategoriTable
-                                        data={listProdukTable}
-                                        setPage={setPage}
-                                        setItemsPerPage={setItemsPerPage}
-                                    ></KategoriTable>
+                                    <KategoriTable data={listProdukTable}></KategoriTable>
                                 :
                                 value === 'jenis' ?
-                                    <JenisTable
-                                        data={listProdukTable}
-                                        setPage={setPage}
-                                        setItemsPerPage={setItemsPerPage}
-                                    ></JenisTable>
+                                    <JenisTable data={listProdukTable}></JenisTable>
                                     :
-                                    <SatuanTable
-                                        data={listProdukTable}
-                                        setPage={setPage}
-                                        setItemsPerPage={setItemsPerPage}
-                                    ></SatuanTable>
+                                    <SatuanTable data={listProdukTable}></SatuanTable>
                         }
                     </div>
                 </div>

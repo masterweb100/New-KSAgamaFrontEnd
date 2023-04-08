@@ -4,17 +4,19 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
 import { pembelianDataTable } from '../dummy';
 import PembelianTable from './pembelianTable';
+import { isMobile } from 'react-device-detect';
 
 const AppPembelian = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Pembelian'} isChild={false} name={'App. Pembelian'} idPanel={8}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <Stack
-                    direction={"row"}
+                    direction={isMobile ? "column" : "row"}
                     alignItems={"center"}
-                    justifyContent={"space-between"}
+                    gap={3}
+                    justifyContent={isMobile ? "center" : "space-between"}
                     sx={{
                         marginTop: 3,
                         paddingX: 4,
@@ -25,13 +27,13 @@ const AppPembelian = () => {
                 >
                     <Stack alignItems={"center"} gap={2} direction={"row"}>
                         <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                        <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Approval Pembelian</p>
+                        <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Approval Pembelian</p>
                     </Stack>
                     <TextField
                         type="search"
                         size="small"
                         placeholder="Pencarian by ID"
-                        sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
+                        sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
