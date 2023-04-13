@@ -5,6 +5,7 @@ import Login from "../pages/login/login";
 
 // SUPER ADMIN ROUTING
 import Dashboard from "../pages/SuperAdmin/dashboard/dashboard";
+import ProfileAdmin from "../pages/SuperAdmin/profileAdmin/profileAdmin";
 
 import DataUser from "../pages/SuperAdmin/dataUser/user";
 import UserForm from "../pages/SuperAdmin/dataUser/userForm";
@@ -88,6 +89,7 @@ const PageRouter = () => {
                 
                 {/* SUPER ADMIN */}
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/admin-profile" element={<ProfileAdmin />} />
                 <Route path="/user-data" element={<DataUser />} />
                 <Route path="/user-data/form-user" element={<UserForm />} />
                 <Route path="/store-data" element={<DataStore />} />

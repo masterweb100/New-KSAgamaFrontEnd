@@ -31,7 +31,7 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
 
     const SettingsPage = () => {
         profileClose()
-        // navigate('/settings/profilku')
+        navigate('/admin-profile')
     }
 
     const Logout = () => {

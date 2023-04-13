@@ -1,9 +1,5 @@
 import React from "react";
 import {
-  Select,
-  FormControl,
-  MenuItem,
-  InputLabel,
   CircularProgress,
   IconButton,
   InputAdornment,
@@ -12,9 +8,10 @@ import {
 } from "@mui/material";
 import "./style.css";
 import { styled } from "@mui/material/styles";
-import { Visibility, VisibilityOff, ChevronLeft } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
+import { Colors } from "../../utils/colors";
 
 const topBg = require("../../assets/images/top-login.png");
 const redCircle = require("../../assets/images/circle-red.png");
@@ -41,51 +38,84 @@ const CustomTextField = styled(OutlinedInput)({
 
 const Login = () => {
   const navigate = useNavigate();
-  const [isPassword, setPassword] = React.useState(true);
-  const handlePassword = () => setPassword(!isPassword);
+  const [isPasswordShow, setPasswordShow] = React.useState(true);
   const [progress, setProgress] = React.useState(false);
-  const [activePage, setActivePage] = React.useState(0);
-  const [page, setPage] = React.useState(0);
-  const [toko, setToko] = React.useState("");
-  const [user, setUser] = React.useState("");
+  // const [activePage, setActivePage] = React.useState(0);
+  // const [page, setPage] = React.useState(0);
+  // const [toko, setToko] = React.useState("");
+  // const [user, setUser] = React.useState("");
+  const [username, setUsername] = React.useState("")
+  const [usernameErr, setUsernameErr] = React.useState(false)
+  const [password, setPassword] = React.useState("")
+  const [passwordErr, setPasswordErr] = React.useState(false)
 
-  const onToko = (event: any) => {
-    setToko(event.target.value);
-  };
+  const handlePasswordShow = () => setPasswordShow(!isPasswordShow);
+  // const onToko = (event: any) => {
+  //   setToko(event.target.value);
+  // };
 
-  const onUser = (user: string) => {
-    setUser(user);
-    onPage(1);
-  };
+  // const onUser = (user: string) => {
+  //   setUser(user);
+  //   onPage(1);
+  // };
 
-  const onPage = (page: number) => {
-    if (page === 0 || page === 1) {
-      setPage(page);
-      setTimeout(() => {
-        setActivePage(page);
-      }, 200);
-    } else {
-      setProgress(true);
-      setTimeout(() => {
-        setPage(page);
-        setProgress(false);
+  // const onPage = (page: number) => {
+  //   if (page === 0 || page === 1) {
+  //     setPage(page);
+  //     setTimeout(() => {
+  //       setActivePage(page);
+  //     }, 200);
+  //   } else {
+  //     setProgress(true);
+  //     setTimeout(() => {
+  //       setPage(page);
+  //       setProgress(false);
+  //       setTimeout(() => {
+  //         setActivePage(page);
+  //       }, 200);
+  //     }, 1000);
+  //   }
+  // };
+
+  const PushUser = () => {
+    if (username === 'supadmin') {
+      setUsernameErr(false)
+      if (password === '123') {
+        setPasswordErr(false)
+        setProgress(true);
         setTimeout(() => {
-          setActivePage(page);
-        }, 200);
-      }, 1000);
+          navigate("/dashboard");
+          setProgress(false);
+        }, 1000);
+      } else {
+        setPasswordErr(true)
+      }
+    } else if (username === 'admin' || username === 'user') {
+      setUsernameErr(false)
+      if (password === '123') {
+        setPasswordErr(false)
+        console.log('user', 'admin')
+        setProgress(true);
+        setTimeout(() => {
+          navigate("/dashboard-user");
+          setProgress(false);
+        }, 1000);
+      } else {
+        setPasswordErr(true)
+      }
+    } else {
+      setUsernameErr(true)
+      setPasswordErr(false)
+      console.log('goblok')
     }
   };
 
-  const PushUser = () => {
-    setProgress(true);
-    setTimeout(() => {
-      if (user === "Super Admin") {
-        navigate("/dashboard");
-      } else {
-        navigate("/dashboard-user");
-      }
-      setProgress(false);
-    }, 1000);
+  const handleUsername = (event: any) => {
+    setUsername(event.target.value as string);
+  };
+
+  const handlePassword = (event: any) => {
+    setPassword(event.target.value as string);
   };
 
   return (
@@ -191,47 +221,62 @@ const Login = () => {
               </Stack>
             ) : null}
             {activePage === 1 ? ( */}
-              <Stack
-                // className={`${page === 1
-                //   ? "slide-right-in"
-                //   : page === 0
-                //     ? "slide-right-out"
-                //     : page === 2
-                //       ? "slide-left-out"
-                //       : ""
-                //   }`}
-                direction={"column"}
-                gap={3}
-              >
-                <Stack alignItems={"center"} gap={1} direction={"row"}>
-                  {/* <div className="btn-back" onClick={() => onPage(0)}>
+            <Stack
+              // className={`${page === 1
+              //   ? "slide-right-in"
+              //   : page === 0
+              //     ? "slide-right-out"
+              //     : page === 2
+              //       ? "slide-left-out"
+              //       : ""
+              //   }`}
+              direction={"column"}
+              gap={3}
+            >
+              <Stack alignItems={"center"} gap={1} direction={"row"}>
+                {/* <div className="btn-back" onClick={() => onPage(0)}>
                     <ChevronLeft sx={{ color: "#fff" }} />
                   </div> */}
-                  <p
-                    style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}
-                  >
-                    Login Form {user}
-                  </p>
-                </Stack>
-                <div>
-                  <p style={{ fontWeight: 600, margin: 0 }}>Username</p>
+                <p
+                  style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}
+                >
+                  Login Form
+                </p>
+              </Stack>
+              <div>
+                <p style={{ fontWeight: 600, margin: 0 }}>Username</p>
+                <Stack direction={'column'}>
                   <CustomTextField
+                    onChange={handleUsername}
+                    value={username}
                     placeholder="Masukkan username anda"
                     size={"small"}
+                    error={usernameErr}
                     sx={{ width: isMobile ? '80vw' : 350 }}
                   ></CustomTextField>
-                </div>
-                <div>
-                  <p style={{ fontWeight: 600, margin: 0 }}>Password</p>
+                  {
+                    usernameErr === true ?
+                      <small style={{ fontWeight: 400, margin: 0, color: Colors.primary }}>Username tidak ditemukan</small>
+                      :
+                      <small style={{ margin: 0 }}></small>
+                  }
+                </Stack>
+              </div>
+              <div>
+                <p style={{ fontWeight: 600, margin: 0 }}>Password</p>
+                <Stack direction={'column'}>
                   <CustomTextField
+                    onChange={handlePassword}
+                    value={password}
+                    error={passwordErr}
                     placeholder="Masukkan password anda"
                     size={"small"}
                     sx={{ width: isMobile ? '80vw' : 350 }}
-                    type={isPassword ? "password" : "text"}
+                    type={isPasswordShow ? "password" : "text"}
                     endAdornment={
                       <InputAdornment position="end">
-                        <IconButton onClick={handlePassword} edge={"end"}>
-                          {isPassword ? (
+                        <IconButton onClick={handlePasswordShow} edge={"end"}>
+                          {isPasswordShow ? (
                             <Visibility sx={{ color: "#ababab" }}></Visibility>
                           ) : (
                             <VisibilityOff
@@ -242,36 +287,43 @@ const Login = () => {
                       </InputAdornment>
                     }
                   ></CustomTextField>
-                </div>
+                  {
+                    passwordErr === true ?
+                      <small style={{ fontWeight: 400, margin: 0, color: Colors.primary }}>Password tidak sesuai</small>
+                      :
+                      <small style={{ margin: 0 }}></small>
+                  }
+                </Stack>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
                 <div
+                  // onClick={() => onPage(2)}
+                  onClick={PushUser}
                   style={{
+                    cursor: "pointer",
+                    padding: "10px 40px",
+                    backgroundColor: "#c42401",
+                    borderRadius: 10,
                     display: "flex",
-                    flexDirection: "column",
+                    alignSelf: "flex-start",
                   }}
-                  >
-                  <div
-                    // onClick={() => onPage(2)}
-                    onClick={PushUser}
-                    style={{
-                      cursor: "pointer",
-                      padding: "10px 40px",
-                      backgroundColor: "#c42401",
-                      borderRadius: 10,
-                      display: "flex",
-                      alignSelf: "flex-start",
-                    }}
-                  >
-                    <p style={{ fontWeight: 600, color: "#fff", margin: 0 }}>
-                      Login
-                    </p>
-                  </div>
-                  <p
-                    style={{ fontWeight: 400, color: "#ababab", fontSize: 13 }}
-                  >
-                    <i>Forgot password? Contact your Admin</i>
+                >
+                  <p style={{ fontWeight: 600, color: "#fff", margin: 0 }}>
+                    Login
                   </p>
                 </div>
-              </Stack>
+                <p
+                  style={{ fontWeight: 400, color: "#ababab", fontSize: 13 }}
+                >
+                  <i>Forgot password? Contact your Admin</i>
+                </p>
+              </div>
+            </Stack>
             {/* ) : null}
             {activePage === 2 ? (
               <Stack
