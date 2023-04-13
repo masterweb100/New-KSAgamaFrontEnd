@@ -36,10 +36,10 @@ const DataRole = () => {
             <NavigationBar title={'Data Role'} indexNav={3} isChild={false}></NavigationBar>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
-                <div>
+                <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <Stack direction={'row'} justifyContent={'space-between'}>
                         <div onClick={FormRole} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '12px 15px' : '10px 30px', alignSelf: 'flex-start' }}>
                             <Stack alignItems={'center'} direction={'row'} gap={1}>

@@ -16,7 +16,7 @@ const LapKeuangan = () => {
             <NavigationBarUser title={'Keuangan'} isChild={false} name={'Lap. Keuangan'} idPanel={6}></NavigationBarUser>
             <Box component="main" sx={{ bgcolor: '#f4f5ff', p: 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
-                <div>
+                <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-end'} gap={2}>
                         <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.error}` }}>
                             <Stack direction={'row'} alignItems={'center'} gap={1}>

@@ -15,7 +15,7 @@ const Dashboard = () => {
         indexNav={0}
         isChild={false}
       ></NavigationBar>
-      <Box component="main" sx={{ bgcolor: "#f4f5ff", p: isMobile ? 3 : 5 }}>
+      <Box component="main" sx={{ bgcolor: "#f4f5ff", p: isMobile ? 2 : 5 }}>
         <Toolbar />
         <Stack direction={"column"} gap={3}>
           {[...Array(20)].map((item, index) => (

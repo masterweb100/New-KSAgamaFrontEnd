@@ -79,10 +79,10 @@ const Login = () => {
   const PushUser = () => {
     setProgress(true);
     setTimeout(() => {
-      if (user === "User") {
-        navigate("/dashboard-user");
-      } else {
+      if (user === "Super Admin") {
         navigate("/dashboard");
+      } else {
+        navigate("/dashboard-user");
       }
       setProgress(false);
     }, 1000);
@@ -159,7 +159,7 @@ const Login = () => {
             >
               <img src={logo} style={{ height: 80, width: "auto" }} alt="" />
             </div>
-            {activePage === 0 ? (
+            {/* {activePage === 0 ? (
               <Stack
                 className={`${page === 1
                   ? "slide-left-out"
@@ -173,40 +173,40 @@ const Login = () => {
                 <p style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}>
                   Login Form
                 </p>
-                <div className={"btn-stack"} style={{width: isMobile ? '80vw' : '350px'}} onClick={() => onUser("Super Admin")}>
+                <div className={"btn-stack"} style={{ width: isMobile ? '80vw' : '350px' }} onClick={() => onUser("Super Admin")}>
                   <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
                     Login Super Admin
                   </p>
                 </div>
-                <div className={"btn-stack"} style={{width: isMobile ? '80vw' : '350px'}} onClick={() => onUser("Admin")}>
+                <div className={"btn-stack"} style={{ width: isMobile ? '80vw' : '350px' }} onClick={() => onUser("Admin")}>
                   <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
                     Login Admin
                   </p>
                 </div>
-                <div className={"btn-stack"} style={{width: isMobile ? '80vw' : '350px'}} onClick={() => onUser("User")}>
+                <div className={"btn-stack"} style={{ width: isMobile ? '80vw' : '350px' }} onClick={() => onUser("User")}>
                   <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
                     Login User
                   </p>
                 </div>
               </Stack>
             ) : null}
-            {activePage === 1 ? (
+            {activePage === 1 ? ( */}
               <Stack
-                className={`${page === 1
-                  ? "slide-right-in"
-                  : page === 0
-                    ? "slide-right-out"
-                    : page === 2
-                      ? "slide-left-out"
-                      : ""
-                  }`}
+                // className={`${page === 1
+                //   ? "slide-right-in"
+                //   : page === 0
+                //     ? "slide-right-out"
+                //     : page === 2
+                //       ? "slide-left-out"
+                //       : ""
+                //   }`}
                 direction={"column"}
                 gap={3}
               >
                 <Stack alignItems={"center"} gap={1} direction={"row"}>
-                  <div className="btn-back" onClick={() => onPage(0)}>
+                  {/* <div className="btn-back" onClick={() => onPage(0)}>
                     <ChevronLeft sx={{ color: "#fff" }} />
-                  </div>
+                  </div> */}
                   <p
                     style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}
                   >
@@ -247,12 +247,13 @@ const Login = () => {
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    cursor: "pointer",
                   }}
-                  onClick={() => onPage(2)}
-                >
+                  >
                   <div
+                    // onClick={() => onPage(2)}
+                    onClick={PushUser}
                     style={{
+                      cursor: "pointer",
                       padding: "10px 40px",
                       backgroundColor: "#c42401",
                       borderRadius: 10,
@@ -271,7 +272,7 @@ const Login = () => {
                   </p>
                 </div>
               </Stack>
-            ) : null}
+            {/* ) : null}
             {activePage === 2 ? (
               <Stack
                 className={`${page === 2
@@ -324,7 +325,7 @@ const Login = () => {
                   </p>
                 </div>
               </Stack>
-            ) : null}
+            ) : null} */}
           </div>
         </div>
       </div>

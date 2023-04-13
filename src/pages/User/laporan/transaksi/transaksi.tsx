@@ -12,9 +12,9 @@ const LapTransaksi = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Penjualan & Pembelian'} isChild={false} name={'Lap. Penjualan & Pembelian'} idPanel={6}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
-                <div>
+                <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     {
                         laporanData.map((item, index) => (
                             <div key={index}>

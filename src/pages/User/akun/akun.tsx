@@ -33,10 +33,10 @@ const Akun = () => {
             <NavigationBarUser title={'Akun'} isChild={false} name={'Akun'} idPanel={5}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
-                <div>
+                <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <CustomTabs
                             value={value}

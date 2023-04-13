@@ -16,7 +16,9 @@ import DataRole from "../pages/SuperAdmin/roleUser/role";
 import RoleForm from "../pages/SuperAdmin/roleUser/roleForm";
 
 import DataBank from "../pages/SuperAdmin/dataBank/dataBank";
+
 import AccessUser from "../pages/SuperAdmin/accessUser/access";
+import AccessSettings from "../pages/SuperAdmin/accessUser/accessSettings";
 
 // USER ROUTING
 import DashboardUser from "../pages/User/dashboard/dashboard";
@@ -93,6 +95,7 @@ const PageRouter = () => {
                 <Route path="/user-role" element={<DataRole />} />
                 <Route path="/user-role/form-role" element={<RoleForm />} />
                 <Route path="/user-access" element={<AccessUser />} />
+                <Route path="/user-access/settings" element={<AccessSettings />} />
                 <Route path="/bank-data" element={<DataBank />} />
 
                 {/* USER */}

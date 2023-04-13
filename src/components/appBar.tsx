@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Toolbar, AppBar, CssBaseline, Drawer, Stack, Avatar, Badge, Icon } from '@mui/material/';
+import { Box, Toolbar, AppBar, CssBaseline, Drawer, Stack, Avatar, Badge, Icon, Menu, MenuItem, IconButton, ListItemText, ListItemIcon } from '@mui/material/';
 import { Notifications, ChevronLeftRounded } from '@mui/icons-material/';
 import { useNavigate } from 'react-router-dom';
 import './style.css'
@@ -14,12 +14,30 @@ const logo = require('../assets/images/ksa-logo-purple.png')
 const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: number, isChild: boolean }) => {
     const navigate = useNavigate()
     const [isDrawer, setDrawer] = React.useState(false)
+    const [profile, setProfile] = React.useState<any>(null)
 
     const Routing = (param: number) => {
         navigate(param)
     }
 
     const toggleDrawer = () => setDrawer(!isDrawer)
+    const profileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setProfile(event.currentTarget);
+    };
+
+    const profileClose = () => {
+        setProfile(null);
+    };
+
+    const SettingsPage = () => {
+        profileClose()
+        // navigate('/settings/profilku')
+    }
+
+    const Logout = () => {
+        profileClose()
+        navigate('/')
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -71,11 +89,33 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                             <Badge badgeContent={100} color="secondary">
                                 <Notifications sx={{ color: Colors.secondary, fontSize: isMobile ? 25 : 30 }} />
                             </Badge>
-                            <Avatar
-                                alt={'avatar'}
-                                src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'}
-                                sx={{ width: isMobile ? 30 : 50, height: isMobile ? 30 : 50 }}
-                            ></Avatar>
+                            <>
+                                <IconButton onClick={profileClick}>
+                                    <Avatar
+                                        alt={'avatar'}
+                                        src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'}
+                                        sx={{ width: isMobile ? 30 : 50, height: isMobile ? 30 : 50 }}
+                                    ></Avatar>
+                                </IconButton>
+                                <Menu
+                                    anchorEl={profile}
+                                    open={Boolean(profile)}
+                                    onClose={profileClose}
+                                >
+                                    <MenuItem sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }} onClick={SettingsPage}>
+                                        <ListItemIcon sx={{ color: 'inherit' }}>
+                                            <Icon>settings</Icon>
+                                        </ListItemIcon>
+                                        <ListItemText sx={{ color: 'inherit' }}>Settings</ListItemText>
+                                    </MenuItem>
+                                    <MenuItem sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }} onClick={Logout}>
+                                        <ListItemIcon sx={{ color: 'inherit' }}>
+                                            <Icon>logout</Icon>
+                                        </ListItemIcon>
+                                        <ListItemText sx={{ color: 'inherit' }}>Logout</ListItemText>
+                                    </MenuItem>
+                                </Menu>
+                            </>
                         </Stack>
                     </Stack>
                 </Toolbar>

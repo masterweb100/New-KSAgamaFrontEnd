@@ -11,7 +11,7 @@ const DashboardUser = () => {
             <NavigationBarUser title={'Dashboard User'} isChild={false} name={'Dashboard'} idPanel={1}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <Stack direction={'column'} gap={3}>

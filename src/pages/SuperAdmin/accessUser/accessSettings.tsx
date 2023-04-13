@@ -1,11 +1,11 @@
 import { Box, Stack, Toolbar, InputAdornment, TextField, Icon, FormControlLabel, Checkbox, AccordionDetails, AccordionSummary, Accordion } from '@mui/material';
 import React from 'react'
-import NavigationBarUser from '../../../../components/appBarUser';
-import { Colors } from '../../../../utils/colors';
-import { GudangList, PenjualanList, PembelianList, LaporanList, KontakList, PengaturanList } from '../dummy';
+import NavigationBar from '../../../components/appBar';
+import { Colors } from '../../../utils/colors';
+import { GudangList, PenjualanList, PembelianList, LaporanList, KontakList, PengaturanList } from '../../User/pengaturan/dummy';
 import { isMobile } from 'react-device-detect';
 
-const PeranSettings = () => {
+const AccessSettings = () => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
 
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -63,7 +63,7 @@ const PeranSettings = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Pengaturan Peran'} isChild={true} name={'Peran'} idPanel={9}></NavigationBarUser>
+            <NavigationBar title={'Pengaturan'} indexNav={4} isChild={true}></NavigationBar>
             <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
                 <Stack
@@ -319,4 +319,4 @@ const PeranSettings = () => {
     )
 }
 
-export default PeranSettings;
+export default AccessSettings;

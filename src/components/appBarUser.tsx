@@ -1,14 +1,5 @@
 import * as React from "react";
-import {
-  Box,
-  Toolbar,
-  AppBar,
-  CssBaseline,
-  Drawer,
-  Stack,
-  Avatar,
-  Badge,
-} from "@mui/material/";
+import { Box, Toolbar, AppBar, CssBaseline, Drawer, Stack, Avatar, Badge, Menu, MenuItem, IconButton, ListItemText, ListItemIcon } from "@mui/material/";
 import {
   Notifications,
   ChevronLeftRounded,
@@ -83,6 +74,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
   const navigate = useNavigate();
   const [isDrawer, setDrawer] = React.useState(false)
+  const [profile, setProfile] = React.useState<any>(null)
 
   const [expanded, setExpanded] = React.useState<string | false>(
     `panel${idPanel}`
@@ -95,6 +87,23 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
   };
 
   const toggleDrawer = () => setDrawer(!isDrawer)
+  const profileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setProfile(event.currentTarget);
+  };
+
+  const profileClose = () => {
+    setProfile(null);
+  };
+
+  const SettingsPage = () => {
+    profileClose()
+    navigate('/settings/profilku')
+  }
+
+  const Logout = () => {
+    profileClose()
+    navigate('/')
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -152,13 +161,33 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
               <Badge badgeContent={100} color="secondary">
                 <Notifications sx={{ color: Colors.secondary, fontSize: isMobile ? 25 : 30 }} />
               </Badge>
-              <Avatar
-                alt={"avatar"}
-                src={
-                  "https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg"
-                }
-                sx={{ width: isMobile ? 30 : 50, height: isMobile ? 30 : 50 }}
-              ></Avatar>
+              <>
+                <IconButton onClick={profileClick}>
+                  <Avatar
+                    alt={'avatar'}
+                    src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'}
+                    sx={{ width: isMobile ? 30 : 50, height: isMobile ? 30 : 50 }}
+                  ></Avatar>
+                </IconButton>
+                <Menu
+                  anchorEl={profile}
+                  open={Boolean(profile)}
+                  onClose={profileClose}
+                >
+                  <MenuItem onClick={SettingsPage} sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }}>
+                    <ListItemIcon sx={{ color: 'inherit' }}>
+                      <Icon>settings</Icon>
+                    </ListItemIcon>
+                    <ListItemText sx={{ color: 'inherit' }}>Settings</ListItemText>
+                  </MenuItem>
+                  <MenuItem onClick={Logout} sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }}>
+                    <ListItemIcon sx={{ color: 'inherit' }}>
+                      <Icon>logout</Icon>
+                    </ListItemIcon>
+                    <ListItemText sx={{ color: 'inherit' }}>Logout</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </>
             </Stack>
           </Stack>
         </Toolbar>

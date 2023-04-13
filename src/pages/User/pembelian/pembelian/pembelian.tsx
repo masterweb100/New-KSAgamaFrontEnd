@@ -30,9 +30,9 @@ const Pembelian = () => {
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pembelian'} isChild={false} name={'Pembelian'} idPanel={4}></NavigationBarUser>
-            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}>
+            <Box component="main" sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}>
                 <Toolbar />
-                <div>
+                <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <CustomTabs
                             value={value}
@@ -50,7 +50,7 @@ const Pembelian = () => {
                             <CustomTab value="tidaksetuju" label="Tidak Disetujui" />
                         </CustomTabs>
                     </Box>
-                    <div style={{marginTop: 20}}>
+                    <div style={{ marginTop: 20 }}>
                         <PembelianTable data={pembelianData}></PembelianTable>
                     </div>
                 </div>

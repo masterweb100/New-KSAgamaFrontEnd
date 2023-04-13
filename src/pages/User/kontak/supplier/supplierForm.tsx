@@ -33,7 +33,7 @@ const SupplierForm = () => {
             <NavigationBarUser title={'Form Tambah Data Supplier'} isChild={true} name={'Supplier'} idPanel={7}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
                 <div style={{ flex: 1, ...CENTER }}>

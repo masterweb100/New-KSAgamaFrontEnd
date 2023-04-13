@@ -11,10 +11,10 @@ const KategoriAkun = () => {
             <NavigationBarUser title={'List Kategori Akun'} isChild={true} name={'Akun'} idPanel={5}></NavigationBarUser>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
-                <div>
+                <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <KategoriTable data={kategoriData}></KategoriTable>
                 </div>
             </Box>

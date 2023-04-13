@@ -89,10 +89,10 @@ const DataUser = () => {
             <NavigationBar title={'Data Pengguna'} indexNav={1} isChild={false}></NavigationBar>
             <Box
                 component="main"
-                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 3 : 5, width: '100vw', minHeight: '100vh' }}
+                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
-                <div>
+                <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <Stack direction={'column'} gap={4}>
                         <Stack direction={'row'} gap={1}>
                             <div className='btn-active'>
