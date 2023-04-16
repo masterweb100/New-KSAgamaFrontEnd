@@ -1,5 +1,19 @@
 import * as React from "react";
-import { Box, Toolbar, AppBar, CssBaseline, Drawer, Stack, Avatar, Badge, Menu, MenuItem, IconButton, ListItemText, ListItemIcon } from "@mui/material/";
+import {
+  Box,
+  Toolbar,
+  AppBar,
+  CssBaseline,
+  Drawer,
+  Stack,
+  Avatar,
+  Badge,
+  Menu,
+  MenuItem,
+  IconButton,
+  ListItemText,
+  ListItemIcon,
+} from "@mui/material/";
 import {
   Notifications,
   ChevronLeftRounded,
@@ -22,7 +36,12 @@ import { isMobile } from "react-device-detect";
 const drawerWidth = 240;
 const logo = require("../assets/images/ksa-logo-purple.png");
 
-interface IDrawer { title: string; isChild: boolean; name: string; idPanel: number; }
+interface IDrawer {
+  title: string;
+  isChild: boolean;
+  name: string;
+  idPanel: number;
+}
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -71,10 +90,10 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   margin: 0,
 }));
 
-const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
+const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
   const navigate = useNavigate();
-  const [isDrawer, setDrawer] = React.useState(false)
-  const [profile, setProfile] = React.useState<any>(null)
+  const [isDrawer, setDrawer] = React.useState(false);
+  const [profile, setProfile] = React.useState<any>(null);
 
   const [expanded, setExpanded] = React.useState<string | false>(
     `panel${idPanel}`
@@ -86,7 +105,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
     // console.log(nav)
   };
 
-  const toggleDrawer = () => setDrawer(!isDrawer)
+  const toggleDrawer = () => setDrawer(!isDrawer);
   const profileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setProfile(event.currentTarget);
   };
@@ -96,14 +115,14 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
   };
 
   const SettingsPage = () => {
-    profileClose()
-    navigate('/settings/profilku')
-  }
+    profileClose();
+    navigate("/settings/profilku");
+  };
 
   const Logout = () => {
-    profileClose()
-    navigate('/')
-  }
+    profileClose();
+    navigate("/");
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -111,7 +130,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
       <AppBar
         position="fixed"
         sx={{
-          width: isMobile ? '100%' : `calc(100% - ${drawerWidth}px)`,
+          width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
           ml: isMobile ? 0 : `${drawerWidth}px`,
           backgroundColor: "#fff",
         }}
@@ -123,13 +142,19 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
             justifyContent={"space-between"}
             width={"100%"}
           >
-            <Stack direction={'row'} alignItems={'center'} gap={2}>
-              {
-                isMobile ?
-                  <Icon sx={{ color: Colors.secondary, fontSize: 25, cursor: 'pointer' }} onClick={toggleDrawer}>menu</Icon>
-                  :
-                  null
-              }
+            <Stack direction={"row"} alignItems={"center"} gap={2}>
+              {isMobile ? (
+                <Icon
+                  sx={{
+                    color: Colors.secondary,
+                    fontSize: 25,
+                    cursor: "pointer",
+                  }}
+                  onClick={toggleDrawer}
+                >
+                  menu
+                </Icon>
+              ) : null}
               {isChild ? (
                 <Stack
                   onClick={() => navigate(-1)}
@@ -159,14 +184,21 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
             </Stack>
             <Stack direction={"row"} alignItems={"center"} gap={3}>
               <Badge badgeContent={100} color="secondary">
-                <Notifications sx={{ color: Colors.secondary, fontSize: isMobile ? 25 : 30 }} />
+                <Notifications
+                  sx={{ color: Colors.secondary, fontSize: isMobile ? 25 : 30 }}
+                />
               </Badge>
               <>
                 <IconButton onClick={profileClick}>
                   <Avatar
-                    alt={'avatar'}
-                    src={'https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg'}
-                    sx={{ width: isMobile ? 30 : 50, height: isMobile ? 30 : 50 }}
+                    alt={"avatar"}
+                    src={
+                      "https://png.pngtree.com/png-vector/20190704/ourlarge/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg"
+                    }
+                    sx={{
+                      width: isMobile ? 30 : 50,
+                      height: isMobile ? 30 : 50,
+                    }}
                   ></Avatar>
                 </IconButton>
                 <Menu
@@ -174,17 +206,39 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
                   open={Boolean(profile)}
                   onClose={profileClose}
                 >
-                  <MenuItem onClick={SettingsPage} sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }}>
-                    <ListItemIcon sx={{ color: 'inherit' }}>
+                  <MenuItem
+                    onClick={SettingsPage}
+                    sx={{
+                      "&:hover": {
+                        color: Colors.primary,
+                        transition: "all .3s",
+                      },
+                      transition: "all .3s",
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: "inherit" }}>
                       <Icon>settings</Icon>
                     </ListItemIcon>
-                    <ListItemText sx={{ color: 'inherit' }}>Settings</ListItemText>
+                    <ListItemText sx={{ color: "inherit" }}>
+                      Settings
+                    </ListItemText>
                   </MenuItem>
-                  <MenuItem onClick={Logout} sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }}>
-                    <ListItemIcon sx={{ color: 'inherit' }}>
+                  <MenuItem
+                    onClick={Logout}
+                    sx={{
+                      "&:hover": {
+                        color: Colors.primary,
+                        transition: "all .3s",
+                      },
+                      transition: "all .3s",
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: "inherit" }}>
                       <Icon>logout</Icon>
                     </ListItemIcon>
-                    <ListItemText sx={{ color: 'inherit' }}>Logout</ListItemText>
+                    <ListItemText sx={{ color: "inherit" }}>
+                      Logout
+                    </ListItemText>
                   </MenuItem>
                 </Menu>
               </>
@@ -194,7 +248,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
       </AppBar>
       <Drawer
         sx={{
-          width: isMobile ? '100%' : drawerWidth,
+          width: isMobile ? "100%" : drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
@@ -289,7 +343,10 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
                             ...styles.tab,
                             padding: "10px",
                             paddingLeft: "30px",
-                            borderLeft: name === val.name ? `3px solid ${Colors.primary}` : 'none',
+                            borderLeft:
+                              name === val.name
+                                ? `3px solid ${Colors.primary}`
+                                : "none",
                             "&:hover": {
                               backgroundColor: Colors.inherit,
                               color: Colors.primary,
@@ -303,7 +360,9 @@ const NavigationBarUser = ({ title, isChild, name, idPanel, }: IDrawer) => {
                           }}
                         >
                           <Icon sx={{ ...styles.iconHover }}>{val.icon}</Icon>
-                          <p style={{ fontSize: 13, margin: 0, fontWeight: 500 }}>
+                          <p
+                            style={{ fontSize: 13, margin: 0, fontWeight: 500 }}
+                          >
                             {val.name}
                           </p>
                         </Stack>
