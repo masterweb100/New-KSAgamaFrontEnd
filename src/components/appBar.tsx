@@ -7,6 +7,7 @@ import { Colors } from '../utils/colors';
 import { StyleSheet } from '../utils/stylesheet';
 import { ListAdmin } from './data';
 import { isMobile } from 'react-device-detect';
+import LogoutModal from './logoutModal'
 
 const drawerWidth = 240;
 const logo = require('../assets/images/ksa-logo-purple.png')
@@ -15,11 +16,13 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
     const navigate = useNavigate()
     const [isDrawer, setDrawer] = React.useState(false)
     const [profile, setProfile] = React.useState<any>(null)
+    const [isLogout, setLogout] = React.useState(false)
 
     const Routing = (param: number) => {
         navigate(param)
     }
 
+    const LogoutPopup = () => { profileClose(); setLogout(!isLogout) }
     const toggleDrawer = () => setDrawer(!isDrawer)
     const profileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setProfile(event.currentTarget);
@@ -32,11 +35,6 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
     const SettingsPage = () => {
         profileClose()
         navigate('/admin-profile')
-    }
-
-    const Logout = () => {
-        profileClose()
-        navigate('/')
     }
 
     return (
@@ -108,7 +106,7 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                                         </ListItemIcon>
                                         <ListItemText sx={{ color: 'inherit' }}>Settings</ListItemText>
                                     </MenuItem>
-                                    <MenuItem sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }} onClick={Logout}>
+                                    <MenuItem sx={{ '&:hover': { color: Colors.primary, transition: 'all .3s' }, transition: 'all .3s' }} onClick={LogoutPopup}>
                                         <ListItemIcon sx={{ color: 'inherit' }}>
                                             <Icon>logout</Icon>
                                         </ListItemIcon>
@@ -155,6 +153,7 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                     }
                 </Stack>
             </Drawer>
+            <LogoutModal isOpen={isLogout} setOpen={LogoutPopup} navigate={navigate} />
         </Box>
     );
 }

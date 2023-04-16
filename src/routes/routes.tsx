@@ -91,9 +91,9 @@ const PageRouter = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin-profile" element={<ProfileAdmin />} />
                 <Route path="/user-data" element={<DataUser />} />
-                <Route path="/user-data/form-user" element={<UserForm />} />
+                <Route path="/user-data/form-user/:action" element={<UserForm />} />
                 <Route path="/store-data" element={<DataStore />} />
-                <Route path="/store-data/form-store" element={<StoreForm />} />
+                <Route path="/store-data/form-store/:action" element={<StoreForm />} />
                 <Route path="/user-role" element={<DataRole />} />
                 <Route path="/user-role/form-role" element={<RoleForm />} />
                 <Route path="/user-access" element={<AccessUser />} />

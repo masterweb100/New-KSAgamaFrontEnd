@@ -4,12 +4,13 @@ import NavigationBar from '../../../components/appBar';
 import { CENTER } from '../../../utils/stylesheet';
 import { Colors } from '../../../utils/colors';
 import './styles.css'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BorderColor } from '@mui/icons-material';
 import { isMobile } from 'react-device-detect';
 
 const StoreForm = () => {
     const [role, setRole] = React.useState('');
+    const { action }: any = useParams()
     const navigate = useNavigate()
 
     const handleChangeRole = (event: SelectChangeEvent) => {
@@ -32,14 +33,19 @@ const StoreForm = () => {
                     <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             {
-                                isMobile ? 
-                                <h3 style={{ color: '#000' }}>Form Tambah Data Toko</h3>
-                                :
-                                <h2 style={{ color: '#000' }}>Form Tambah Data Toko</h2>
+                                isMobile ?
+                                    <h3 style={{ color: '#000' }}>Form Tambah Data Toko</h3>
+                                    :
+                                    <h2 style={{ color: '#000' }}>Form Tambah Data Toko</h2>
                             }
-                            <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
-                                <BorderColor style={{ color: '#fff', fontSize: 20 }}></BorderColor>
-                            </div>
+                            {
+                                action === 'update' ?
+                                    <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
+                                        <BorderColor style={{ color: '#fff', fontSize: 20 }}></BorderColor>
+                                    </div>
+                                    :
+                                    null
+                            }
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
@@ -91,8 +97,8 @@ const StoreForm = () => {
                                     }}
                                 >
                                     {
-                                        [1, 2, 3, 4, 5, 6].map((item, index) => (
-                                            <MenuItem value={'Admin ' + item} key={index}>Admin {index + 1}</MenuItem>
+                                        ['A', 'B', 'C', 'D', 'E'].map((item, index) => (
+                                            <MenuItem value={'Admin ' + item} key={index}>Admin {item}</MenuItem>
                                         ))
                                     }
                                 </Select>

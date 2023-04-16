@@ -7,11 +7,13 @@ import './styles.css'
 import { useNavigate } from "react-router-dom";
 import { BorderColor } from '@mui/icons-material';
 import { isMobile } from 'react-device-detect';
+import { useParams } from 'react-router-dom';
 
 const UserForm = () => {
     const [toko, setToko] = React.useState('');
     const [role, setRole] = React.useState('');
     const [status, setStatus] = React.useState('');
+    const { action }: any = useParams()
     const navigate = useNavigate()
 
     const handleChangeToko = (event: SelectChangeEvent) => {
@@ -46,9 +48,14 @@ const UserForm = () => {
                                     :
                                     <h2 style={{ color: '#000' }}>Form Tambah Data Pengguna</h2>
                             }
-                            <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
-                                <BorderColor style={{ color: '#fff', fontSize: 20 }}></BorderColor>
-                            </div>
+                            {
+                                action === 'update' ?
+                                    <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
+                                        <BorderColor style={{ color: '#fff', fontSize: 20 }}></BorderColor>
+                                    </div>
+                                    :
+                                    null
+                            }
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
@@ -89,8 +96,8 @@ const UserForm = () => {
                                     }}
                                 >
                                     {
-                                        [1, 2, 3, 4, 5, 6].map((item, index) => (
-                                            <MenuItem value={'Toko ' + item} key={index}>Toko {index + 1}</MenuItem>
+                                        ['A', 'B', 'C', 'D', 'E', 'F'].map((item, index) => (
+                                            <MenuItem value={'Toko ' + item} key={index}>Toko {item}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -111,8 +118,8 @@ const UserForm = () => {
                                     }}
                                 >
                                     {
-                                        [1, 2, 3, 4, 5, 6].map((item, index) => (
-                                            <MenuItem value={'Role ' + item} key={index}>Role {index + 1}</MenuItem>
+                                        ['Admin', 'User'].map((item, index) => (
+                                            <MenuItem value={item} key={index}>{item}</MenuItem>
                                         ))
                                     }
                                 </Select>
@@ -134,8 +141,8 @@ const UserForm = () => {
                                 }}
                             >
                                 {
-                                    [1, 2, 3, 4, 5, 6].map((item, index) => (
-                                        <MenuItem value={'Status ' + item} key={index}>Status {index + 1}</MenuItem>
+                                    ['Active', 'Deactive'].map((item, index) => (
+                                        <MenuItem value={item} key={index}>{item}</MenuItem>
                                     ))
                                 }
                             </Select>

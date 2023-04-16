@@ -118,6 +118,12 @@ const Login = () => {
     setPassword(event.target.value as string);
   };
 
+  const handleSubmit = (event: any) => {
+    if (event.key === 'Enter') {
+      PushUser()
+    }
+  }
+
   return (
     <div>
       {
@@ -271,6 +277,7 @@ const Login = () => {
                     error={passwordErr}
                     placeholder="Masukkan password anda"
                     size={"small"}
+                    onKeyDown={handleSubmit}
                     sx={{ width: isMobile ? '80vw' : 350 }}
                     type={isPasswordShow ? "password" : "text"}
                     endAdornment={

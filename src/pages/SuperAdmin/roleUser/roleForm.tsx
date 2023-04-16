@@ -32,9 +32,6 @@ const RoleForm = () => {
                                 :
                                 <h2 style={{ color: '#000' }}>Form Tambah Data Role</h2>
                             }
-                            <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
-                                <BorderColor style={{ color: '#fff', fontSize: 20 }}></BorderColor>
-                            </div>
                         </Stack>
 
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
