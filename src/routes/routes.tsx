@@ -108,20 +108,20 @@ const PageRouter = () => {
                 <Route path="/gudang/mutasi" element={<Mutasi />} />
                 <Route path="/gudang/mutasi/form-mutasi" element={<MutasiForm />} />
                 <Route path="/gudang/list-produk" element={<ListProduk />} />
-                <Route path="/gudang/list-produk/form-brand" element={<BrandForm />} />
-                <Route path="/gudang/list-produk/form-jenis" element={<JenisForm />} />
-                <Route path="/gudang/list-produk/form-kategori" element={<KategoriForm />} />
-                <Route path="/gudang/list-produk/form-satuan" element={<SatuanForm />} />
+                <Route path="/gudang/list-produk/form-brand/:action" element={<BrandForm />} />
+                <Route path="/gudang/list-produk/form-jenis/:action" element={<JenisForm />} />
+                <Route path="/gudang/list-produk/form-kategori/:action" element={<KategoriForm />} />
+                <Route path="/gudang/list-produk/form-satuan/:action" element={<SatuanForm />} />
 
                 <Route path="/penjualan/penjualan" element={<Penjualan />} />
-                <Route path="/penjualan/penjualan/form-penjualan" element={<PenjualanForm />} />
+                <Route path="/penjualan/penjualan/form-penjualan/:action" element={<PenjualanForm />} />
                 <Route path="/penjualan/return-penjualan" element={<ReturnPenjualan />} />
-                <Route path="/penjualan/return-penjualan/form-return" element={<ReturnPenjualanForm />} />
+                <Route path="/penjualan/return-penjualan/form-return/:action" element={<ReturnPenjualanForm />} />
 
                 <Route path="/pembelian/pembelian" element={<Pembelian />} />
-                <Route path="/pembelian/pembelian/form-pembelian" element={<PembelianForm />} />
+                <Route path="/pembelian/pembelian/form-pembelian/:action" element={<PembelianForm />} />
                 <Route path="/pembelian/pembelian/detail" element={<PembelianDetail />} />
-                <Route path="/pembelian/pembelian/form-detail" element={<PembelianDetailForm />} />
+                <Route path="/pembelian/pembelian/form-detail/:action" element={<PembelianDetailForm />} />
                 <Route path="/pembelian/tracking" element={<Tracking />} />
 
                 <Route path="/akun" element={<Akun />} />

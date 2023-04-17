@@ -98,9 +98,29 @@ const SatuanTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
+    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected: readonly string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+
+        setSelected(newSelected);
+    };
+
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any) => n.name);
+            const newSelected = props.data.content.map((n: any, index: number) => index.toString());
             setSelected(newSelected);
             return;
         }
@@ -108,22 +128,27 @@ const SatuanTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-    const FormPage = () => navigate('/gudang/list-produk/form-satuan')
+    const FormAddSatuan = () => navigate('/gudang/list-produk/form-satuan/add')
+    const FormUpdateSatuan = () => {
+        if (selected.length > 0) {
+            navigate('/gudang/list-produk/form-satuan/update')
+        }
+    }
 
     return (
         <div>
             <Stack direction={'row'} justifyContent={'space-between'}>
-                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '12px 15px' : '10px 30px', alignSelf: 'flex-start' }}>
+                <div onClick={FormAddSatuan} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '12px 15px' : '10px 30px', alignSelf: 'flex-start' }}>
                     <Stack alignItems={'center'} direction={'row'} gap={1}>
                         <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
                         <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: '#fff' }}>Tambah Data Satuan Produk</p>
                     </Stack>
                 </div>
                 <Stack direction={'row'} alignItems={'center'} gap={isMobile ? 1 : 2}>
-                    <div style={{ ...CENTER, backgroundColor: Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
+                    <div onClick={FormUpdateSatuan} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
                         <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>border_color</Icon>
                     </div>
-                    <div style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
+                    <div style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
                         <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>delete_outline</Icon>
                     </div>
                 </Stack>
@@ -212,7 +237,7 @@ const SatuanTable = (props: any) => {
                                         getComparator(orderdirection, valuetoorderby))
                                         .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                         .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(item.name);
+                                            const isItemSelected = isSelected(index.toString());
                                             const labelId = `enhanced-table-checkbox-${index}`;
 
                                             return (
@@ -222,7 +247,7 @@ const SatuanTable = (props: any) => {
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                 >
-                                                    <StyledTableCell align="center" padding="checkbox">
+                                                    <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
                                                         <Checkbox
                                                             color="primary"
                                                             checked={isItemSelected}

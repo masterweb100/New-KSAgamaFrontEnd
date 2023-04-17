@@ -254,6 +254,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
             width: drawerWidth,
             boxSizing: "border-box",
           },
+          scrollbarWidth: 'thin'
         }}
         variant={isMobile ? "temporary" : "permanent"}
         anchor="left"
@@ -263,7 +264,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
         <Toolbar sx={{ ...CENTER }}>
           <img src={logo} style={styles.imgLogo} alt="" />
         </Toolbar>
-        <Stack direction={"column"} gap={0.5}>
+        <Stack direction={"column"} gap={0.5} style={{ scrollbarWidth: 'thin' }}>
           {ListUser.map((item, index) => (
             <>
               {item.expandable === false ? (

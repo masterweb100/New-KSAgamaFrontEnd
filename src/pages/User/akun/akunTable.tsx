@@ -94,9 +94,29 @@ const AkunTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
+    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected: readonly string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+
+        setSelected(newSelected);
+    };
+    
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.map((n: any) => n.name);
+            const newSelected = props.data.map((n: any, index: number) => index.toString());
             setSelected(newSelected);
             return;
         }
@@ -204,7 +224,7 @@ const AkunTable = (props: any) => {
                                         getComparator(orderdirection, valuetoorderby))
                                         .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                         .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(item.name);
+                                            const isItemSelected = isSelected(index.toString());
                                             const labelId = `enhanced-table-checkbox-${index}`;
 
                                             return (
@@ -213,9 +233,8 @@ const AkunTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    onClick={DetailPage}
                                                 >
-                                                    <StyledTableCell align="center" padding="checkbox">
+                                                    <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
                                                         <Checkbox
                                                             color="primary"
                                                             checked={isItemSelected}
@@ -224,10 +243,10 @@ const AkunTable = (props: any) => {
                                                             }}
                                                         />
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.kode}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.nama}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.kategori}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.saldo}</StyledTableCell>
+                                                    <StyledTableCell onClick={DetailPage} align="center">{item.kode}</StyledTableCell>
+                                                    <StyledTableCell onClick={DetailPage} align="center">{item.nama}</StyledTableCell>
+                                                    <StyledTableCell onClick={DetailPage} align="center">{item.kategori}</StyledTableCell>
+                                                    <StyledTableCell onClick={DetailPage} align="center">{item.saldo}</StyledTableCell>
                                                 </TableRow>
                                             )
                                         })

@@ -22,6 +22,7 @@ import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 import MutasiDialog from "./mutasiDialog";
 import { isMobile } from 'react-device-detect';
+import DeleteModal from "../../../../components/deleteModal";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -77,6 +78,19 @@ const MutasiTable = (props: any) => {
     const [page, setPage] = React.useState(0);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [isStatus, setStatus] = React.useState(false)
+    const [isDeleteModal, setDeleteModal] = React.useState(false);
+
+    const handleDelete = () => {
+        if (selected.length > 0) {
+            setDeleteModal(!isDeleteModal);
+        }
+    };
+
+    const handleUpdate = () => {
+        if (selected.length > 0) {
+            StatusDialog()
+        }
+    }
 
     const handleChangePage = (event: any, newPage: any) => {
         console.log(event)
@@ -101,9 +115,29 @@ const MutasiTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
+    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected: readonly string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+
+        setSelected(newSelected);
+    };
+
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any) => n.name);
+            const newSelected = props.data.content.map((n: any, index: number) => index.toString());
             setSelected(newSelected);
             return;
         }
@@ -127,11 +161,11 @@ const MutasiTable = (props: any) => {
                         <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: '#fff' }}>Tambah Data Mutasi</p>
                     </Stack>
                 </div>
-                <Stack direction={'row'} alignItems={'center'} gap={isMobile ? 1 :2}>
-                    <div style={{ ...CENTER, backgroundColor: Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
+                <Stack direction={'row'} alignItems={'center'} gap={isMobile ? 1 : 2}>
+                    <div onClick={handleUpdate} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
                         <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>border_color</Icon>
                     </div>
-                    <div style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
+                    <div onClick={handleDelete} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
                         <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>delete_outline</Icon>
                     </div>
                 </Stack>
@@ -220,7 +254,7 @@ const MutasiTable = (props: any) => {
                                         getComparator(orderdirection, valuetoorderby))
                                         .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                         .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(item.name);
+                                            const isItemSelected = isSelected(index.toString());
                                             const labelId = `enhanced-table-checkbox-${index}`;
 
                                             return (
@@ -229,9 +263,8 @@ const MutasiTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    onClick={StatusDialog}
                                                 >
-                                                    <StyledTableCell align="center" padding="checkbox">
+                                                    <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
                                                         <Checkbox
                                                             color="primary"
                                                             checked={isItemSelected}
@@ -240,15 +273,15 @@ const MutasiTable = (props: any) => {
                                                             }}
                                                         />
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.no}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.jenisBarang}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.jumlah}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.asal}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tujuan}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.jenisMutasi}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
-                                                    <StyledTableCell align="center">
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.tanggal}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.no}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.jenisBarang}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.jumlah}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.asal}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.tujuan}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.jenisMutasi}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.updatedBy}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">
                                                         <div style={{ ...CENTER, backgroundColor: '#d38b00', padding: '5px 10px', borderRadius: 10 }}>
                                                             <p style={{ color: '#fff', margin: 0 }}>Menunggu Approval</p>
                                                         </div>
@@ -272,8 +305,9 @@ const MutasiTable = (props: any) => {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 )}
-                <MutasiDialog isOpen={isStatus} setOpen={() => setStatus(false)}></MutasiDialog>
             </Box>
+            <MutasiDialog isOpen={isStatus} setOpen={() => setStatus(false)}></MutasiDialog>
+            <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
         </div>
     );
 }

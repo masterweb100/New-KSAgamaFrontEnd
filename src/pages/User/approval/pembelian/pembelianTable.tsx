@@ -93,9 +93,29 @@ const PenjualanTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
+    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected: readonly string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+
+        setSelected(newSelected);
+    };
+
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any) => n.name);
+            const newSelected = props.data.content.map((n: any, index: number) => index.toString());
             setSelected(newSelected);
             return;
         }
@@ -159,7 +179,7 @@ const PenjualanTable = (props: any) => {
                                     getComparator(orderdirection, valuetoorderby))
                                     .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                     .map((item: any, index: number) => {
-                                        const isItemSelected = isSelected(item.name);
+                                        const isItemSelected = isSelected(index.toString());
                                         const labelId = `enhanced-table-checkbox-${index}`;
 
                                         return (
@@ -168,9 +188,8 @@ const PenjualanTable = (props: any) => {
                                                 tabIndex={-1}
                                                 key={index}
                                                 sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                onClick={ApproveDialog}
                                             >
-                                                <StyledTableCell align="center" padding="checkbox">
+                                                <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
                                                     <Checkbox
                                                         color="primary"
                                                         checked={isItemSelected}
@@ -179,16 +198,16 @@ const PenjualanTable = (props: any) => {
                                                         }}
                                                     />
                                                 </StyledTableCell>
-                                                <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.brand}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.kategori}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.supplier}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.tempo}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.tagihan}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.total}</StyledTableCell>
-                                                <StyledTableCell align="center" style={{ color: '#d38b00' }}>{item.status}</StyledTableCell>
-                                                <StyledTableCell align="center">{item.updatedby}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.tanggal}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.id}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.brand}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.kategori}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.supplier}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.tempo}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.tagihan}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.total}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center" style={{ color: '#d38b00' }}>{item.status}</StyledTableCell>
+                                                <StyledTableCell onClick={ApproveDialog} align="center">{item.updatedby}</StyledTableCell>
                                             </TableRow>
                                         )
                                     })

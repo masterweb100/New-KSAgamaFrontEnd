@@ -1,14 +1,15 @@
 import React from 'react';
-import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, Icon } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { isMobile } from 'react-device-detect';
 
 const JenisForm = () => {
     const navigate = useNavigate()
     const [brand, setBrand] = React.useState('');
+    const { action }: any = useParams()
 
     const handleChangeBrand = (event: SelectChangeEvent) => {
         setBrand(event.target.value as string);
@@ -30,6 +31,14 @@ const JenisForm = () => {
                     <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                             <h2 style={{ color: '#000' }}>Form Data Kategori</h2>
+                            {
+                                action === 'update' ?
+                                    <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
+                                        <Icon style={{ color: '#fff', fontSize: 20 }}>border_color</Icon>
+                                    </div>
+                                    :
+                                    null
+                            }
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>

@@ -96,9 +96,29 @@ const ReturnTable = (props: any) => {
         setOrderDirection(isAscending ? "desc" : "asc");
     };
 
+    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected: readonly string[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+
+        setSelected(newSelected);
+    };
+
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any) => n.name);
+            const newSelected = props.data.content.map((n: any, index: number) => index.toString());
             setSelected(newSelected);
             return;
         }
@@ -194,7 +214,7 @@ const ReturnTable = (props: any) => {
                                         getComparator(orderdirection, valuetoorderby))
                                         .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
                                         .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(item.name);
+                                            const isItemSelected = isSelected(index.toString());
                                             const labelId = `enhanced-table-checkbox-${index}`;
 
                                             return (
@@ -203,9 +223,8 @@ const ReturnTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    onClick={StatusDialog}
                                                 >
-                                                    <StyledTableCell align="center" padding="checkbox">
+                                                    <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
                                                         <Checkbox
                                                             color="primary"
                                                             checked={isItemSelected}
@@ -214,13 +233,13 @@ const ReturnTable = (props: any) => {
                                                             }}
                                                         />
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.brand}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.jenis}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.qty}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
-                                                    <StyledTableCell align="center">
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.tanggal}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.id}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.brand}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.jenis}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.qty}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.updatedBy}</StyledTableCell>
+                                                    <StyledTableCell onClick={StatusDialog} align="center">
                                                         <div style={{ ...CENTER, backgroundColor: index % 2 === 1 ? Colors.success : '#0499a3', padding: '10px 10px', borderRadius: 10 }}>
                                                             <p style={{ color: '#fff', margin: 0 }}>{index % 2 === 1 ? 'Barang Diterima Gudang' : 'Menunggu Diterima Gudang'}</p>
                                                         </div>

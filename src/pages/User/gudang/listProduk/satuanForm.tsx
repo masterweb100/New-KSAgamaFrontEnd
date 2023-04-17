@@ -7,15 +7,18 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Icon
 } from "@mui/material";
 import NavigationBarUser from "../../../../components/appBarUser";
 import { CENTER } from "../../../../utils/stylesheet";
 import { Colors } from "../../../../utils/colors";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 
 const SatuanForm = () => {
   const navigate = useNavigate();
+  const { action }: any = useParams()
+
   const [brand, setBrand] = React.useState("");
   const [jenis, setJenis] = React.useState("");
   const [supplier, setSupplier] = React.useState("");
@@ -81,6 +84,14 @@ const SatuanForm = () => {
               justifyContent={"space-between"}
             >
               <h2 style={{ color: "#000" }}>Form Data Satuan</h2>
+              {
+                action === 'update' ?
+                  <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
+                    <Icon style={{ color: '#fff', fontSize: 20 }}>border_color</Icon>
+                  </div>
+                  :
+                  null
+              }
             </Stack>
             <Stack
               direction={"row"}
