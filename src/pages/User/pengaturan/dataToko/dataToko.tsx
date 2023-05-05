@@ -4,8 +4,26 @@ import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { Box, Stack, TextField, Toolbar, Icon } from '@mui/material';
 import { isMobile } from 'react-device-detect';
+import { useDropzone } from 'react-dropzone';
 
 const SetDataToko = () => {
+    const [files, setFiles] = React.useState<any>([]);
+
+    const SetImage = (e: any) => {
+        setFiles(e.map((file: any) => Object.assign(file, {
+            preview: URL.createObjectURL(file)
+        })))
+    }
+
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: {
+            'image/*': []
+        },
+        onDrop: SetImage,
+        multiple: false
+    });
+
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Pengaturan'} isChild={false} name={'Data Toko'} idPanel={9}></NavigationBarUser>
@@ -29,7 +47,7 @@ const SetDataToko = () => {
                                 <TextField
                                     type="text"
                                     size="small"
-                                    placeholder="Nama"
+                                    placeholder="Email"
                                     sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
@@ -40,7 +58,7 @@ const SetDataToko = () => {
                                 <TextField
                                     type="text"
                                     size="small"
-                                    placeholder="Nama"
+                                    placeholder="Telepon"
                                     sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
@@ -49,7 +67,7 @@ const SetDataToko = () => {
                                 <TextField
                                     type="text"
                                     size="small"
-                                    placeholder="Nama"
+                                    placeholder="NPWP"
                                     sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
@@ -60,7 +78,7 @@ const SetDataToko = () => {
                                 <TextField
                                     type="text"
                                     size="small"
-                                    placeholder="Nama"
+                                    placeholder="Kontak"
                                     sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
@@ -69,7 +87,7 @@ const SetDataToko = () => {
                                 <TextField
                                     type="text"
                                     size="small"
-                                    placeholder="Nama"
+                                    placeholder="Whatsapp"
                                     sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                 />
                             </Stack>
@@ -88,18 +106,43 @@ const SetDataToko = () => {
                         <h2 style={{ color: '#000', margin: 0 }}>Logo Toko</h2>
                         <Stack gap={1} direction={'column'}>
                             <span>Upload Logo</span>
-                            <div style={{
-                                border: '1px dashed #909090',
-                                borderRadius: '5px',
-                                padding: '7% 0',
-                                width: isMobile ? '100%' : '25vw',
-                                ...CENTER
-                            }}>
-                                <Stack direction={'column'} alignItems={'center'} justifyContent={'center'} gap={2}>
-                                    <Icon style={{ color: '#909090', fontSize: 60 }}>cloud_upload</Icon>
-                                    <span style={{ color: '#909090' }}>Browse File to Upload</span>
-                                </Stack>
-                            </div>
+                            {
+                                files.length === 0 ?
+                                    <div {...getRootProps({ className: 'dropzone' })} style={{
+                                        border: '1px dashed #909090',
+                                        borderRadius: '5px',
+                                        padding: '5% 0',
+                                        width: isMobile ? '100%' : '25vw',
+                                        cursor: 'pointer',
+                                        ...CENTER
+                                    }}>
+                                        <input {...getInputProps()} />
+                                        <Stack direction={'column'} alignItems={'center'} justifyContent={'center'} gap={2}>
+                                            <Icon style={{ color: '#909090', fontSize: 60 }}>cloud_upload</Icon>
+                                            <span style={{ color: '#909090', whiteSpace: 'pre-line', textAlign: 'center' }}>{'Drag & drop some image\nOR\nClick to select file'}</span>
+                                        </Stack>
+                                    </div>
+                                    :
+                                    <>
+                                        {
+                                            files.map((file: any, index: number) => (
+                                                <img
+                                                    key={index}
+                                                    src={file.preview}
+                                                    style={{
+                                                        borderRadius: '10px',
+                                                        width: isMobile ? '100%' : '25vw',
+                                                        objectFit: 'cover',
+                                                        aspectRatio: 4 / 3,
+                                                        position: 'relative'
+                                                    }}
+                                                    onLoad={() => { URL.revokeObjectURL(file.preview) }}
+                                                    alt="..."
+                                                />
+                                            ))
+                                        }
+                                    </>
+                            }
                             <span style={{ color: '#909090', fontSize: 13 }}>*Ukuran File Maksimal 1 MB</span>
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>

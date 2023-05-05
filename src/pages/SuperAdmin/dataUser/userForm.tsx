@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, InputAdornment, Icon } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import { CENTER } from '../../../utils/stylesheet';
 import { Colors } from '../../../utils/colors';
@@ -10,15 +10,15 @@ import { isMobile } from 'react-device-detect';
 import { useParams } from 'react-router-dom';
 
 const UserForm = () => {
-    const [toko, setToko] = React.useState('');
     const [role, setRole] = React.useState('');
     const [status, setStatus] = React.useState('');
+    const [newPassShow, setNewPassShow] = React.useState(false)
+    const [confirmPassShow, setConfirmPassShow] = React.useState(false)
     const { action }: any = useParams()
     const navigate = useNavigate()
 
-    const handleChangeToko = (event: SelectChangeEvent) => {
-        setToko(event.target.value as string);
-    };
+    const toggleNewPass = () => setNewPassShow(!newPassShow)
+    const toggleConfirmPass = () => setConfirmPassShow(!confirmPassShow)
 
     const handleChangeRole = (event: SelectChangeEvent) => {
         setRole(event.target.value as string);
@@ -81,27 +81,61 @@ const UserForm = () => {
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
-                                <span>Nama Toko</span>
-                                <Select
+                                <span>Username</span>
+                                <TextField
+                                    type="text"
                                     size="small"
-                                    value={toko}
-                                    displayEmpty
-                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                    onChange={handleChangeToko}
-                                    renderValue={(selected: any) => {
-                                        if (selected.length === 0) {
-                                            return <span style={{ color: '#a7a5a6' }}>Toko</span>;
-                                        }
-                                        return selected
-                                    }}
-                                >
-                                    {
-                                        ['A', 'B', 'C', 'D', 'E', 'F'].map((item, index) => (
-                                            <MenuItem value={'Toko ' + item} key={index}>Toko {item}</MenuItem>
-                                        ))
-                                    }
-                                </Select>
+                                    placeholder="Username"
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
+                                />
                             </Stack>
+                            <Stack direction={'column'} gap={1}>
+                                <span>Email</span>
+                                <TextField
+                                    type="text"
+                                    size="small"
+                                    placeholder="email@gmail.com"
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
+                                />
+                            </Stack>
+                        </Stack>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                            <Stack direction={"column"} gap={1}>
+                                <span>Password</span>
+                                <TextField
+                                    type={newPassShow ? "text" : "password"}
+                                    size="small"
+                                    placeholder="Password Lama"
+                                    sx={{ bgcolor: "white", width: isMobile ? "60vw" : "25vw" }}
+                                    InputProps={{
+                                        endAdornment:
+                                            <InputAdornment position='end'>
+                                                <Icon style={{ color: "#909090", fontSize: 25, cursor: 'pointer' }} onClick={toggleNewPass}>
+                                                    {!newPassShow ? 'visibility' : 'visibility_off'}
+                                                </Icon>
+                                            </InputAdornment>
+                                    }}
+                                />
+                            </Stack>
+                            <Stack direction={"column"} gap={1}>
+                                <span>Konfirmasi Password</span>
+                                <TextField
+                                    type={confirmPassShow ? "text" : "password"}
+                                    size="small"
+                                    placeholder="Password Lama"
+                                    sx={{ bgcolor: "white", width: isMobile ? "60vw" : "25vw" }}
+                                    InputProps={{
+                                        endAdornment:
+                                            <InputAdornment position='end'>
+                                                <Icon style={{ color: "#909090", fontSize: 25, cursor: 'pointer' }} onClick={toggleConfirmPass}>
+                                                    {!confirmPassShow ? 'visibility' : 'visibility_off'}
+                                                </Icon>
+                                            </InputAdornment>
+                                    }}
+                                />
+                            </Stack>
+                        </Stack>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>Role Pengguna</span>
                                 <Select
@@ -124,28 +158,28 @@ const UserForm = () => {
                                     }
                                 </Select>
                             </Stack>
-                        </Stack>
-                        <Stack direction={'column'} gap={1}>
-                            <span>Status</span>
-                            <Select
-                                size="small"
-                                value={status}
-                                displayEmpty
-                                sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                onChange={handleChangeStatus}
-                                renderValue={(selected: any) => {
-                                    if (selected.length === 0) {
-                                        return <span style={{ color: '#a7a5a6' }}>Status</span>;
+                            <Stack direction={'column'} gap={1}>
+                                <span>Status</span>
+                                <Select
+                                    size="small"
+                                    value={status}
+                                    displayEmpty
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                    onChange={handleChangeStatus}
+                                    renderValue={(selected: any) => {
+                                        if (selected.length === 0) {
+                                            return <span style={{ color: '#a7a5a6' }}>Status</span>;
+                                        }
+                                        return selected
+                                    }}
+                                >
+                                    {
+                                        ['Active', 'Deactive'].map((item, index) => (
+                                            <MenuItem value={item} key={index}>{item}</MenuItem>
+                                        ))
                                     }
-                                    return selected
-                                }}
-                            >
-                                {
-                                    ['Active', 'Deactive'].map((item, index) => (
-                                        <MenuItem value={item} key={index}>{item}</MenuItem>
-                                    ))
-                                }
-                            </Select>
+                                </Select>
+                            </Stack>
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>
                             <div onClick={GoBack} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.primary}`, padding: '10px 30px', cursor: 'pointer' }}>

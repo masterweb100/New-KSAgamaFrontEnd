@@ -2,10 +2,34 @@ import React from "react";
 import NavigationBarUser from "../../../../components/appBarUser";
 import { CENTER } from "../../../../utils/stylesheet";
 import { Colors } from "../../../../utils/colors";
-import { Box, Stack, TextField, Toolbar, Icon } from "@mui/material";
+import { Box, Stack, TextField, Toolbar, Icon, InputAdornment } from "@mui/material";
 import { isMobile } from "react-device-detect";
+import { useDropzone } from 'react-dropzone';
 
 const SetProfil = () => {
+  const [oldPassShow, setOldPassShow] = React.useState(false)
+  const [newPassShow, setNewPassShow] = React.useState(false)
+  const [confirmPassShow, setConfirmPassShow] = React.useState(false)
+  const [files, setFiles] = React.useState<any>([]);
+
+  const toggleOldPass = () => setOldPassShow(!oldPassShow)
+  const toggleNewPass = () => setNewPassShow(!newPassShow)
+  const toggleConfirmPass = () => setConfirmPassShow(!confirmPassShow)
+
+  const SetImage = (e: any) => {
+    setFiles(e.map((file: any) => Object.assign(file, {
+      preview: URL.createObjectURL(file)
+    })))
+  }
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'image/*': []
+    },
+    onDrop: SetImage,
+    multiple: false
+  });
+
   return (
     <div style={{ display: "flex" }}>
       <NavigationBarUser
@@ -36,34 +60,46 @@ const SetProfil = () => {
             }}
           >
             <h2 style={{ color: "#000", margin: 0 }}>Data User</h2>
-            <Stack gap={1} direction={"column"}>
-              <span>Upload Foto</span>
-              <div
-                style={{
-                  border: "1px dashed #909090",
-                  borderRadius: "5px",
-                  padding: "7% 0",
-                  width: isMobile ? "100%" : "25vw",
-                  ...CENTER,
-                }}
-              >
-                <Stack
-                  direction={"column"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={2}
-                >
-                  <Icon style={{ color: "#909090", fontSize: 60 }}>
-                    cloud_upload
-                  </Icon>
-                  <span style={{ color: "#909090" }}>
-                    Browse File to Upload
-                  </span>
-                </Stack>
-              </div>
-              <span style={{ color: "#909090", fontSize: 13 }}>
-                *Ukuran File Maksimal 1 MB
-              </span>
+            <Stack gap={1} direction={'column'}>
+              <span>Upload Logo</span>
+              {
+                files.length === 0 ?
+                  <div {...getRootProps({ className: 'dropzone' })} style={{
+                    border: '1px dashed #909090',
+                    borderRadius: '5px',
+                    padding: '5% 0',
+                    width: isMobile ? '100%' : '25vw',
+                    cursor: 'pointer',
+                    ...CENTER
+                  }}>
+                    <input {...getInputProps()} />
+                    <Stack direction={'column'} alignItems={'center'} justifyContent={'center'} gap={2}>
+                      <Icon style={{ color: '#909090', fontSize: 60 }}>cloud_upload</Icon>
+                      <span style={{ color: '#909090', whiteSpace: 'pre-line', textAlign: 'center' }}>{'Drag & drop some image\nOR\nClick to select file'}</span>
+                    </Stack>
+                  </div>
+                  :
+                  <>
+                    {
+                      files.map((file: any, index: number) => (
+                        <img
+                          key={index}
+                          src={file.preview}
+                          style={{
+                            borderRadius: '10px',
+                            width: isMobile ? '100%' : '25vw',
+                            objectFit: 'cover',
+                            aspectRatio: 4 / 3,
+                            position: 'relative'
+                          }}
+                          onLoad={() => { URL.revokeObjectURL(file.preview) }}
+                          alt="..."
+                        />
+                      ))
+                    }
+                  </>
+              }
+              <span style={{ color: '#909090', fontSize: 13 }}>*Ukuran File Maksimal 1 MB</span>
             </Stack>
             <Stack
               direction={"row"}
@@ -81,6 +117,22 @@ const SetProfil = () => {
                 />
               </Stack>
               <Stack direction={"column"} gap={1}>
+                <span>*Username</span>
+                <TextField
+                  type="text"
+                  size="small"
+                  placeholder="Username"
+                  sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
+                />
+              </Stack>
+            </Stack>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"flex-start"}
+              gap={isMobile ? 2 : 3}
+            >
+              <Stack direction={"column"} gap={1}>
                 <span>*Alamat Email</span>
                 <TextField
                   type="text"
@@ -89,42 +141,66 @@ const SetProfil = () => {
                   sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
                 />
               </Stack>
-            </Stack>
-            <Stack direction={"column"} gap={1}>
-              <span>*No. Telepon</span>
-              <TextField
-                type="text"
-                size="small"
-                placeholder="Telp"
-                sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
-              />
+              <Stack direction={"column"} gap={1}>
+                <span>*No. Telepon</span>
+                <TextField
+                  type="text"
+                  size="small"
+                  placeholder="Telp"
+                  sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
+                />
+              </Stack>
             </Stack>
             <h2 style={{ color: "#000", margin: 0 }}>Ganti Password</h2>
             <Stack direction={"column"} gap={1}>
               <span>*Password Lama</span>
               <TextField
-                type="password"
+                type={oldPassShow ? "text" : "password"}
                 size="small"
                 placeholder="Password Lama"
                 sx={{ bgcolor: "white", width: isMobile ? "60vw" : "25vw" }}
+                InputProps={{
+                  endAdornment:
+                    <InputAdornment position='end'>
+                      <Icon style={{ color: "#909090", fontSize: 25, cursor: 'pointer' }} onClick={toggleOldPass}>
+                        {!oldPassShow ? 'visibility' : 'visibility_off'}
+                      </Icon>
+                    </InputAdornment>
+                }}
               />
             </Stack>
             <Stack direction={"column"} gap={1}>
               <span>*Password Baru</span>
               <TextField
-                type="password"
+                type={newPassShow ? "text" : "password"}
                 size="small"
                 placeholder="Password Baru"
                 sx={{ bgcolor: "white", width: isMobile ? "60vw" : "25vw" }}
+                InputProps={{
+                  endAdornment:
+                    <InputAdornment position='end'>
+                      <Icon style={{ color: "#909090", fontSize: 25, cursor: 'pointer' }} onClick={toggleNewPass}>
+                        {!newPassShow ? 'visibility' : 'visibility_off'}
+                      </Icon>
+                    </InputAdornment>
+                }}
               />
             </Stack>
             <Stack direction={"column"} gap={1}>
               <span>*Ulangi Password Baru</span>
               <TextField
-                type="password"
+                type={confirmPassShow ? "text" : "password"}
                 size="small"
                 placeholder="Ulangi Password Baru"
                 sx={{ bgcolor: "white", width: isMobile ? "60vw" : "25vw" }}
+                InputProps={{
+                  endAdornment:
+                    <InputAdornment position='end'>
+                      <Icon style={{ color: "#909090", fontSize: 25, cursor: 'pointer' }} onClick={toggleConfirmPass}>
+                        {!confirmPassShow ? 'visibility' : 'visibility_off'}
+                      </Icon>
+                    </InputAdornment>
+                }}
               />
             </Stack>
             <Stack

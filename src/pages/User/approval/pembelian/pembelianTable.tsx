@@ -181,7 +181,7 @@ const PenjualanTable = (props: any) => {
                                     .map((item: any, index: number) => {
                                         const isItemSelected = isSelected(index.toString());
                                         const labelId = `enhanced-table-checkbox-${index}`;
-
+                                        
                                         return (
                                             <TableRow
                                                 role="checkbox"
@@ -214,6 +214,7 @@ const PenjualanTable = (props: any) => {
                                 : null}
                         </TableBody>
                     </Table>
+                    
                 </TableContainer>
             </Box>
             {props.data.content !== undefined && (

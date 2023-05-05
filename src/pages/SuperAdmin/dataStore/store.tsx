@@ -1,11 +1,7 @@
 import React from 'react';
-import { Box, Stack, TextField, Toolbar, InputAdornment } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
-import { CENTER } from '../../../utils/stylesheet';
-import { Colors } from '../../../utils/colors';
-import { Add, ViewList, Search, DeleteOutline } from '@mui/icons-material';
 import StoreTable from './storeTable';
-import { useNavigate } from "react-router-dom";
 import DeleteModal from '../../../components/deleteModal';
 import { isMobile } from 'react-device-detect';
 
@@ -66,14 +62,11 @@ const dummyTable = {
 };
 
 const DataStore = () => {
-    const navigate = useNavigate()
     const [isDeleteModal, setDeleteModal] = React.useState(false);
 
     const handleDelete = () => {
         setDeleteModal(!isDeleteModal);
     };
-
-    const FormStore = () => navigate('/store-data/form-store')
 
     return (
         <div style={{ display: 'flex' }}>

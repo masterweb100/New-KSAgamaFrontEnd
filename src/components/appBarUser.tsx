@@ -280,9 +280,9 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                     ...styles.tab,
                     padding: "15px 20px",
                     backgroundColor:
-                      name === item.name ? Colors.inherit : "#fff",
+                      name === item.label ? Colors.inherit : "#fff",
                     color:
-                      name === item.name ? Colors.primary : Colors.secondary,
+                      name === item.label ? Colors.primary : Colors.secondary,
                     marginTop: index === 0 ? 5 : 0,
                     "&:hover": {
                       backgroundColor: Colors.inherit,
@@ -294,14 +294,14 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                   <Icon
                     sx={{
                       color:
-                        name === item.name ? Colors.primary : Colors.secondary,
+                        name === item.label ? Colors.primary : Colors.secondary,
                       ...styles.iconHover,
                     }}
                   >
                     {item.icon}
                   </Icon>
                   <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
-                    {item.name}
+                    {item.label}
                   </p>
                 </Stack>
               ) : (
@@ -316,7 +316,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                       <Icon
                         sx={{
                           color:
-                            name === item.name
+                            name === item.label
                               ? Colors.primary
                               : Colors.secondary,
                           ...styles.iconHover,
@@ -325,7 +325,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                         {item.icon}
                       </Icon>
                       <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
-                        {item.name}
+                        {item.label}
                       </p>
                     </Stack>
                   </AccordionSummary>
@@ -345,7 +345,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                             padding: "10px",
                             paddingLeft: "30px",
                             borderLeft:
-                              name === val.name
+                              name === val.label
                                 ? `3px solid ${Colors.primary}`
                                 : "none",
                             "&:hover": {
@@ -353,9 +353,9 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                               color: Colors.primary,
                             },
                             backgroundColor:
-                              name === val.name ? Colors.inherit : "#fff",
+                              name === val.label ? Colors.inherit : "#fff",
                             color:
-                              name === val.name
+                              name === val.label
                                 ? Colors.primary
                                 : Colors.secondary,
                           }}
@@ -364,7 +364,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                           <p
                             style={{ fontSize: 13, margin: 0, fontWeight: 500 }}
                           >
-                            {val.name}
+                            {val.label}
                           </p>
                         </Stack>
                       ))}

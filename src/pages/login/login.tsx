@@ -12,6 +12,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import { Colors } from "../../utils/colors";
+import { HTTPLogin } from "../../apis/authentication";
+import secureLocalStorage from "react-secure-storage";
 
 const topBg = require("../../assets/images/top-login.png");
 const redCircle = require("../../assets/images/circle-red.png");
@@ -40,43 +42,13 @@ const Login = () => {
   const navigate = useNavigate();
   const [isPasswordShow, setPasswordShow] = React.useState(true);
   const [progress, setProgress] = React.useState(false);
-  // const [activePage, setActivePage] = React.useState(0);
-  // const [page, setPage] = React.useState(0);
-  // const [toko, setToko] = React.useState("");
-  // const [user, setUser] = React.useState("");
   const [username, setUsername] = React.useState("")
   const [usernameErr, setUsernameErr] = React.useState(false)
   const [password, setPassword] = React.useState("")
   const [passwordErr, setPasswordErr] = React.useState(false)
 
   const handlePasswordShow = () => setPasswordShow(!isPasswordShow);
-  // const onToko = (event: any) => {
-  //   setToko(event.target.value);
-  // };
-
-  // const onUser = (user: string) => {
-  //   setUser(user);
-  //   onPage(1);
-  // };
-
-  // const onPage = (page: number) => {
-  //   if (page === 0 || page === 1) {
-  //     setPage(page);
-  //     setTimeout(() => {
-  //       setActivePage(page);
-  //     }, 200);
-  //   } else {
-  //     setProgress(true);
-  //     setTimeout(() => {
-  //       setPage(page);
-  //       setProgress(false);
-  //       setTimeout(() => {
-  //         setActivePage(page);
-  //       }, 200);
-  //     }, 1000);
-  //   }
-  // };
-
+ 
   const PushUser = () => {
     if (username === 'supadmin') {
       setUsernameErr(false)
@@ -106,7 +78,6 @@ const Login = () => {
     } else {
       setUsernameErr(true)
       setPasswordErr(false)
-      console.log('goblok')
     }
   };
 
@@ -121,6 +92,21 @@ const Login = () => {
   const handleSubmit = (event: any) => {
     if (event.key === 'Enter') {
       PushUser()
+    }
+  }
+
+  const Login = async () => {
+    try {
+      let newForm = new FormData()
+      newForm.append("username", username)
+      newForm.append("password", password)
+      console.log(newForm)
+      const response = await HTTPLogin({form: newForm})
+      if (response.code === 200) {
+        secureLocalStorage.setItem("TOKEN", response.data.token as string)
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -195,59 +181,9 @@ const Login = () => {
             >
               <img src={logo} style={{ height: 80, width: "auto" }} alt="" />
             </div>
-            {/* {activePage === 0 ? (
-              <Stack
-                className={`${page === 1
-                  ? "slide-left-out"
-                  : page === 0
-                    ? "slide-left-in"
-                    : ""
-                  }`}
-                direction={"column"}
-                gap={1.5}
-              >
-                <p style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}>
-                  Login Form
-                </p>
-                <div className={"btn-stack"} style={{ width: isMobile ? '80vw' : '350px' }} onClick={() => onUser("Super Admin")}>
-                  <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
-                    Login Super Admin
-                  </p>
-                </div>
-                <div className={"btn-stack"} style={{ width: isMobile ? '80vw' : '350px' }} onClick={() => onUser("Admin")}>
-                  <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
-                    Login Admin
-                  </p>
-                </div>
-                <div className={"btn-stack"} style={{ width: isMobile ? '80vw' : '350px' }} onClick={() => onUser("User")}>
-                  <p style={{ fontSize: 16, fontWeight: "600", margin: 0 }}>
-                    Login User
-                  </p>
-                </div>
-              </Stack>
-            ) : null}
-            {activePage === 1 ? ( */}
-            <Stack
-              // className={`${page === 1
-              //   ? "slide-right-in"
-              //   : page === 0
-              //     ? "slide-right-out"
-              //     : page === 2
-              //       ? "slide-left-out"
-              //       : ""
-              //   }`}
-              direction={"column"}
-              gap={3}
-            >
+            <Stack direction={"column"} gap={3}>
               <Stack alignItems={"center"} gap={1} direction={"row"}>
-                {/* <div className="btn-back" onClick={() => onPage(0)}>
-                    <ChevronLeft sx={{ color: "#fff" }} />
-                  </div> */}
-                <p
-                  style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}
-                >
-                  Login Form
-                </p>
+                <p style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}>Login Form</p>
               </Stack>
               <div>
                 <p style={{ fontWeight: 600, margin: 0 }}>Username</p>
@@ -309,7 +245,6 @@ const Login = () => {
                 }}
               >
                 <div
-                  // onClick={() => onPage(2)}
                   onClick={PushUser}
                   style={{
                     cursor: "pointer",
@@ -320,71 +255,13 @@ const Login = () => {
                     alignSelf: "flex-start",
                   }}
                 >
-                  <p style={{ fontWeight: 600, color: "#fff", margin: 0 }}>
-                    Login
-                  </p>
+                  <p style={{ fontWeight: 600, color: "#fff", margin: 0 }}>Login</p>
                 </div>
-                <p
-                  style={{ fontWeight: 400, color: "#ababab", fontSize: 13 }}
-                >
+                <p style={{ fontWeight: 400, color: "#ababab", fontSize: 13 }}>
                   <i>Forgot password? Contact your Admin</i>
                 </p>
               </div>
             </Stack>
-            {/* ) : null}
-            {activePage === 2 ? (
-              <Stack
-                className={`${page === 2
-                  ? "slide-right-in"
-                  : page === 1
-                    ? "slide-right-out"
-                    : ""
-                  }`}
-                direction={"column"}
-                gap={3}
-              >
-                <Stack alignItems={"center"} gap={1} direction={"row"}>
-                  <div className="btn-back" onClick={() => onPage(1)}>
-                    <ChevronLeft sx={{ color: "#fff" }} />
-                  </div>
-                  <p
-                    style={{ fontWeight: 700, fontSize: 18, color: "#c42401" }}
-                  >{`Pilih Toko (${user})`}</p>
-                </Stack>
-                <FormControl sx={{ width: isMobile ? '80vw' : 350 }} size="small">
-                  <InputLabel id="demo-select-small">Pilih Toko</InputLabel>
-                  <Select
-                    labelId="demo-select-small"
-                    id="demo-select-small"
-                    value={toko}
-                    label="Pilih Toko"
-                    onChange={onToko}
-                  >
-                    {[1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => (
-                      <MenuItem value={index} key={index}>
-                        Toko {index + 1}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <div
-                  onClick={PushUser}
-                  style={{
-                    padding: "10px 40px",
-                    backgroundColor: "#c42401",
-                    borderRadius: 10,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                  }}
-                >
-                  <p style={{ fontWeight: 600, color: "#fff", margin: 0 }}>
-                    Select
-                  </p>
-                </div>
-              </Stack>
-            ) : null} */}
           </div>
         </div>
       </div>
