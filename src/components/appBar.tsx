@@ -146,7 +146,7 @@ const NavigationBar = ({ title, indexNav, isChild }: { title: string, indexNav: 
                             >
                                 <Stack direction={'row'} gap={2} alignItems={'center'}>
                                     <Icon sx={{ color: 'inherit', ...styles.iconHover }}>{item.icon}</Icon>
-                                    <p style={{ fontSize: 16, margin: 0, fontWeight: 600 }}>{item.name}</p>
+                                    <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>{item.name}</p>
                                 </Stack>
                             </div>
                         ))

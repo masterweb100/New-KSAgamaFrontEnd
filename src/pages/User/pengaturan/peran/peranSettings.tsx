@@ -4,10 +4,17 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
 import { GudangList, PenjualanList, PembelianList, LaporanList, KontakList, PengaturanList } from '../dummy';
 import { isMobile } from 'react-device-detect';
+import { CENTER } from '../../../../utils/stylesheet';
+import { useNavigate } from 'react-router-dom';
 
 const PeranSettings = () => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
+    const navigate = useNavigate()
 
+    const GoBack = () => {
+        navigate(-1)
+    }
+    
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -313,6 +320,14 @@ const PeranSettings = () => {
                             </Box>
                         </AccordionDetails>
                     </Accordion>
+                    <Stack direction={'row'} alignItems={'center'} gap={2} padding={'20px'}>
+                        <div onClick={GoBack} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.primary}`, padding: '10px 30px', cursor: 'pointer' }}>
+                            <span style={{ fontSize: 13, color: Colors.primary }}>BATAL</span>
+                        </div>
+                        <div style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.primary, padding: '10px 30px', cursor: 'pointer' }}>
+                            <span style={{ fontSize: 13, color: '#fff' }}>SIMPAN</span>
+                        </div>
+                    </Stack>
                 </div>
             </Box>
         </div>
