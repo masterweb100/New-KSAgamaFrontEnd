@@ -80,85 +80,93 @@ import SetPenomoran from "../pages/User/pengaturan/penomoran/penomoran";
 import SetProfil from "../pages/User/pengaturan/profil/profileku";
 import SetPeran from "../pages/User/pengaturan/peran/peran";
 import PeranSettings from "../pages/User/pengaturan/peran/peranSettings";
+import ProtectedRoutes from "./protectedRoutes";
+import UserRoutes from "./userRoutes";
+import AdminRoutes from "./adminRoutes";
 
 const PageRouter = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<Login />} />
-                
-                {/* SUPER ADMIN */}
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/admin-profile" element={<ProfileAdmin />} />
-                <Route path="/user-data" element={<DataUser />} />
-                <Route path="/user-data/form-user/:action" element={<UserForm />} />
-                <Route path="/store-data" element={<DataStore />} />
-                <Route path="/store-data/form-store/:action" element={<StoreForm />} />
-                <Route path="/user-role" element={<DataRole />} />
-                <Route path="/user-role/form-role" element={<RoleForm />} />
-                <Route path="/user-access" element={<AccessUser />} />
-                <Route path="/user-access/settings" element={<AccessSettings />} />
-                <Route path="/bank-data" element={<DataBank />} />
 
-                {/* USER */}
-                <Route path="/dashboard-user" element={<DashboardUser />} />
+                <Route element={<ProtectedRoutes />}>
+                    {/* SUPER ADMIN */}
+                    <Route element={<AdminRoutes />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/admin-profile" element={<ProfileAdmin />} />
+                        <Route path="/user-data" element={<DataUser />} />
+                        <Route path="/user-data/form-user/:action" element={<UserForm />} />
+                        <Route path="/store-data" element={<DataStore />} />
+                        <Route path="/store-data/form-store/:action" element={<StoreForm />} />
+                        <Route path="/user-role" element={<DataRole />} />
+                        <Route path="/user-role/form-role" element={<RoleForm />} />
+                        <Route path="/user-access" element={<AccessUser />} />
+                        <Route path="/user-access/settings" element={<AccessSettings />} />
+                        <Route path="/bank-data" element={<DataBank />} />
+                    </Route>
 
-                <Route path="/gudang/data-produk" element={<DataProduk />} />
-                <Route path="/gudang/data-produk/form-produk" element={<DataProdukForm />} />
-                <Route path="/gudang/mutasi" element={<Mutasi />} />
-                <Route path="/gudang/mutasi/form-mutasi" element={<MutasiForm />} />
-                <Route path="/gudang/list-produk" element={<ListProduk />} />
-                <Route path="/gudang/list-produk/form-brand/:action" element={<BrandForm />} />
-                <Route path="/gudang/list-produk/form-jenis/:action" element={<JenisForm />} />
-                <Route path="/gudang/list-produk/form-kategori/:action" element={<KategoriForm />} />
-                <Route path="/gudang/list-produk/form-satuan/:action" element={<SatuanForm />} />
+                    {/* USER */}
+                    <Route element={<UserRoutes />}>
+                        <Route path="/dashboard-user" element={<DashboardUser />} />
+                        <Route path="/gudang/data-produk" element={<DataProduk />} />
+                        <Route path="/gudang/data-produk/form-produk" element={<DataProdukForm />} />
+                        <Route path="/gudang/mutasi" element={<Mutasi />} />
+                        <Route path="/gudang/mutasi/form-mutasi" element={<MutasiForm />} />
+                        <Route path="/gudang/list-produk" element={<ListProduk />} />
+                        <Route path="/gudang/list-produk/form-brand/:action" element={<BrandForm />} />
+                        <Route path="/gudang/list-produk/form-jenis/:action" element={<JenisForm />} />
+                        <Route path="/gudang/list-produk/form-kategori/:action" element={<KategoriForm />} />
+                        <Route path="/gudang/list-produk/form-satuan/:action" element={<SatuanForm />} />
 
-                <Route path="/penjualan/penjualan" element={<Penjualan />} />
-                <Route path="/penjualan/penjualan/form-penjualan/:action" element={<PenjualanForm />} />
-                <Route path="/penjualan/return-penjualan" element={<ReturnPenjualan />} />
-                <Route path="/penjualan/return-penjualan/form-return/:action" element={<ReturnPenjualanForm />} />
+                        <Route path="/penjualan/penjualan" element={<Penjualan />} />
+                        <Route path="/penjualan/penjualan/form-penjualan/:action" element={<PenjualanForm />} />
+                        <Route path="/penjualan/return-penjualan" element={<ReturnPenjualan />} />
+                        <Route path="/penjualan/return-penjualan/form-return/:action" element={<ReturnPenjualanForm />} />
 
-                <Route path="/pembelian/pembelian" element={<Pembelian />} />
-                <Route path="/pembelian/pembelian/form-pembelian/:action" element={<PembelianForm />} />
-                <Route path="/pembelian/pembelian/detail" element={<PembelianDetail />} />
-                <Route path="/pembelian/pembelian/form-detail/:action" element={<PembelianDetailForm />} />
-                <Route path="/pembelian/tracking" element={<Tracking />} />
+                        <Route path="/pembelian/pembelian" element={<Pembelian />} />
+                        <Route path="/pembelian/pembelian/form-pembelian/:action" element={<PembelianForm />} />
+                        <Route path="/pembelian/pembelian/detail" element={<PembelianDetail />} />
+                        <Route path="/pembelian/pembelian/form-detail/:action" element={<PembelianDetailForm />} />
+                        <Route path="/pembelian/tracking" element={<Tracking />} />
 
-                <Route path="/akun" element={<Akun />} />
-                <Route path="/akun/form-akun" element={<AkunForm />} />
-                <Route path="/akun/detail-akun" element={<DetailAkun />} />
-                <Route path="/akun/kategori-akun" element={<KategoriAkun />} />
-                <Route path="/akun/form-kategori" element={<KategoriAkunForm />} />
+                        <Route path="/akun" element={<Akun />} />
+                        <Route path="/akun/form-akun" element={<AkunForm />} />
+                        <Route path="/akun/detail-akun" element={<DetailAkun />} />
+                        <Route path="/akun/kategori-akun" element={<KategoriAkun />} />
+                        <Route path="/akun/form-kategori" element={<KategoriAkunForm />} />
 
-                <Route path="/laporan/keuangan" element={<LapKeuangan />} />
-                <Route path="/laporan/transaksi" element={<LapTransaksi />} />
-                <Route path="/laporan/transaksi/penjualan/detail" element={<PenjualanDetailTable />} />
-                <Route path="/laporan/transaksi/penjualan/piutang" element={<UmurPiutangTable />} />
-                <Route path="/laporan/transaksi/penjualan/piutang/detail" element={<UmurPiutangDetailTable />} />
-                <Route path="/laporan/transaksi/penjualan/income" element={<PendapatanPelangganTable />} />
-                <Route path="/laporan/transaksi/penjualan/produk" element={<PenjualanProdukTable />} />
-                <Route path="/laporan/transaksi/pembelian/detail" element={<PembelianDetailTable />} />
-                <Route path="/laporan/transaksi/pembelian/hutang" element={<UmurHutangTable />} />
-                <Route path="/laporan/transaksi/pembelian/hutang/detail" element={<UmurHutangDetailTable />} />
-                <Route path="/laporan/transaksi/pembelian/outcome" element={<PembelianSupplierTable />} />
-                <Route path="/laporan/transaksi/pembelian/produk" element={<PembelianProdukTable />} />
+                        <Route path="/laporan/keuangan" element={<LapKeuangan />} />
+                        <Route path="/laporan/transaksi" element={<LapTransaksi />} />
+                        <Route path="/laporan/transaksi/penjualan/detail" element={<PenjualanDetailTable />} />
+                        <Route path="/laporan/transaksi/penjualan/piutang" element={<UmurPiutangTable />} />
+                        <Route path="/laporan/transaksi/penjualan/piutang/detail" element={<UmurPiutangDetailTable />} />
+                        <Route path="/laporan/transaksi/penjualan/income" element={<PendapatanPelangganTable />} />
+                        <Route path="/laporan/transaksi/penjualan/produk" element={<PenjualanProdukTable />} />
+                        <Route path="/laporan/transaksi/pembelian/detail" element={<PembelianDetailTable />} />
+                        <Route path="/laporan/transaksi/pembelian/hutang" element={<UmurHutangTable />} />
+                        <Route path="/laporan/transaksi/pembelian/hutang/detail" element={<UmurHutangDetailTable />} />
+                        <Route path="/laporan/transaksi/pembelian/outcome" element={<PembelianSupplierTable />} />
+                        <Route path="/laporan/transaksi/pembelian/produk" element={<PembelianProdukTable />} />
 
-                <Route path="/kontak/pelanggan" element={<Pelanggan />} />
-                <Route path="/kontak/pelanggan/form-pelanggan" element={<PelangganForm />} />
-                <Route path="/kontak/supplier" element={<Supplier />} />
-                <Route path="/kontak/supplier/form-supplier" element={<SupplierForm />} />
-                <Route path="/kontak/ekspedisi" element={<Ekspedisi />} />
-                <Route path="/kontak/ekspedisi/form-ekspedisi" element={<EkspedisiForm />} />
+                        <Route path="/kontak/pelanggan" element={<Pelanggan />} />
+                        <Route path="/kontak/pelanggan/form-pelanggan" element={<PelangganForm />} />
+                        <Route path="/kontak/supplier" element={<Supplier />} />
+                        <Route path="/kontak/supplier/form-supplier" element={<SupplierForm />} />
+                        <Route path="/kontak/ekspedisi" element={<Ekspedisi />} />
+                        <Route path="/kontak/ekspedisi/form-ekspedisi" element={<EkspedisiForm />} />
 
-                <Route path="/approval/gudang" element={<AppGudang />} />
-                <Route path="/approval/pembelian" element={<AppPembelian />} />
-                <Route path="/approval/penjualan" element={<AppPenjualan />} />
+                        <Route path="/approval/gudang" element={<AppGudang />} />
+                        <Route path="/approval/pembelian" element={<AppPembelian />} />
+                        <Route path="/approval/penjualan" element={<AppPenjualan />} />
 
-                <Route path="/settings/data-toko" element={<SetDataToko />} />
-                <Route path="/settings/penomoran" element={<SetPenomoran />} />
-                <Route path="/settings/profilku" element={<SetProfil />} />
-                <Route path="/settings/peran" element={<SetPeran />} />
-                <Route path="/settings/peran/set-peran" element={<PeranSettings />} />
+                        <Route path="/settings/data-toko" element={<SetDataToko />} />
+                        <Route path="/settings/penomoran" element={<SetPenomoran />} />
+                        <Route path="/settings/profilku" element={<SetProfil />} />
+                        <Route path="/settings/peran" element={<SetPeran />} />
+                        <Route path="/settings/peran/set-peran" element={<PeranSettings />} />
+                    </Route>
+                </Route>
             </Routes>
         </Router>
     )

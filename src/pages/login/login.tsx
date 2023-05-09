@@ -48,7 +48,7 @@ const Login = () => {
   const [passwordErr, setPasswordErr] = React.useState(false)
 
   const handlePasswordShow = () => setPasswordShow(!isPasswordShow);
- 
+
   const PushUser = () => {
     if (username === 'supadmin') {
       setUsernameErr(false)
@@ -56,7 +56,8 @@ const Login = () => {
         setPasswordErr(false)
         setProgress(true);
         setTimeout(() => {
-          navigate("/dashboard");
+          // navigate("/dashboard");
+          Login('super')
           setProgress(false);
         }, 1000);
       } else {
@@ -69,7 +70,8 @@ const Login = () => {
         console.log('user', 'admin')
         setProgress(true);
         setTimeout(() => {
-          navigate("/dashboard-user");
+          // navigate("/dashboard-user");
+          Login('user')
           setProgress(false);
         }, 1000);
       } else {
@@ -95,20 +97,45 @@ const Login = () => {
     }
   }
 
-  const Login = async () => {
+  const Login = async (param: string) => {
     try {
-      let newForm = new FormData()
-      newForm.append("username", username)
-      newForm.append("password", password)
-      console.log(newForm)
-      const response = await HTTPLogin({form: newForm})
-      if (response.code === 200) {
-        secureLocalStorage.setItem("TOKEN", response.data.token as string)
+      // let newForm = new FormData()
+      // newForm.append("username", username)
+      // newForm.append("password", password)
+      // console.log(newForm)
+      // const response = await HTTPLogin({form: newForm})
+      // if (response.code === 200) {
+      //   secureLocalStorage.setItem("TOKEN", response.data.token as string)
+      // }
+      
+      secureLocalStorage.setItem("TOKEN", param as string)
+      if (param === 'user') {
+        navigate('/dashboard-user')
+      } else {
+        navigate('/dashboard')
       }
     } catch (error) {
       console.log(error)
     }
   }
+
+  const Auth = () => {
+    const auth = secureLocalStorage.getItem("TOKEN")
+    console.log(auth)
+    if (auth !== null) {
+      if (auth === 'user') {
+        navigate('dashboard-user')
+      } else {
+        navigate('dashboard')
+      }
+    }
+  }
+
+
+  const [init, setInit] = React.useState(false)
+  React.useEffect(() => {
+    Auth()
+  }, [init])
 
   return (
     <div>

@@ -64,6 +64,7 @@ const PeranSettings = () => {
     const handlePengaturanAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPengaturan({ toko: event.target.checked, penomoran: event.target.checked, profil: event.target.checked, peran: event.target.checked })
     };
+
     const handlePengaturan = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPengaturan({ ...pengaturan, [event.target.name]: event.target.checked })
     };

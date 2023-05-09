@@ -32,6 +32,8 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { styled } from "@mui/material/styles";
 import Icon from "@mui/material/Icon";
 import { isMobile } from "react-device-detect";
+import secureLocalStorage from "react-secure-storage";
+import LogoutModal from './logoutModal'
 
 const drawerWidth = 240;
 const logo = require("../assets/images/ksa-logo-purple.png");
@@ -57,8 +59,8 @@ const Accordion = styled((props: AccordionProps) => (
   },
   "& .Mui-expanded": {
     color: Colors.primary,
-    borderTopRightRadius: 100,
-    borderBottomRightRadius: 100,
+    // borderTopRightRadius: 100,
+    // borderBottomRightRadius: 100,
   },
 }));
 
@@ -94,6 +96,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
   const navigate = useNavigate();
   const [isDrawer, setDrawer] = React.useState(false);
   const [profile, setProfile] = React.useState<any>(null);
+  const [isLogout, setLogout] = React.useState(false)
 
   const [expanded, setExpanded] = React.useState<string | false>(
     `panel${idPanel}`
@@ -105,6 +108,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
     // console.log(nav)
   };
 
+  const LogoutPopup = () => { profileClose(); setLogout(!isLogout) }
   const toggleDrawer = () => setDrawer(!isDrawer);
   const profileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setProfile(event.currentTarget);
@@ -119,10 +123,6 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
     navigate("/settings/profilku");
   };
 
-  const Logout = () => {
-    profileClose();
-    navigate("/");
-  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -224,7 +224,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                     </ListItemText>
                   </MenuItem>
                   <MenuItem
-                    onClick={Logout}
+                    onClick={LogoutPopup}
                     sx={{
                       "&:hover": {
                         color: Colors.primary,
@@ -279,6 +279,8 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                   sx={{
                     ...styles.tab,
                     padding: "15px 20px",
+                    borderTopRightRadius: 100,
+                    borderBottomRightRadius: 100,
                     backgroundColor:
                       name === item.label ? Colors.inherit : "#fff",
                     color:
@@ -287,6 +289,8 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                     "&:hover": {
                       backgroundColor: Colors.inherit,
                       color: Colors.primary,
+                      borderTopRightRadius: 100,
+                      borderBottomRightRadius: 100,
                     },
                     width: "95%",
                   }}
@@ -344,6 +348,8 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                             ...styles.tab,
                             padding: "10px",
                             paddingLeft: "30px",
+                            borderTopRightRadius: 100,
+                            borderBottomRightRadius: 100,
                             borderLeft:
                               name === val.label
                                 ? `3px solid ${Colors.primary}`
@@ -351,6 +357,8 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                             "&:hover": {
                               backgroundColor: Colors.inherit,
                               color: Colors.primary,
+                              borderTopRightRadius: 100,
+                              borderBottomRightRadius: 100,
                             },
                             backgroundColor:
                               name === val.label ? Colors.inherit : "#fff",
@@ -376,6 +384,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
           ))}
         </Stack>
       </Drawer>
+      <LogoutModal isOpen={isLogout} setOpen={LogoutPopup} navigate={navigate} />
     </Box>
   );
 };

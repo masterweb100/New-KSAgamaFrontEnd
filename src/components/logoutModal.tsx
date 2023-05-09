@@ -9,6 +9,7 @@ import * as React from "react";
 import { Colors } from "../utils/colors";
 import { CENTER } from "../utils/stylesheet";
 import { Error } from "@mui/icons-material";
+import secureLocalStorage from "react-secure-storage";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -20,7 +21,12 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const LogoutModal = ({ isOpen, setOpen, navigate }: { isOpen: boolean; setOpen: any; navigate: any }) => {
-    const Logout = () => { setOpen(); navigate('/') }
+    const Logout = () => {
+        setOpen();
+        secureLocalStorage.clear();
+        navigate('/')
+    }
+
     return (
         <Dialog
             open={isOpen}
