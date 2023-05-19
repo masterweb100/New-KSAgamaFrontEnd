@@ -14,7 +14,6 @@ const PembelianForm = () => {
     const { action }: any = useParams()
     const [supplier, setSupplier] = React.useState('');
     const [brand, setBrand] = React.useState('');
-    const [kategori, setKategori] = React.useState('');
     const [dateTransaksi, setDateTransaksi] = React.useState<any>(null);
     const [dateTempo, setDateTempo] = React.useState<any>(null);
     const [isSupplierOpen, setSupplierOpen] = React.useState(false);
@@ -25,10 +24,6 @@ const PembelianForm = () => {
 
     const handleChangeBrand = (event: SelectChangeEvent) => {
         setBrand(event.target.value as string);
-    };
-
-    const handleChangeKategori = (event: SelectChangeEvent) => {
-        setKategori(event.target.value as string);
     };
 
     const GoBack = () => {
@@ -128,26 +123,13 @@ const PembelianForm = () => {
                             </Stack>
                             <Stack direction={'column'} gap={1}>
                                 <span>Kategori</span>
-                                <Select
+                                <TextField
+                                    type="text"
                                     size="medium"
-                                    value={kategori}
-                                    displayEmpty
-                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                    onChange={handleChangeKategori}
-                                    MenuProps={{ style: { height: 300 } }}
-                                    renderValue={(selected: any) => {
-                                        if (selected.length === 0) {
-                                            return <span style={{ color: '#a7a5a6' }}>Nama Kategori</span>;
-                                        }
-                                        return selected
-                                    }}
-                                >
-                                    {
-                                        [...Array(10)].map((item, index) => (
-                                            <MenuItem key={index} value={'Kategori ' + (index + 1)}> Kategori {index + 1} </MenuItem>
-                                        ))
-                                    }
-                                </Select>
+                                    disabled
+                                    defaultValue={'Air Conditioner'}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
+                                />
                             </Stack>
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>

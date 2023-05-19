@@ -14,6 +14,7 @@ import { isMobile } from "react-device-detect";
 import { Colors } from "../../utils/colors";
 import { HTTPLogin } from "../../apis/authentication";
 import secureLocalStorage from "react-secure-storage";
+import { useFormik } from "formik";
 
 const topBg = require("../../assets/images/top-login.png");
 const redCircle = require("../../assets/images/circle-red.png");
@@ -44,44 +45,55 @@ const Login = () => {
   const [progress, setProgress] = React.useState(false);
   const [username, setUsername] = React.useState("")
   const [usernameErr, setUsernameErr] = React.useState(false)
+  const [usernameErrText, setUsernameErrText] = React.useState('')
   const [password, setPassword] = React.useState("")
   const [passwordErr, setPasswordErr] = React.useState(false)
+  const [passwordErrText, setPasswordErrText] = React.useState('')
 
   const handlePasswordShow = () => setPasswordShow(!isPasswordShow);
 
-  const PushUser = () => {
-    if (username === 'supadmin') {
-      setUsernameErr(false)
-      if (password === '123') {
-        setPasswordErr(false)
-        setProgress(true);
-        setTimeout(() => {
-          // navigate("/dashboard");
-          Login('super')
-          setProgress(false);
-        }, 1000);
+  const onLogin = async () => {
+    setUsernameErr(false)
+    setPasswordErr(false)
+    try {
+      if (username.length !== 0 && password.length !== 0) {
+        setProgress(true)
+        let newForm = new FormData()
+        newForm.append("username", username)
+        newForm.append("password", password)
+        const response = await HTTPLogin({ form: newForm })
+        if (response.status === 200) {
+          setProgress(false)
+          secureLocalStorage.setItem("TOKEN", response.data.data.token as string)
+          secureLocalStorage.setItem("USERDATA", JSON.stringify(response.data.data.user) as string)
+          if (response.data.data.user.roleId === 1) {
+            navigate('/dashboard')
+          } else {
+            navigate('/dashboard-user')
+          }
+        }
       } else {
-        setPasswordErr(true)
+        if (username.length === 0) {
+          setUsernameErr(true)
+          setUsernameErrText('Pastikan Username Terisi')
+        } 
+        if (password.length === 0) {
+          setPasswordErr(true)
+          setPasswordErrText('Pastikan Password Terisi')
+        }
       }
-    } else if (username === 'admin' || username === 'user') {
-      setUsernameErr(false)
-      if (password === '123') {
-        setPasswordErr(false)
-        console.log('user', 'admin')
-        setProgress(true);
-        setTimeout(() => {
-          // navigate("/dashboard-user");
-          Login('user')
-          setProgress(false);
-        }, 1000);
+    } catch (error: any) {
+      console.log(error)
+      setProgress(false)
+      setPasswordErr(true)
+      if (error.data.errors[0].message === 'Bad credentials') {
+        setPasswordErrText('Terjadi kesalahan, pastikan username dan password sudah benar')
       } else {
-        setPasswordErr(true)
+        let err = error.data.errors[0].message as string
+        setPasswordErrText(err.charAt(0).toUpperCase() + err.slice(1))
       }
-    } else {
-      setUsernameErr(true)
-      setPasswordErr(false)
     }
-  };
+  }
 
   const handleUsername = (event: any) => {
     setUsername(event.target.value as string);
@@ -93,37 +105,15 @@ const Login = () => {
 
   const handleSubmit = (event: any) => {
     if (event.key === 'Enter') {
-      PushUser()
-    }
-  }
-
-  const Login = async (param: string) => {
-    try {
-      // let newForm = new FormData()
-      // newForm.append("username", username)
-      // newForm.append("password", password)
-      // console.log(newForm)
-      // const response = await HTTPLogin({form: newForm})
-      // if (response.code === 200) {
-      //   secureLocalStorage.setItem("TOKEN", response.data.token as string)
-      // }
-      
-      secureLocalStorage.setItem("TOKEN", param as string)
-      if (param === 'user') {
-        navigate('/dashboard-user')
-      } else {
-        navigate('/dashboard')
-      }
-    } catch (error) {
-      console.log(error)
+      onLogin()
     }
   }
 
   const Auth = () => {
-    const auth = secureLocalStorage.getItem("TOKEN")
-    console.log(auth)
+    const auth = secureLocalStorage.getItem("USERDATA") as string
+    const authData = JSON.parse(auth)
     if (auth !== null) {
-      if (auth === 'user') {
+      if (authData.roleId === 2) {
         navigate('dashboard-user')
       } else {
         navigate('dashboard')
@@ -225,7 +215,7 @@ const Login = () => {
                   ></CustomTextField>
                   {
                     usernameErr === true ?
-                      <small style={{ fontWeight: 400, margin: 0, color: Colors.primary }}>Username tidak ditemukan</small>
+                      <small style={{ fontWeight: 400, margin: 0, color: Colors.primary }}>{usernameErrText}</small>
                       :
                       <small style={{ margin: 0 }}></small>
                   }
@@ -259,7 +249,7 @@ const Login = () => {
                   ></CustomTextField>
                   {
                     passwordErr === true ?
-                      <small style={{ fontWeight: 400, margin: 0, color: Colors.primary }}>Password tidak sesuai</small>
+                      <small style={{ fontWeight: 400, margin: 0, color: Colors.primary }}>{passwordErrText}</small>
                       :
                       <small style={{ margin: 0 }}></small>
                   }
@@ -272,7 +262,8 @@ const Login = () => {
                 }}
               >
                 <div
-                  onClick={PushUser}
+                  onClick={onLogin}
+                  // onClick={PushUser}
                   style={{
                     cursor: "pointer",
                     padding: "10px 40px",

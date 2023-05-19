@@ -64,19 +64,7 @@ const DeleteModal = ({
             marginTop={5}
           >
             <div
-              onClick={setOpen}
-              style={{
-                ...CENTER,
-                borderRadius: 10,
-                backgroundColor: Colors.error,
-                padding: "10px 30px",
-                cursor: "pointer",
-              }}
-            >
-              <span style={{ fontSize: 13, color: "#fff" }}>HAPUS</span>
-            </div>
-            <div
-              onClick={setOpen}
+              onClick={() => setOpen('close')}
               style={{
                 ...CENTER,
                 borderRadius: 10,
@@ -86,6 +74,18 @@ const DeleteModal = ({
               }}
             >
               <span style={{ fontSize: 13, color: Colors.error }}>BATAL</span>
+            </div>
+            <div
+              onClick={() => setOpen('yes')}
+              style={{
+                ...CENTER,
+                borderRadius: 10,
+                backgroundColor: Colors.error,
+                padding: "10px 30px",
+                cursor: "pointer",
+              }}
+            >
+              <span style={{ fontSize: 13, color: "#fff" }}>HAPUS</span>
             </div>
           </Stack>
         </Stack>

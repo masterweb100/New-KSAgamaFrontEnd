@@ -51,8 +51,19 @@ export function HTTPAddRole(param: {
   });
 }
 
+export function HTTPGenerateRoleID(): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await AxiosNormal().get(`roles/id`);
+      return resolve(response);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+}
+
 export function HTTPUpdateRole(param: { 
-    id: string;
+    id: number;
     roleName: string;
     token: string;
 }): Promise<any> {
@@ -74,13 +85,17 @@ export function HTTPDeleteRoles(param: {
 }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await AxiosNormal(param.token).get(`roles`, {
+      const response = await AxiosNormal(param.token).delete(`roles`, {
         params: {
           ids: param.ids,
         },
         paramsSerializer: {
-          encode: (params: any) => {
-            return QueryString.stringify(params, { encodeValuesOnly: true });
+          serialize: (params: any) => {
+            let newParams = QueryString.stringify(params, {
+              encodeValuesOnly: true,
+              arrayFormat: "brackets",
+            });
+            return newParams.replace(/[\[\]']+/g, "");
           },
         },
       });

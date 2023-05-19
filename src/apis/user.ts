@@ -22,6 +22,17 @@ export function HTTPGetUsers(param: {
   });
 }
 
+export function HTTPGenerateUserID(): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await AxiosNormal().get(`users/id`);
+      return resolve(response);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+}
+
 export function HTTPGetUserID(param: { id: number }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
@@ -36,10 +47,11 @@ export function HTTPGetUserID(param: { id: number }): Promise<any> {
 export function HTTPAddUser(param: {
   username: string;
   storeId: number;
-  getId: string;
+  genId: string;
   name: string;
   roleId: number;
-  status: string;
+  status: boolean;
+  email: string;
   password: string;
   token: string;
 }): Promise<any> {
@@ -48,8 +60,9 @@ export function HTTPAddUser(param: {
       const response = await AxiosNormal(param.token).post("users", {
         username: param.username,
         storeId: param.storeId,
-        getId: param.getId,
+        genId: param.genId,
         name: param.name,
+        email: param.email,
         roleId: param.roleId,
         status: param.status,
         password: param.password,
@@ -62,7 +75,7 @@ export function HTTPAddUser(param: {
 }
 
 export function HTTPUpdateUser(param: {
-  id: number;
+  id: string;
   storeId: number;
   roleId: number;
   name: string;
@@ -84,19 +97,23 @@ export function HTTPUpdateUser(param: {
   });
 }
 
-export function HTTPDeleteUsers(param: { 
-    ids: any[];
-    token: string;
+export function HTTPDeleteUsers(param: {
+  ids: any[];
+  token: string;
 }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await AxiosNormal(param.token).get(`users`, {
+      const response = await AxiosNormal(param.token).delete(`users`, {
         params: {
           ids: param.ids,
         },
         paramsSerializer: {
-          encode: (params: any) => {
-            return QueryString.stringify(params, { encodeValuesOnly: true });
+          serialize: (params: any) => {
+            let newParams = QueryString.stringify(params, {
+              encodeValuesOnly: true,
+              arrayFormat: "brackets",
+            });
+            return newParams.replace(/[\[\]']+/g, "");
           },
         },
       });

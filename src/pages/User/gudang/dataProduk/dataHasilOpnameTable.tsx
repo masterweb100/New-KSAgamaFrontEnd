@@ -10,6 +10,7 @@ import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "data", label: "Tanggal" },
+    { id: "sku", label: "ID SKU" },
     { id: "id", label: "ID Barang" },
     { id: "brand", label: "Nama Brand" },
     { id: "category", label: "Jenis Barang" },
@@ -166,9 +167,9 @@ const DataHasilOpnameTable = (props: any) => {
                                                     tabIndex={-1}
                                                     key={index}
                                                     sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                                                // onClick={FormStore}
                                                 >
                                                     <StyledTableCell align="center">{item.date}</StyledTableCell >
+                                                    <StyledTableCell align="center">SKU/00{index + 1}</StyledTableCell>
                                                     <StyledTableCell align="center">P/00{item.id}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.brand}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.category}</StyledTableCell>

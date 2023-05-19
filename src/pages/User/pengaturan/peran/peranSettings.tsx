@@ -24,7 +24,7 @@ const PeranSettings = () => {
     const [pembelian, setPembelian] = React.useState<any>({ pembelian: false, tracking: false });
     const [laporan, setLaporan] = React.useState<any>({ keuangan: false, transaksi: false });
     const [kontak, setKontak] = React.useState<any>({ pelanggan: false, supplier: false, ekspedisi: false });
-    const [pengaturan, setPengaturan] = React.useState<any>({ toko: false, penomoran: false, profil: false, peran: false });
+    const [pengaturan, setPengaturan] = React.useState<any>({ toko: false, penomoran: false, peran: false });
 
     const handleGudangAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         setGudang({ produk: event.target.checked, mutasi: event.target.checked, list: event.target.checked })
@@ -62,7 +62,7 @@ const PeranSettings = () => {
     };
 
     const handlePengaturanAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPengaturan({ toko: event.target.checked, penomoran: event.target.checked, profil: event.target.checked, peran: event.target.checked })
+        setPengaturan({ toko: event.target.checked, penomoran: event.target.checked, peran: event.target.checked })
     };
 
     const handlePengaturan = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -294,7 +294,7 @@ const PeranSettings = () => {
                                 control={
                                     <Checkbox
                                         sx={{ '&.Mui-checked': { color: Colors.primary } }}
-                                        checked={pengaturan.toko && pengaturan.penomoran && pengaturan.profil && pengaturan.peran}
+                                        checked={pengaturan.toko && pengaturan.penomoran && pengaturan.peran}
                                         onChange={handlePengaturanAll}
                                     />
                                 }

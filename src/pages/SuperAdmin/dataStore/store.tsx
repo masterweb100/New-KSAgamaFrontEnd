@@ -4,69 +4,33 @@ import NavigationBar from '../../../components/appBar';
 import StoreTable from './storeTable';
 import DeleteModal from '../../../components/deleteModal';
 import { isMobile } from 'react-device-detect';
-
-const dummyTable = {
-    content: [
-        {
-            id: 1,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-        {
-            id: 2,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-        {
-            id: 3,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-        {
-            id: 4,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-        {
-            id: 5,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-        {
-            id: 6,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-        {
-            id: 7,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-        {
-            id: 8,
-            store: "Warteg Woro Kangen",
-            address: "Jl. Tendean No. 11, Jakarta Selatan",
-            admin: "Admin",
-        },
-    ],
-    totalElements: 10,
-    number: 0,
-    size: 5,
-};
+import { HTTPGetStores } from '../../../apis/store';
 
 const DataStore = () => {
     const [isDeleteModal, setDeleteModal] = React.useState(false);
+    const [init, setInit] = React.useState(false)
+    const [DataStore, setDataStore] = React.useState([])
 
     const handleDelete = () => {
         setDeleteModal(!isDeleteModal);
     };
+
+    const GetStoreTable = async () => {
+        try {
+            const response = await HTTPGetStores({
+                limit: '10',
+                page: '1',
+                q: ''
+            })
+            setDataStore(response.data.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    React.useEffect(() => {
+        GetStoreTable()
+    }, [init])
 
     return (
         <div style={{ display: 'flex' }}>
@@ -77,7 +41,7 @@ const DataStore = () => {
             >
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
-                    <StoreTable data={dummyTable} />
+                    <StoreTable data={DataStore} />
                 </div>
                 <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
             </Box>

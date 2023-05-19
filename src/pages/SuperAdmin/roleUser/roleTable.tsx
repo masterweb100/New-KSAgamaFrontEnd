@@ -22,6 +22,10 @@ import DeleteModal from "../../../components/deleteModal";
 import { isMobile } from "react-device-detect";
 import { CENTER } from "../../../utils/stylesheet";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setRoleData } from "../../../stores/reduxes/role";
+import { HTTPDeleteRoles } from "../../../apis/role";
+import secureLocalStorage from "react-secure-storage";
 
 const columns = [
   { id: "id", label: "ID Role" },
@@ -69,14 +73,26 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 
 const RoleTable = (props: any) => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const dispatch = useDispatch()
+  const [selected, setSelected] = useState<any[]>([]);
   const [page, setPage] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [isDeleteModal, setDeleteModal] = React.useState(false);
 
-  const handleDelete = () => {
+  const handleDelete = async (param: string) => {
     if (selected.length > 0) {
-      setDeleteModal(!isDeleteModal);
+      if (param === 'yes') {
+        const token = secureLocalStorage.getItem("TOKEN") as string
+        const respDelete = await HTTPDeleteRoles({
+          ids: selected.map(String),
+          token: token
+        })
+        console.log(respDelete)
+        setDeleteModal(!isDeleteModal);
+        window.location.reload()
+      } else {
+        setDeleteModal(!isDeleteModal);
+      }
     }
   };
 
@@ -104,7 +120,7 @@ const RoleTable = (props: any) => {
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+    let newSelected: any[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -124,7 +140,7 @@ const RoleTable = (props: any) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = props.data.content.map((n: any) => n.role);
+      const newSelected = props.data.map((n: any) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -133,13 +149,17 @@ const RoleTable = (props: any) => {
 
   const isSelected = (name: any) => selected.indexOf(name) !== -1;
 
-  const FormRole = () => navigate("/user-role/form-role");
+  const FormAddRole = () => navigate("/user-role/form-role/add");
+  const FormUpdateRole = (item: any) => {
+    dispatch(setRoleData({ data: item }))
+    navigate("/user-role/form-role/update");
+  }
 
   return (
     <div>
       <Stack direction={"row"} justifyContent={"space-between"}>
         <div
-          onClick={FormRole}
+          onClick={FormAddRole}
           style={{
             ...CENTER,
             backgroundColor: Colors.primary,
@@ -164,7 +184,7 @@ const RoleTable = (props: any) => {
           </Stack>
         </div>
         <div
-          onClick={handleDelete}
+          onClick={() => handleDelete('open')}
           style={{
             ...CENTER,
             backgroundColor:
@@ -228,102 +248,109 @@ const RoleTable = (props: any) => {
         }}
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-          <TableContainer>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>
-                    <Checkbox
-                      color="primary"
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < props.data.content.length
-                      }
-                      checked={
-                        props.data.content.length > 0 &&
-                        selected.length === props.data.content.length
-                      }
-                      onChange={handleSelectAllClick}
-                    />
-                  </StyledTableCell>
-                  {columns.map((column: any) => (
-                    <StyledTableCell key={column.id}>
-                      <TableSortLabel
-                        active={valuetoorderby === column.id}
-                        direction={
-                          valuetoorderby === column.id ? "asc" : "desc"
-                        }
-                        onClick={createSortHandler(column.id)}
-                        sx={{
-                          fontWeight: "bold",
-                          whiteSpace: "nowrap",
-                          "& .MuiTableSortLabel-icon": {
-                            opacity: 1,
-                            fontSize: 10,
-                          },
-                        }}
-                        IconComponent={FilterList}
-                      >
-                        {column.label}
-                      </TableSortLabel>
-                    </StyledTableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {props.data.content !== undefined
-                  ? sortedRowInformation(
-                      props.data.content,
-                      getComparator(orderdirection, valuetoorderby)
-                    )
-                      .slice(
-                        page * itemsPerPage,
-                        page * itemsPerPage + itemsPerPage
-                      )
-                      .map((item: any, index: number) => {
-                        const isItemSelected = isSelected(item.role);
-                        const labelId = `enhanced-table-checkbox-${index}`;
-
-                        return (
-                          <TableRow
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={index}
-                            sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+          {
+            props.data.length === 0 ?
+              <div style={{ ...CENTER, padding: '20px 0' }}>
+                <span>Tidak ada data</span>
+              </div>
+              :
+              <TableContainer>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell>
+                        <Checkbox
+                          color="primary"
+                          indeterminate={
+                            selected.length > 0 &&
+                            selected.length < props.data.length
+                          }
+                          checked={
+                            props.data.length > 0 &&
+                            selected.length === props.data.length
+                          }
+                          onChange={handleSelectAllClick}
+                        />
+                      </StyledTableCell>
+                      {columns.map((column: any) => (
+                        <StyledTableCell key={column.id}>
+                          <TableSortLabel
+                            active={valuetoorderby === column.id}
+                            direction={
+                              valuetoorderby === column.id ? "asc" : "desc"
+                            }
+                            onClick={createSortHandler(column.id)}
+                            sx={{
+                              fontWeight: "bold",
+                              whiteSpace: "nowrap",
+                              "& .MuiTableSortLabel-icon": {
+                                opacity: 1,
+                                fontSize: 10,
+                              },
+                            }}
+                            IconComponent={FilterList}
                           >
-                            <StyledTableCell
-                              onClick={(e) => handleClick(e, item.role)}
-                              align="center"
-                              padding="checkbox"
+                            {column.label}
+                          </TableSortLabel>
+                        </StyledTableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+
+                  <TableBody>
+                    {props.data !== undefined
+                      ? sortedRowInformation(
+                        props.data,
+                        getComparator(orderdirection, valuetoorderby)
+                      )
+                        .slice(
+                          page * itemsPerPage,
+                          page * itemsPerPage + itemsPerPage
+                        )
+                        .map((item: any, index: number) => {
+                          const isItemSelected = isSelected(item.id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
+
+                          return (
+                            <TableRow
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={index}
+                              sx={{ "&:hover": { bgcolor: Colors.inherit } }}
                             >
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.id}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.role}
-                            </StyledTableCell>
-                          </TableRow>
-                        );
-                      })
-                  : null}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                              <StyledTableCell
+                                onClick={(e) => handleClick(e, item.id)}
+                                align="center"
+                                padding="checkbox"
+                              >
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": labelId,
+                                  }}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell onClick={() => FormUpdateRole(item)} align="center">
+                                {item.id}
+                              </StyledTableCell>
+                              <StyledTableCell onClick={() => FormUpdateRole(item)} align="center">
+                                {item.roleName}
+                              </StyledTableCell>
+                            </TableRow>
+                          );
+                        })
+                      : null}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+          }
         </Box>
-        {props.data.content !== undefined && (
+        {props.data !== undefined && (
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, 100]}
             component="div"
-            count={props.data.content.length}
+            count={props.data.length}
             rowsPerPage={itemsPerPage}
             page={page}
             onPageChange={handleChangePage}

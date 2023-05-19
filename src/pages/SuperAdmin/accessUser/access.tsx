@@ -12,6 +12,9 @@ import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import "./styles.css";
 import { Colors } from "../../../utils/colors";
+import { HTTPGetRoles } from "../../../apis/role";
+import { useDispatch } from "react-redux";
+import { setRoleData } from "../../../stores/reduxes/role";
 
 const user = [
   "Admin",
@@ -22,8 +25,32 @@ const user = [
 ];
 const AccessUser = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const [init, setInit] = React.useState(false)
+  const [DataRole, setDataRole] = React.useState<any[]>([])
 
-  const SettingPage = () => navigate("/user-access/settings");
+  const GetRoleTable = async () => {
+    try {
+      const response = await HTTPGetRoles({
+        limit: '',
+        page: '',
+        q: ''
+      })
+      setDataRole(response.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  React.useEffect(() => {
+    GetRoleTable()
+  }, [init])
+
+  const SettingPage = (item: any) => {
+    dispatch(setRoleData({ data: item }))
+    navigate("/user-access/settings");
+  }
+  
   return (
     <div style={{ display: "flex" }}>
       <NavigationBar
@@ -45,7 +72,7 @@ const AccessUser = () => {
           direction={isMobile ? "column" : "row"}
           alignItems={"center"}
           gap={3}
-          justifyContent={isMobile ? "center" : "space-between"}
+          justifyContent={"space-between"}
           sx={{
             marginTop: 3,
             paddingX: 4,
@@ -58,24 +85,11 @@ const AccessUser = () => {
             <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
             <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Peran</p>
           </Stack>
-          {/* <TextField
-                        type="search"
-                        size="small"
-                        placeholder="Pencarian by Name"
-                        sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Icon>search</Icon>
-                                </InputAdornment>
-                            ),
-                        }}
-                    /> */}
         </Stack>
         <Stack direction={"column"} gap={0}>
-          {user.map((item, index) => (
-            <div onClick={SettingPage} key={index} className={"list"}>
-              <span>{item}</span>
+          {DataRole.map((item, index) => (
+            <div onClick={() => SettingPage(item)} key={index} className={"list"}>
+              <span>{item.roleName}</span>
             </div>
           ))}
         </Stack>

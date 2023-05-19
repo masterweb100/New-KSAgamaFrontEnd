@@ -100,7 +100,7 @@ const PageRouter = () => {
                         <Route path="/store-data" element={<DataStore />} />
                         <Route path="/store-data/form-store/:action" element={<StoreForm />} />
                         <Route path="/user-role" element={<DataRole />} />
-                        <Route path="/user-role/form-role" element={<RoleForm />} />
+                        <Route path="/user-role/form-role/:action" element={<RoleForm />} />
                         <Route path="/user-access" element={<AccessUser />} />
                         <Route path="/user-access/settings" element={<AccessSettings />} />
                         <Route path="/bank-data" element={<DataBank />} />

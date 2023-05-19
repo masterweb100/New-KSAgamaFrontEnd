@@ -3,6 +3,7 @@ import { Box, Toolbar } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import RoleTable from './roleTable';
 import { isMobile } from 'react-device-detect';
+import { HTTPGetRoles } from '../../../apis/role';
 
 const dummyTable = {
     content: [
@@ -15,6 +16,26 @@ const dummyTable = {
 };
 
 const DataRole = () => {
+    const [init, setInit] = React.useState(false)
+    const [DataRole, setDataRole] = React.useState([])
+
+    const GetRoleTable = async () => {
+        try {
+            const response = await HTTPGetRoles({
+                limit: '10',
+                page: '1',
+                q: ''
+            })
+            setDataRole(response.data.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    React.useEffect(() => {
+        GetRoleTable()
+    }, [init])
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBar title={'Data Role'} indexNav={3} isChild={false}></NavigationBar>
@@ -24,7 +45,7 @@ const DataRole = () => {
             >
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
-                    <RoleTable data={dummyTable} />
+                    <RoleTable data={DataRole} />
                 </div>
             </Box>
         </div >

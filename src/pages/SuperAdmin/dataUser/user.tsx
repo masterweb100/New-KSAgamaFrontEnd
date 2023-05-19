@@ -4,6 +4,7 @@ import NavigationBar from '../../../components/appBar';
 import './styles.css'
 import UserTable from './userTable';
 import { isMobile } from 'react-device-detect';
+import { HTTPGetUsers } from '../../../apis/user';
 
 const dummyTable = {
     content: [
@@ -70,6 +71,26 @@ const dummyTable = {
 };
 
 const DataUser = () => {
+    const [init, setInit] = React.useState(false)
+    const [DataUser, setDataUser] = React.useState([])
+
+    const GetUserTable = async () => {
+        try {
+            const response = await HTTPGetUsers({
+                limit: '10',
+                page: '1',
+                q: ''
+            })
+            setDataUser(response.data.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    React.useEffect(() => {
+        GetUserTable()
+    }, [init])
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBar title={'Data Pengguna'} indexNav={1} isChild={false}></NavigationBar>
@@ -79,7 +100,7 @@ const DataUser = () => {
             >
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
-                    <UserTable data={dummyTable} />
+                    <UserTable data={DataUser} />
                 </div>
             </Box>
         </div >

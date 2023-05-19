@@ -11,6 +11,7 @@ import { isMobile } from 'react-device-detect';
 
 const columns = [
     { id: "data", label: "Tanggal" },
+    { id: "sku", label: "ID SKU" },
     { id: "id", label: "ID Barang" },
     { id: "brand", label: "Nama Brand" },
     { id: "category", label: "Jenis Barang" },
@@ -108,7 +109,7 @@ const DataOpnameTable = (props: any) => {
                     type="search"
                     size="small"
                     placeholder="Pencarian by ID"
-                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%': '20vw' }}
+                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -172,17 +173,18 @@ const DataOpnameTable = (props: any) => {
                                                     onClick={FormPage}
                                                 >
                                                     <StyledTableCell align="center">{item.date}</StyledTableCell >
+                                                    <StyledTableCell align="center">SKU/00{index + 1}</StyledTableCell>
                                                     <StyledTableCell align="center">P/00{item.id}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.brand}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.category}</StyledTableCell>
                                                     <StyledTableCell align="center">{item.qty}</StyledTableCell>
                                                     <StyledTableCell align="center">
-                                                        <div style={{ backgroundColor: '#2191b7', padding: '3px 10px', borderRadius: 10, width: '80%', ...CENTER }}>
+                                                        <div style={{ backgroundColor: '#2191b7', padding: '3px 10px', borderRadius: 10, width: '80%', ...CENTER, alignSelf: 'center' }}>
                                                             <p style={{ margin: 0, color: '#fff' }}>Freeze</p>
                                                         </div>
                                                     </StyledTableCell>
                                                     <StyledTableCell align="center">
-                                                        <Stack direction={'row'} gap={2} width={'100%'}>
+                                                        <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
                                                             <span style={{ margin: 0, display: 'flex', alignSelf: 'center' }}>{item.updatedby}</span>
                                                             <IconButton style={{ width: '15%' }}>
                                                                 <Icon style={{ color: Colors.primary, fontSize: 20 }}>chevron_right</Icon>

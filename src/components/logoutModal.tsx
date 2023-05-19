@@ -49,7 +49,7 @@ const LogoutModal = ({ isOpen, setOpen, navigate }: { isOpen: boolean; setOpen: 
                         direction={"column"}
                         alignItems={"center"}
                         justifyContent={"center"}
-                        width={"90%"}
+                        // width={"90%"}
                         textAlign={"center"}
                     >
                         <h3 style={{ color: "#686868" }}>Log Out</h3>
