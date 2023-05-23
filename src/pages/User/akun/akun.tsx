@@ -37,7 +37,7 @@ const Akun = () => {
             >
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <CustomTabs
                             value={value}
                             onChange={handleChange}
@@ -52,7 +52,7 @@ const Akun = () => {
                             <CustomTab value="income" label="Pendapatan" />
                             <CustomTab value="hargapokok" label="Harga Pokok Penjualan" />
                         </CustomTabs>
-                    </Box>
+                    </Box> */}
                     <div style={{ marginTop: 20 }}>
                         <AkunTable data={akunData}></AkunTable>
                     </div>

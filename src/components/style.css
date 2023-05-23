@@ -14,11 +14,11 @@
     border-bottom-right-radius: 100px;
     cursor: pointer;
     color: #909090;
-    transition: all 0.5s;
+    transition: all 0.3s;
 }
 
 .side-btn:hover {
     background-color: #ffe4e3;
     color: #c42401;
-    transition: all 0.5s;
+    transition: all 0.3s;
 }

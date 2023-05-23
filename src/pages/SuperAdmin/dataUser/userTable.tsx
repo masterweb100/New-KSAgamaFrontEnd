@@ -47,40 +47,11 @@ const StyledTableCell = styled(TableCell)(() => ({
   },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-  return order === "desc"
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-  const stabilizedRowArray = rowArray.map((el: any, index: number) => [
-    el,
-    index,
-  ]);
-  stabilizedRowArray.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const UserTable = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selected, setSelected] = useState<any[]>([]);
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [isDeleteModal, setDeleteModal] = React.useState(false);
   const [DataRole, setDataRole] = React.useState([]);
@@ -104,26 +75,14 @@ const UserTable = (props: any) => {
   };
 
   const handleChangePage = (event: any, newPage: any) => {
-    setPage(newPage);
-    console.log(event);
+    setPage(newPage + 1);
+    props.changePage(newPage + 1)
   };
 
   const handleChangeRowsPerPage = (event: any) => {
     setItemsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const [orderdirection, setOrderDirection] = useState("asc");
-  const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-  const createSortHandler = (property: any) => (event: any) => {
-    handleRequestSort(event, property);
-  };
-
-  const handleRequestSort = (event: any, property: any) => {
-    console.log(event);
-    const isAscending = valuetoorderby === property && orderdirection === "asc";
-    setValueToOrderBy(property);
-    setOrderDirection(isAscending ? "desc" : "asc");
+    props.itemsPerPage(parseInt(event.target.value, 10))
+    setPage(1);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,6 +124,10 @@ const UserTable = (props: any) => {
     dispatch(setUserData({ data: item }));
     navigate("/user-data/form-user/update");
   };
+  
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.search(event.target.value)
+  }
 
   const GetRoleTable = async () => {
     try {
@@ -187,17 +150,6 @@ const UserTable = (props: any) => {
     <div>
       <div style={{ maxWidth: isMobile ? "100vw" : "78vw" }}>
         <Stack direction={"column"} gap={4}>
-          {/* <Stack direction={"row"} gap={1}>
-            <div className="btn-active">
-              <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>Semua</p>
-            </div>
-            <div className="btn-inactive">
-              <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>Admin</p>
-            </div>
-            <div className="btn-inactive">
-              <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>User</p>
-            </div>
-          </Stack> */}
           <Stack direction={"row"} justifyContent={"space-between"}>
             {DataRole.length === 0 ? (
               <Tooltip title="Role belum tersedia" placement="right">
@@ -298,6 +250,7 @@ const UserTable = (props: any) => {
                 borderRadius: 1,
                 width: isMobile ? "90%" : "20vw",
               }}
+              onChange={handleSearch}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -345,130 +298,104 @@ const UserTable = (props: any) => {
                     </StyledTableCell>
                     {columns.map((column: any) => (
                       <StyledTableCell key={column.id}>
-                        <TableSortLabel
-                          active={valuetoorderby === column.id}
-                          direction={
-                            valuetoorderby === column.id ? "asc" : "desc"
-                          }
-                          onClick={createSortHandler(column.id)}
-                          sx={{
-                            fontWeight: "bold",
-                            whiteSpace: "nowrap",
-                            "& .MuiTableSortLabel-icon": {
-                              opacity: 1,
-                              fontSize: 10,
-                            },
-                          }}
-                          IconComponent={FilterList}
-                        >
-                          {column.label}
-                        </TableSortLabel>
+                        {column.label}
                       </StyledTableCell>
                     ))}
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  {props.data !== undefined
-                    ? sortedRowInformation(
-                        props.data,
-                        getComparator(orderdirection, valuetoorderby)
-                      )
-                        .slice(
-                          page * itemsPerPage,
-                          page * itemsPerPage + itemsPerPage
-                        )
-                        .map((item: any, index: number) => {
-                          const isItemSelected = isSelected(item.id.toString());
-                          const labelId = `enhanced-table-checkbox-${index}`;
+                  {props.data.map((item: any, index: number) => {
+                        const isItemSelected = isSelected(item.id.toString());
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                          return (
-                            <TableRow
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={index}
-                              sx={{
-                                "&:hover": { bgcolor: Colors.inherit },
-                                cursor: "pointer",
-                              }}
+                        return (
+                          <TableRow
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                            sx={{
+                              "&:hover": { bgcolor: Colors.inherit },
+                              cursor: "pointer",
+                            }}
+                          >
+                            <StyledTableCell
+                              onClick={(e) =>
+                                handleClick(e, item.id.toString())
+                              }
+                              align="center"
+                              padding="checkbox"
                             >
-                              <StyledTableCell
-                                onClick={(e) =>
-                                  handleClick(e, item.id.toString())
-                                }
-                                align="center"
-                                padding="checkbox"
-                              >
-                                <Checkbox
-                                  color="primary"
-                                  checked={isItemSelected}
-                                  inputProps={{
-                                    "aria-labelledby": labelId,
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                inputProps={{
+                                  "aria-labelledby": labelId,
+                                }}
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell
+                              onClick={() => FormUpdateUser(item)}
+                              align="center"
+                            >
+                              {index + 1}
+                            </StyledTableCell>
+                            <StyledTableCell
+                              onClick={() => FormUpdateUser(item)}
+                              align="center"
+                            >
+                              {item.name}
+                            </StyledTableCell>
+                            <StyledTableCell
+                              onClick={() => FormUpdateUser(item)}
+                              align="center"
+                            >
+                              {item.storeId === 0
+                                ? "Tidak ada Toko"
+                                : item.storeId}
+                            </StyledTableCell>
+                            <StyledTableCell
+                              onClick={() => FormUpdateUser(item)}
+                              align="center"
+                            >
+                              {item.roleId}
+                            </StyledTableCell>
+                            <StyledTableCell
+                              onClick={() => FormUpdateUser(item)}
+                              align="center"
+                            >
+                              {item.status === true ? (
+                                <div
+                                  style={{
+                                    ...CENTER,
+                                    backgroundColor: Colors.success,
+                                    padding: "5px 10px",
+                                    borderRadius: 10,
                                   }}
-                                />
-                              </StyledTableCell>
-                              <StyledTableCell
-                                onClick={() => FormUpdateUser(item)}
-                                align="center"
-                              >
-                                {index + 1}
-                              </StyledTableCell>
-                              <StyledTableCell
-                                onClick={() => FormUpdateUser(item)}
-                                align="center"
-                              >
-                                {item.name}
-                              </StyledTableCell>
-                              <StyledTableCell
-                                onClick={() => FormUpdateUser(item)}
-                                align="center"
-                              >
-                                {item.storeId === 0
-                                  ? "Tidak ada Toko"
-                                  : item.storeId}
-                              </StyledTableCell>
-                              <StyledTableCell
-                                onClick={() => FormUpdateUser(item)}
-                                align="center"
-                              >
-                                {item.roleId}
-                              </StyledTableCell>
-                              <StyledTableCell
-                                onClick={() => FormUpdateUser(item)}
-                                align="center"
-                              >
-                                {item.status === true ? (
-                                  <div
-                                    style={{
-                                      ...CENTER,
-                                      backgroundColor: Colors.success,
-                                      padding: "5px 10px",
-                                      borderRadius: 10,
-                                    }}
-                                  >
-                                    <p style={{ color: "#fff", margin: 0 }}>
-                                      Active
-                                    </p>
-                                  </div>
-                                ) : (
-                                  <div
-                                    style={{
-                                      ...CENTER,
-                                      backgroundColor: Colors.error,
-                                      padding: "5px 10px",
-                                      borderRadius: 10,
-                                    }}
-                                  >
-                                    <p style={{ color: "#fff", margin: 0 }}>
-                                      Deactive
-                                    </p>
-                                  </div>
-                                )}
-                              </StyledTableCell>
-                            </TableRow>
-                          );
-                        })
-                    : null}
+                                >
+                                  <p style={{ color: "#fff", margin: 0 }}>
+                                    Active
+                                  </p>
+                                </div>
+                              ) : (
+                                <div
+                                  style={{
+                                    ...CENTER,
+                                    backgroundColor: Colors.error,
+                                    padding: "5px 10px",
+                                    borderRadius: 10,
+                                  }}
+                                >
+                                  <p style={{ color: "#fff", margin: 0 }}>
+                                    Deactive
+                                  </p>
+                                </div>
+                              )}
+                            </StyledTableCell>
+                          </TableRow>
+                        );
+                      })
+                    }
                 </TableBody>
               </Table>
             </TableContainer>
@@ -476,11 +403,11 @@ const UserTable = (props: any) => {
         </Box>
         {props.data !== undefined && (
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 100]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={props.data.length}
+            count={props.pagination.totalItem === undefined ? 0 : props.pagination.totalItem}
             rowsPerPage={itemsPerPage}
-            page={page}
+            page={page - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />

@@ -6,82 +6,39 @@ import UserTable from './userTable';
 import { isMobile } from 'react-device-detect';
 import { HTTPGetUsers } from '../../../apis/user';
 
-const dummyTable = {
-    content: [
-        {
-            id: 1,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: false,
-        },
-        {
-            id: 2,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: true,
-        },
-        {
-            id: 3,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: false,
-        },
-        {
-            id: 4,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: true,
-        },
-        {
-            id: 5,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: false,
-        },
-        {
-            id: 6,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: true,
-        },
-        {
-            id: 7,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: false,
-        },
-        {
-            id: 8,
-            name: "Siti",
-            store: "Hanifah Barokah",
-            role: "Admin",
-            isActive: true,
-        },
-    ],
-    totalElements: 10,
-    number: 0,
-    size: 5,
-};
-
 const DataUser = () => {
     const [init, setInit] = React.useState(false)
     const [DataUser, setDataUser] = React.useState([])
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1)
+    const [pagination, setPagination] = React.useState(false)
+    const [search, setSearch] = React.useState('')
+
+    const onChangeLimit = (param: any) => {
+        setLimit(param)
+        setPage(1)
+        setInit(!init)
+    }
+
+    const onChangePage = (param: any) => {
+        setPage(param)
+        setInit(!init)
+    }
+
+    const onSearch = (param: string) => {
+        setSearch(param)
+        setInit(!init)
+    }
 
     const GetUserTable = async () => {
         try {
             const response = await HTTPGetUsers({
-                limit: '10',
-                page: '1',
-                q: ''
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search,
             })
             setDataUser(response.data.data)
+            setPagination(response.data.pagination)
         } catch (error) {
             console.log(error)
         }
@@ -100,7 +57,13 @@ const DataUser = () => {
             >
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
-                    <UserTable data={DataUser} />
+                    <UserTable 
+                        data={DataUser} 
+                        changePage={onChangePage}
+                        itemsPerPage={onChangeLimit}
+                        pagination={pagination}
+                        search={onSearch}
+                    />
                 </div>
             </Box>
         </div >

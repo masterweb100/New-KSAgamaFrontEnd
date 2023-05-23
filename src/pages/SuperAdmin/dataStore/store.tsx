@@ -2,27 +2,42 @@ import React from 'react';
 import { Box, Toolbar } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import StoreTable from './storeTable';
-import DeleteModal from '../../../components/deleteModal';
 import { isMobile } from 'react-device-detect';
 import { HTTPGetStores } from '../../../apis/store';
 
 const DataStore = () => {
-    const [isDeleteModal, setDeleteModal] = React.useState(false);
     const [init, setInit] = React.useState(false)
     const [DataStore, setDataStore] = React.useState([])
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1)
+    const [pagination, setPagination] = React.useState(false)
+    const [search, setSearch] = React.useState('')
 
-    const handleDelete = () => {
-        setDeleteModal(!isDeleteModal);
-    };
+    const onChangeLimit = (param: any) => {
+        setLimit(param)
+        setPage(1)
+        setInit(!init)
+    }
+
+    const onChangePage = (param: any) => {
+        setPage(param)
+        setInit(!init)
+    }
+
+    const onSearch = (param: string) => {
+        setSearch(param)
+        setInit(!init)
+    }
 
     const GetStoreTable = async () => {
         try {
             const response = await HTTPGetStores({
-                limit: '10',
-                page: '1',
-                q: ''
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search,
             })
             setDataStore(response.data.data)
+            setPagination(response.data.pagination)
         } catch (error) {
             console.log(error)
         }
@@ -41,9 +56,14 @@ const DataStore = () => {
             >
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
-                    <StoreTable data={DataStore} />
+                    <StoreTable
+                        data={DataStore}
+                        changePage={onChangePage}
+                        itemsPerPage={onChangeLimit}
+                        pagination={pagination}
+                        search={onSearch}
+                    />
                 </div>
-                <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
             </Box>
         </div >
     )

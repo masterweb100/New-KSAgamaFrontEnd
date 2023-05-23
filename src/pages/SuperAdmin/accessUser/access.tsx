@@ -32,7 +32,7 @@ const AccessUser = () => {
   const GetRoleTable = async () => {
     try {
       const response = await HTTPGetRoles({
-        limit: '',
+        limit: '100',
         page: '',
         q: ''
       })

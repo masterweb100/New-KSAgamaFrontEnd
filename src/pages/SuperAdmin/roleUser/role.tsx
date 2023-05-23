@@ -18,15 +18,36 @@ const dummyTable = {
 const DataRole = () => {
   const [init, setInit] = React.useState(false);
   const [DataRole, setDataRole] = React.useState([]);
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] = React.useState(1)
+  const [pagination, setPagination] = React.useState(false)
+  const [search, setSearch] = React.useState('')
+
+  const onChangeLimit = (param: any) => {
+    setLimit(param)
+    setPage(1)
+    setInit(!init)
+  }
+
+  const onChangePage = (param: any) => {
+    setPage(param)
+    setInit(!init)
+  }
+
+  const onSearch = (param: string) => {
+    setSearch(param)
+    setInit(!init)
+  }
 
   const GetRoleTable = async () => {
     try {
       const response = await HTTPGetRoles({
-        limit: "10",
-        page: "1",
-        q: "",
+        limit: limit.toString(),
+        page: page.toString(),
+        q: search,
       });
       setDataRole(response.data.data);
+      setPagination(response.data.pagination);
     } catch (error) {
       console.log(error);
     }
@@ -54,7 +75,13 @@ const DataRole = () => {
       >
         <Toolbar />
         <div style={{ maxWidth: isMobile ? "100vw" : "78vw" }}>
-          <RoleTable data={DataRole} />
+          <RoleTable
+            data={DataRole}
+            changePage={onChangePage}
+            itemsPerPage={onChangeLimit}
+            pagination={pagination}
+            search={onSearch}
+          />
         </div>
       </Box>
     </div>

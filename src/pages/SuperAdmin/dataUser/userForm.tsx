@@ -145,8 +145,8 @@ const UserForm = () => {
     const Initial = async () => {
         try {
             const respID = await HTTPGenerateUserID()
-            const respStore = await HTTPGetStores({ limit: '', page: '', q: '' })
-            const respRole = await HTTPGetRoles({ limit: '', page: '', q: '' })
+            const respStore = await HTTPGetStores({ limit: '50', page: '', q: '' })
+            const respRole = await HTTPGetRoles({ limit: '50', page: '', q: '' })
             setGenId(respID.data.data.genId)
             setStoresId(respStore.data.data)
             setRolesId(respRole.data.data)
@@ -365,6 +365,7 @@ const UserForm = () => {
                                                 name="role"
                                                 value={formik.values.role}
                                                 displayEmpty
+                                                MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                 onChange={formik.handleChange}
                                             >
@@ -381,6 +382,7 @@ const UserForm = () => {
                                                 name="role"
                                                 value={formik.values.role}
                                                 displayEmpty
+                                                MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                 onChange={formik.handleChange}
                                                 renderValue={(selected: any) => getRoleName(selected)}
@@ -409,6 +411,7 @@ const UserForm = () => {
                                                         name="store"
                                                         value={formik.values.store}
                                                         displayEmpty
+                                                        MenuProps={{ style: { height: 300 } }}
                                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                         onChange={formik.handleChange}
                                                     >
@@ -425,6 +428,7 @@ const UserForm = () => {
                                                         name="store"
                                                         value={formik.values.store}
                                                         displayEmpty
+                                                        MenuProps={{ style: { height: 300 } }}
                                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                         onChange={formik.handleChange}
                                                         renderValue={(selected: any) => getStoreName(selected)}

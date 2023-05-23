@@ -45,35 +45,6 @@ const StyledTableCell = styled(TableCell)(() => ({
   },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-  return order === "desc"
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-  const stabilizedRowArray = rowArray.map((el: any, index: number) => [
-    el,
-    index,
-  ]);
-  stabilizedRowArray.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const StoreTable = (props: any) => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -102,26 +73,14 @@ const StoreTable = (props: any) => {
   };
 
   const handleChangePage = (event: any, newPage: any) => {
-    console.log(event);
-    setPage(newPage);
+    setPage(newPage + 1);
+    props.changePage(newPage + 1)
   };
 
   const handleChangeRowsPerPage = (event: any) => {
     setItemsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const [orderdirection, setOrderDirection] = useState("asc");
-  const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-  const createSortHandler = (property: any) => (event: any) => {
-    handleRequestSort(event, property);
-  };
-
-  const handleRequestSort = (event: any, property: any) => {
-    console.log(event);
-    const isAscending = valuetoorderby === property && orderdirection === "asc";
-    setValueToOrderBy(property);
-    setOrderDirection(isAscending ? "desc" : "asc");
+    props.itemsPerPage(parseInt(event.target.value, 10))
+    setPage(1);
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
@@ -180,6 +139,10 @@ const StoreTable = (props: any) => {
     dispatch(setStoreData({ data: item }))
     navigate("/store-data/form-store/update");
   };
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.search(event.target.value)
+  }
 
   return (
     <div>
@@ -265,6 +228,7 @@ const StoreTable = (props: any) => {
               borderRadius: 1,
               width: isMobile ? "90%" : "20vw",
             }}
+            onChange={handleSearch}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -312,40 +276,14 @@ const StoreTable = (props: any) => {
                       </StyledTableCell>
                       {columns.map((column: any) => (
                         <StyledTableCell key={column.id}>
-                          <TableSortLabel
-                            active={valuetoorderby === column.id}
-                            direction={
-                              valuetoorderby === column.id ? "asc" : "desc"
-                            }
-                            onClick={createSortHandler(column.id)}
-                            sx={{
-                              fontWeight: "bold",
-                              whiteSpace: "nowrap",
-                              "& .MuiTableSortLabel-icon": {
-                                opacity: 1,
-                                fontSize: 10,
-                              },
-                            }}
-                            IconComponent={FilterList}
-                          >
-                            {column.label}
-                          </TableSortLabel>
+                          {column.label}
                         </StyledTableCell>
                       ))}
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
-                    {props.data !== undefined
-                      ? sortedRowInformation(
-                        props.data,
-                        getComparator(orderdirection, valuetoorderby)
-                      )
-                        .slice(
-                          page * itemsPerPage,
-                          page * itemsPerPage + itemsPerPage
-                        )
-                        .map((item: any, index: number) => {
+                    {props.data.map((item: any, index: number) => {
                           const isItemSelected = isSelected(item.id.toString());
                           const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -390,7 +328,7 @@ const StoreTable = (props: any) => {
                             </TableRow>
                           );
                         })
-                      : null}
+                      }
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -398,11 +336,11 @@ const StoreTable = (props: any) => {
         </Box>
         {props.data !== undefined && (
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 100]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={props.data.length}
+            count={props.pagination.totalItem === undefined ? 0 : props.pagination.totalItem}
             rowsPerPage={itemsPerPage}
-            page={page}
+            page={page - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />

@@ -186,6 +186,7 @@ const StoreForm = () => {
                                                 name="adminId"
                                                 value={Formik.values.adminId}
                                                 onChange={Formik.handleChange}
+                                                MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                             >
                                                 {
@@ -202,6 +203,7 @@ const StoreForm = () => {
                                                 name="adminId"
                                                 value={Formik.values.adminId}
                                                 onChange={Formik.handleChange}
+                                                MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                 renderValue={(selected: any) => getUserName(selected)}
                                             >
