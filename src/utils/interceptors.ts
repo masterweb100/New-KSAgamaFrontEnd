@@ -1,6 +1,7 @@
 import Axios from "axios";
 
-const ServerURL = "http://181.215.78.71:8080/api/v1/";
+
+const ServerURL = "https://ksaprojectapp.com/api/v1/";
 
 export function AxiosNormal(token?: string) {
   let instance = Axios.create({
