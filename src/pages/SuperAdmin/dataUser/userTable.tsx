@@ -78,25 +78,25 @@ const sortedRowInformation = (rowArray: any, comparator: any) => {
 
 const UserTable = (props: any) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState<any[]>([]);
   const [page, setPage] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [isDeleteModal, setDeleteModal] = React.useState(false);
-  const [DataRole, setDataRole] = React.useState([])
-  const [init, setInit] = React.useState([])
+  const [DataRole, setDataRole] = React.useState([]);
+  const [init, setInit] = React.useState([]);
 
   const handleDelete = async (param: string) => {
     if (selected.length > 0) {
-      if (param === 'yes') {
-        const token = secureLocalStorage.getItem("TOKEN") as string
+      if (param === "yes") {
+        const token = secureLocalStorage.getItem("TOKEN") as string;
         const respDelete = await HTTPDeleteUsers({
           ids: selected,
-          token: token
-        })
-        console.log(respDelete)
+          token: token,
+        });
+        console.log(respDelete);
         setDeleteModal(!isDeleteModal);
-        window.location.reload()
+        window.location.reload();
       } else {
         setDeleteModal(!isDeleteModal);
       }
@@ -162,32 +162,32 @@ const UserTable = (props: any) => {
   };
 
   const FormUpdateUser = (item: any) => {
-    dispatch(setUserData({ data: item }))
+    dispatch(setUserData({ data: item }));
     navigate("/user-data/form-user/update");
   };
 
   const GetRoleTable = async () => {
     try {
       const response = await HTTPGetRoles({
-        limit: '10',
-        page: '1',
-        q: ''
-      })
-      setDataRole(response.data.data)
+        limit: "10",
+        page: "1",
+        q: "",
+      });
+      setDataRole(response.data.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   React.useEffect(() => {
-    GetRoleTable()
-  }, [init])
+    GetRoleTable();
+  }, [init]);
 
   return (
     <div>
       <div style={{ maxWidth: isMobile ? "100vw" : "78vw" }}>
         <Stack direction={"column"} gap={4}>
-          <Stack direction={"row"} gap={1}>
+          {/* <Stack direction={"row"} gap={1}>
             <div className="btn-active">
               <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>Semua</p>
             </div>
@@ -197,33 +197,14 @@ const UserTable = (props: any) => {
             <div className="btn-inactive">
               <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>User</p>
             </div>
-          </Stack>
+          </Stack> */}
           <Stack direction={"row"} justifyContent={"space-between"}>
-            {
-              DataRole.length === 0 ?
-                <Tooltip title="Role belum tersedia" placement="right">
-                  <div
-                    style={{
-                      ...CENTER,
-                      backgroundColor: '#ababab',
-                      borderRadius: 5,
-                      cursor: "pointer",
-                      padding: isMobile ? "12px 15px" : "10px 30px",
-                      alignSelf: "flex-start",
-                    }}
-                  >
-                    <Stack alignItems={"center"} direction={"row"} gap={1}>
-                      <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
-                      <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: "#ffff" }}>Tambah Data Pengguna</p>
-                    </Stack>
-                  </div>
-                </Tooltip>
-                :
+            {DataRole.length === 0 ? (
+              <Tooltip title="Role belum tersedia" placement="right">
                 <div
-                  onClick={FormAddUser}
                   style={{
                     ...CENTER,
-                    backgroundColor: Colors.primary,
+                    backgroundColor: "#ababab",
                     borderRadius: 5,
                     cursor: "pointer",
                     padding: isMobile ? "12px 15px" : "10px 30px",
@@ -232,12 +213,48 @@ const UserTable = (props: any) => {
                 >
                   <Stack alignItems={"center"} direction={"row"} gap={1}>
                     <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
-                    <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: "#ffff" }}>Tambah Data Pengguna</p>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontWeight: 500,
+                        fontSize: isMobile ? 13 : 15,
+                        color: "#ffff",
+                      }}
+                    >
+                      Tambah Data Pengguna
+                    </p>
                   </Stack>
                 </div>
-            }
+              </Tooltip>
+            ) : (
+              <div
+                onClick={FormAddUser}
+                style={{
+                  ...CENTER,
+                  backgroundColor: Colors.primary,
+                  borderRadius: 5,
+                  cursor: "pointer",
+                  padding: isMobile ? "12px 15px" : "10px 30px",
+                  alignSelf: "flex-start",
+                }}
+              >
+                <Stack alignItems={"center"} direction={"row"} gap={1}>
+                  <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontWeight: 500,
+                      fontSize: isMobile ? 13 : 15,
+                      color: "#ffff",
+                    }}
+                  >
+                    Tambah Data Pengguna
+                  </p>
+                </Stack>
+              </div>
+            )}
             <div
-              onClick={() => handleDelete('open')}
+              onClick={() => handleDelete("open")}
               style={{
                 ...CENTER,
                 backgroundColor:
@@ -303,58 +320,57 @@ const UserTable = (props: any) => {
         }}
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-          {
-            props.data.length === 0 ?
-              <div style={{ ...CENTER, padding: '20px 0' }}>
-                <span>Tidak ada data</span>
-              </div>
-              :
-              <TableContainer>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell>
-                        <Checkbox
-                          color="primary"
-                          indeterminate={
-                            selected.length > 0 &&
-                            selected.length < props.data.length
+          {props.data.length === 0 ? (
+            <div style={{ ...CENTER, padding: "20px 0" }}>
+              <span>Tidak ada data</span>
+            </div>
+          ) : (
+            <TableContainer>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>
+                      <Checkbox
+                        color="primary"
+                        indeterminate={
+                          selected.length > 0 &&
+                          selected.length < props.data.length
+                        }
+                        checked={
+                          props.data.length > 0 &&
+                          selected.length === props.data.length
+                        }
+                        onChange={handleSelectAllClick}
+                      />
+                    </StyledTableCell>
+                    {columns.map((column: any) => (
+                      <StyledTableCell key={column.id}>
+                        <TableSortLabel
+                          active={valuetoorderby === column.id}
+                          direction={
+                            valuetoorderby === column.id ? "asc" : "desc"
                           }
-                          checked={
-                            props.data.length > 0 &&
-                            selected.length === props.data.length
-                          }
-                          onChange={handleSelectAllClick}
-                        />
+                          onClick={createSortHandler(column.id)}
+                          sx={{
+                            fontWeight: "bold",
+                            whiteSpace: "nowrap",
+                            "& .MuiTableSortLabel-icon": {
+                              opacity: 1,
+                              fontSize: 10,
+                            },
+                          }}
+                          IconComponent={FilterList}
+                        >
+                          {column.label}
+                        </TableSortLabel>
                       </StyledTableCell>
-                      {columns.map((column: any) => (
-                        <StyledTableCell key={column.id}>
-                          <TableSortLabel
-                            active={valuetoorderby === column.id}
-                            direction={
-                              valuetoorderby === column.id ? "asc" : "desc"
-                            }
-                            onClick={createSortHandler(column.id)}
-                            sx={{
-                              fontWeight: "bold",
-                              whiteSpace: "nowrap",
-                              "& .MuiTableSortLabel-icon": {
-                                opacity: 1,
-                                fontSize: 10,
-                              },
-                            }}
-                            IconComponent={FilterList}
-                          >
-                            {column.label}
-                          </TableSortLabel>
-                        </StyledTableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHead>
 
-                  <TableBody>
-                    {props.data !== undefined
-                      ? sortedRowInformation(
+                <TableBody>
+                  {props.data !== undefined
+                    ? sortedRowInformation(
                         props.data,
                         getComparator(orderdirection, valuetoorderby)
                       )
@@ -407,7 +423,9 @@ const UserTable = (props: any) => {
                                 onClick={() => FormUpdateUser(item)}
                                 align="center"
                               >
-                                {item.storeId === 0 ? 'Tidak ada Toko' : item.storeId}
+                                {item.storeId === 0
+                                  ? "Tidak ada Toko"
+                                  : item.storeId}
                               </StyledTableCell>
                               <StyledTableCell
                                 onClick={() => FormUpdateUser(item)}
@@ -450,11 +468,11 @@ const UserTable = (props: any) => {
                             </TableRow>
                           );
                         })
-                      : null}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-          }
+                    : null}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Box>
         {props.data !== undefined && (
           <TablePagination
