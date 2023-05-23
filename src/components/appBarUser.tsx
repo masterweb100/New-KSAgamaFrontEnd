@@ -32,8 +32,9 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { styled } from "@mui/material/styles";
 import Icon from "@mui/material/Icon";
 import { isMobile } from "react-device-detect";
-import secureLocalStorage from "react-secure-storage";
 import LogoutModal from './logoutModal'
+import { useSelector } from "react-redux";
+import { RootState } from "../stores/rootReducer";
 
 const drawerWidth = 240;
 const logo = require("../assets/images/ksa-logo-purple.png");
@@ -94,6 +95,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
   const navigate = useNavigate();
+  const PermissionsRedux = useSelector((state: RootState) => state.userPermissions.data)
   const [isDrawer, setDrawer] = React.useState(false);
   const [profile, setProfile] = React.useState<any>(null);
   const [isLogout, setLogout] = React.useState(false)
@@ -123,6 +125,38 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
     navigate("/settings/profilku");
   };
 
+  const MenuList = () => {
+    let newArr = []
+    for (let i = 0; i < ListUser.length; i++) {
+      const ItemI = ListUser[i];
+      const filteredArray = ItemI.children.filter((el) => {
+        return PermissionsRedux.permissions.some((f: any) => {
+          return f.permissionName === el.name
+        })
+      })
+      if (filteredArray.length > 0) {
+        let newObj = ItemI
+        newObj.children = filteredArray
+        newArr.push(newObj)
+      }
+    }
+    newArr.unshift(ListUser[0])
+    PermissionsRedux.permissions.find((e: any) => {
+      if (e.permissionName === 'AKUN') {
+        newArr.push({
+          id: 5,
+          label: "Akun",
+          name: "AKUN",
+          icon: "description",
+          navigate: "/akun",
+          expandable: false,
+          children: [],
+        })
+      }
+    }
+    )
+    return newArr;
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -265,7 +299,8 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
           <img src={logo} style={styles.imgLogo} alt="" />
         </Toolbar>
         <Stack direction={"column"} gap={0.5} style={{ scrollbarWidth: 'thin' }}>
-          {ListUser.map((item, index) => (
+          {/* {MenuList().map((item: any, index: number) => ( */}
+          {ListUser.map((item: any, index: number) => (
             <>
               {item.expandable === false ? (
                 <Stack
@@ -335,7 +370,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
                   </AccordionSummary>
                   <AccordionDetails sx={{ paddingLeft: 0 }}>
                     <Stack direction={"column"} gap={0.5}>
-                      {item.children.map((val, index) => (
+                      {item.children.map((val: any, index: number) => (
                         <Stack
                           key={index}
                           direction={"row"}

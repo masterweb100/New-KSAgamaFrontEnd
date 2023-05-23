@@ -63,6 +63,8 @@ import UmurHutangTable from "../pages/User/laporan/transaksi/pembelian/umurHutan
 import UmurHutangDetailTable from "../pages/User/laporan/transaksi/pembelian/umurHutangDetailTable";
 import PembelianSupplierTable from "../pages/User/laporan/transaksi/pembelian/pembelianSupplierTable";
 import PembelianProdukTable from "../pages/User/laporan/transaksi/pembelian/pembelianProdukTable";
+import LapBank from "../pages/User/laporan/bank/bank";
+import KasBank from "../pages/User/laporan/bank/kas/kas";
 
 import Pelanggan from "../pages/User/kontak/pelanggan/pelanggan";
 import PelangganForm from "../pages/User/kontak/pelanggan/pelangganForm";
@@ -148,6 +150,8 @@ const PageRouter = () => {
                         <Route path="/laporan/transaksi/pembelian/hutang/detail" element={<UmurHutangDetailTable />} />
                         <Route path="/laporan/transaksi/pembelian/outcome" element={<PembelianSupplierTable />} />
                         <Route path="/laporan/transaksi/pembelian/produk" element={<PembelianProdukTable />} />
+                        <Route path="/laporan/bank" element={<LapBank />} />
+                        <Route path="/laporan/bank/kas" element={<KasBank />} />
 
                         <Route path="/kontak/pelanggan" element={<Pelanggan />} />
                         <Route path="/kontak/pelanggan/form-pelanggan" element={<PelangganForm />} />

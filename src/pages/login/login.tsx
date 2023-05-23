@@ -15,6 +15,9 @@ import { Colors } from "../../utils/colors";
 import { HTTPLogin } from "../../apis/authentication";
 import secureLocalStorage from "react-secure-storage";
 import { useFormik } from "formik";
+import { HTTPGetRoleID } from "../../apis/role";
+import { useDispatch } from "react-redux";
+import { setUserPermissions } from "../../stores/reduxes/userPermissions";
 
 const topBg = require("../../assets/images/top-login.png");
 const redCircle = require("../../assets/images/circle-red.png");
@@ -41,6 +44,7 @@ const CustomTextField = styled(OutlinedInput)({
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isPasswordShow, setPasswordShow] = React.useState(true);
   const [progress, setProgress] = React.useState(false);
   const [username, setUsername] = React.useState("")
@@ -69,6 +73,10 @@ const Login = () => {
           if (response.data.data.user.roleId === 1) {
             navigate('/dashboard')
           } else {
+            const roleResp = await HTTPGetRoleID({
+              id: (response.data.data.user.roleId).toString()
+            })
+            dispatch(setUserPermissions({data: roleResp.data.data}))
             navigate('/dashboard-user')
           }
         }
