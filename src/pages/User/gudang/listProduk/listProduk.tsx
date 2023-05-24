@@ -23,7 +23,7 @@ const CustomTab = styled(Tab)({
 })
 
 const ListProduk = () => {
-    const [value, setValue] = React.useState('brand');
+    const [value, setValue] = React.useState('kategori');
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
@@ -45,8 +45,8 @@ const ListProduk = () => {
                             scrollButtons={isMobile ? true : false}
                             allowScrollButtonsMobile={isMobile ? true : false}
                         >
-                            <CustomTab value="brand" label="Nama Brand" />
                             <CustomTab value="kategori" label="Kategori Produk" />
+                            <CustomTab value="brand" label="Nama Brand" />
                             <CustomTab value="jenis" label="Jenis Produk" />
                             <CustomTab value="satuan" label="Satuan Produk" />
                         </CustomTabs>
@@ -54,10 +54,10 @@ const ListProduk = () => {
                     <div style={{ marginTop: 20 }}>
                         {
                             value === 'brand' ?
-                                <BrandTable data={listProdukTable}></BrandTable>
+                                <BrandTable></BrandTable>
                                 :
                                 value === 'kategori' ?
-                                    <KategoriTable data={listProdukTable}></KategoriTable>
+                                    <KategoriTable></KategoriTable>
                                 :
                                 value === 'jenis' ?
                                     <JenisTable data={listProdukTable}></JenisTable>

@@ -23,11 +23,11 @@ import { Colors } from "../../../utils/colors";
 import { CENTER } from "../../../utils/stylesheet";
 import DeleteModal from "../../../components/deleteModal";
 import { isMobile } from "react-device-detect";
-import { HTTPDeleteUsers } from "../../../apis/user";
+import { HTTPDeleteUsers } from "../../../apis/SuperAdmin/user";
 import secureLocalStorage from "react-secure-storage";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../stores/reduxes/user";
-import { HTTPGetRoles } from "../../../apis/role";
+import { HTTPGetRoles } from "../../../apis/SuperAdmin/role";
 
 const columns = [
   { id: "no", label: "No" },

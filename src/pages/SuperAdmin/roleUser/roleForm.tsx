@@ -6,7 +6,7 @@ import { Colors } from '../../../utils/colors';
 import './styles.css'
 import { useNavigate, useParams } from "react-router-dom";
 import { isMobile } from 'react-device-detect';
-import { HTTPAddRole, HTTPGenerateRoleID, HTTPUpdateRole } from '../../../apis/role';
+import { HTTPAddRole, HTTPGenerateRoleID, HTTPUpdateRole } from '../../../apis/SuperAdmin/role';
 import secureLocalStorage from 'react-secure-storage';
 import { BorderColor } from '@mui/icons-material';
 import { useSelector } from 'react-redux';

@@ -8,8 +8,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BorderColor } from '@mui/icons-material';
 import { isMobile } from 'react-device-detect';
 import { useFormik } from 'formik';
-import { HTTPAddStore, HTTPGenerateStoreID, HTTPUpdateStore } from '../../../apis/store';
-import { HTTPGetUsers } from '../../../apis/user';
+import { HTTPAddStore, HTTPGenerateStoreID, HTTPUpdateStore } from '../../../apis/SuperAdmin/store';
+import { HTTPGetUsers, HTTPUpdateUser } from '../../../apis/SuperAdmin/user';
 import secureLocalStorage from 'react-secure-storage';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../stores/rootReducer';
@@ -22,6 +22,7 @@ const StoreForm = () => {
     const [genId, setGenId] = React.useState('')
     const [usersId, setUsersId] = React.useState<any>([])
     const [onSend, setSend] = React.useState(false)
+    const [userStore, setUserStore] = React.useState<any>({})
 
     const GoBack = () => {
         navigate(-1)
@@ -46,14 +47,23 @@ const StoreForm = () => {
                         token: token
                     })
                 } else {
-                    await HTTPAddStore({
+                    const resp = await HTTPAddStore({
                         address: values.address,
                         adminId: values.adminId,
                         storeName: values.storeName,
                         genId: genId,
                         token: token
                     })
+                    console.log(resp)
                 }
+                // await HTTPUpdateUser({
+                //     id: UserData.id,
+                //     name: values.name,
+                //     roleId: values.role,
+                //     status: values.status === '1' ? true : false,
+                //     storeId: values.store,
+                //     token: token
+                // })
                 setSend(false)
                 navigate('/store-data')
             } catch (error) {
@@ -77,6 +87,7 @@ const StoreForm = () => {
             return <span style={{ color: '#a7a5a6' }}>Pilih Admin</span>;
         } else {
             const result = usersId.filter((value: any) => value.id === Formik.values.adminId)
+            setUserStore(result[0])
             return <span style={{ color: '#000' }}>{result[0].name}</span>;
         }
     }
@@ -84,7 +95,7 @@ const StoreForm = () => {
     const Initial = async () => {
         try {
             const respID = await HTTPGenerateStoreID()
-            const respUser = await HTTPGetUsers({ limit: '', page: '', q: '' })
+            const respUser = await HTTPGetUsers({ limit: '50', page: '', q: '' })
             setGenId(respID.data.data.genId)
             setUsersId(respUser.data.data)
         } catch (error) {

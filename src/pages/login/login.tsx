@@ -15,7 +15,7 @@ import { Colors } from "../../utils/colors";
 import { HTTPLogin } from "../../apis/authentication";
 import secureLocalStorage from "react-secure-storage";
 import { useFormik } from "formik";
-import { HTTPGetRoleID } from "../../apis/role";
+import { HTTPGetRoleID } from "../../apis/SuperAdmin/role";
 import { useDispatch } from "react-redux";
 import { setUserPermissions } from "../../stores/reduxes/userPermissions";
 

@@ -21,79 +21,67 @@ import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 import { isMobile } from "react-device-detect";
+import { HTTPGetCategories } from "../../../../apis/User/product/category";
+import secureLocalStorage from "react-secure-storage";
+import { HTTPGetBrands } from "../../../../apis/User/product/brand";
+import moment from "moment";
 
 const columns = [
   { id: "id", label: "ID Jenis Produk" },
   { id: "brand", label: "Nama Brand" },
   { id: "jenis", label: "Nama Kategori" },
-  { id: "hargaPcs", label: "Min. Stok" },
+  // { id: "minstok", label: "Min. Stok" },
   { id: "updatedBy", label: "Updated By" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     textAlign: "center",
-    // borderBottomWidth: 1,
+    fontWeight: '700'
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
   },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-  return order === "desc"
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-  const stabilizedRowArray = rowArray.map((el: any, index: number) => [
-    el,
-    index,
-  ]);
-  stabilizedRowArray.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedRowArray.map((el: any) => el[0]);
-};
-
-const BrandTable = (props: any) => {
+const BrandTable = () => {
   const navigate = useNavigate();
+  const token = secureLocalStorage.getItem("TOKEN") as string
   const [selected, setSelected] = useState<readonly string[]>([]);
-  const [page, setPage] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
+  const [BrandData, setBrandData] = React.useState([]);
+  const [init, setInit] = React.useState(false)
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+  const [pagination, setPagination] = React.useState<any>({});
+  const [search, setSearch] = React.useState('');
+
+  const GetBrand = async () => {
+    try {
+      const resp = await HTTPGetBrands({
+        limit: limit.toString(),
+        page: page.toString(),
+        q: search,
+        token: token
+      })
+      console.log(resp)
+      setBrandData(resp.data.data)
+      setPagination(resp.data.pagination)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleChangePage = (event: any, newPage: any) => {
-    setPage(newPage);
+    setPage(newPage + 1);
+    setInit(!init)
   };
 
   const handleChangeRowsPerPage = (event: any) => {
     setItemsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const [orderdirection, setOrderDirection] = useState("asc");
-  const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-  const createSortHandler = (property: any) => (event: any) => {
-    handleRequestSort(event, property);
-  };
-
-  const handleRequestSort = (event: any, property: any) => {
-    const isAscending = valuetoorderby === property && orderdirection === "asc";
-    setValueToOrderBy(property);
-    setOrderDirection(isAscending ? "desc" : "asc");
+    setLimit(parseInt(event.target.value, 10))
+    setPage(1);
+    setInit(!init)
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
@@ -118,7 +106,7 @@ const BrandTable = (props: any) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = props.data.content.map((n: any, index: number) =>
+      const newSelected = BrandData.map((n: any, index: number) =>
         index.toString()
       );
       setSelected(newSelected);
@@ -135,6 +123,10 @@ const BrandTable = (props: any) => {
       navigate("/gudang/list-produk/form-brand/update");
     }
   };
+
+  React.useEffect(() => {
+    GetBrand()
+  }, [init])
 
   return (
     <div>
@@ -244,116 +236,97 @@ const BrandTable = (props: any) => {
         }}
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-          <TableContainer>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>
-                    <Checkbox
-                      color="primary"
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < props.data.content.length
-                      }
-                      checked={
-                        props.data.content.length > 0 &&
-                        selected.length === props.data.content.length
-                      }
-                      onChange={handleSelectAllClick}
-                    />
-                  </StyledTableCell>
-                  {columns.map((column: any) => (
-                    <StyledTableCell key={column.id}>
-                      <TableSortLabel
-                        active={valuetoorderby === column.id}
-                        direction={
-                          valuetoorderby === column.id ? "asc" : "desc"
-                        }
-                        onClick={createSortHandler(column.id)}
-                        sx={{
-                          fontWeight: "bold",
-                          whiteSpace: "nowrap",
-                          "& .MuiTableSortLabel-icon": {
-                            opacity: 1,
-                            fontSize: 10,
-                          },
-                        }}
-                        IconComponent={FilterList}
-                      >
-                        {column.label}
-                      </TableSortLabel>
-                    </StyledTableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
+          {
+            BrandData.length === 0 ?
+              <div style={{ ...CENTER, padding: '20px 0' }}>
+                <span>Tidak ada data</span>
+              </div>
+              :
+              <TableContainer>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell>
+                        <Checkbox
+                          color="primary"
+                          indeterminate={
+                            selected.length > 0 &&
+                            selected.length < BrandData.length
+                          }
+                          checked={
+                            BrandData.length > 0 &&
+                            selected.length === BrandData.length
+                          }
+                          onChange={handleSelectAllClick}
+                        />
+                      </StyledTableCell>
+                      {columns.map((column: any) => (
+                        <StyledTableCell key={column.id}>
+                          {column.label}
+                        </StyledTableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
 
-              <TableBody>
-                {props.data.content !== undefined
-                  ? sortedRowInformation(
-                      props.data.content,
-                      getComparator(orderdirection, valuetoorderby)
-                    )
-                      .slice(
-                        page * itemsPerPage,
-                        page * itemsPerPage + itemsPerPage
-                      )
-                      .map((item: any, index: number) => {
-                        const isItemSelected = isSelected(index.toString());
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                  <TableBody>
+                    {BrandData.map((item: any, index: number) => {
+                      const isItemSelected = isSelected(index.toString());
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={index}
-                            sx={{
-                              "&:hover": { bgcolor: Colors.inherit },
-                              cursor: "pointer",
-                            }}
+                      return (
+                        <TableRow
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                          sx={{
+                            "&:hover": { bgcolor: Colors.inherit },
+                            cursor: "pointer",
+                          }}
+                        >
+                          <StyledTableCell
+                            onClick={(e) => handleClick(e, index.toString())}
+                            align="center"
+                            padding="checkbox"
                           >
-                            <StyledTableCell
-                              onClick={(e) => handleClick(e, index.toString())}
-                              align="center"
-                              padding="checkbox"
-                            >
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.id}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.brand}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.jenis}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              590
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.updatedBy}
-                            </StyledTableCell>
-                          </TableRow>
-                        );
-                      })
-                  : null}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                "aria-labelledby": labelId,
+                              }}
+                            />
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {item.id}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {item.brandName}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {item.productCategoryId}
+                          </StyledTableCell>
+                          {/* <StyledTableCell align="center">
+                            590
+                          </StyledTableCell> */}
+                          <StyledTableCell align="center">
+                            {item.updatedAt === null ? moment(item.createdAt).format('DD MMMM YYYY, hh:mm') : item.updatedAt}
+                          </StyledTableCell>
+                        </TableRow>
+                      );
+                    })
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+          }
         </Box>
-        {props.data.content !== undefined && (
+        {BrandData !== undefined && (
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 100]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={props.data.content.length}
+            count={pagination.totalItem === undefined ? 0 : pagination.totalItem}
             rowsPerPage={itemsPerPage}
-            page={page}
+            page={page - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />

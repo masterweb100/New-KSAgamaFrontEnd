@@ -4,14 +4,14 @@ import NavigationBar from '../../../components/appBar';
 import './styles.css'
 import UserTable from './userTable';
 import { isMobile } from 'react-device-detect';
-import { HTTPGetUsers } from '../../../apis/user';
+import { HTTPGetUsers } from '../../../apis/SuperAdmin/user';
 
 const DataUser = () => {
     const [init, setInit] = React.useState(false)
     const [DataUser, setDataUser] = React.useState([])
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1)
-    const [pagination, setPagination] = React.useState(false)
+    const [pagination, setPagination] = React.useState({})
     const [search, setSearch] = React.useState('')
 
     const onChangeLimit = (param: any) => {

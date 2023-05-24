@@ -3,14 +3,14 @@ import { Box, Toolbar } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import StoreTable from './storeTable';
 import { isMobile } from 'react-device-detect';
-import { HTTPGetStores } from '../../../apis/store';
+import { HTTPGetStores } from '../../../apis/SuperAdmin/store';
 
 const DataStore = () => {
     const [init, setInit] = React.useState(false)
     const [DataStore, setDataStore] = React.useState([])
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1)
-    const [pagination, setPagination] = React.useState(false)
+    const [pagination, setPagination] = React.useState({})
     const [search, setSearch] = React.useState('')
 
     const onChangeLimit = (param: any) => {

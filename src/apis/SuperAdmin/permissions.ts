@@ -1,4 +1,4 @@
-import { AxiosNormal } from "../utils/interceptors";
+import { AxiosNormal } from "../../utils/interceptors";
 
 export function HTTPPermissions(): Promise<any> {
   return new Promise(async (resolve, reject) => {

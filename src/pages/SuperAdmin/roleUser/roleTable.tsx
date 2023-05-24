@@ -23,7 +23,7 @@ import { CENTER } from "../../../utils/stylesheet";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setRoleData } from "../../../stores/reduxes/role";
-import { HTTPDeleteRoles } from "../../../apis/role";
+import { HTTPDeleteRoles } from "../../../apis/SuperAdmin/role";
 import secureLocalStorage from "react-secure-storage";
 
 const columns = [

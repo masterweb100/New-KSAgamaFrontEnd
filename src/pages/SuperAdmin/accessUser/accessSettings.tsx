@@ -8,9 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { CENTER } from '../../../utils/stylesheet';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../stores/rootReducer';
-import { HTTPRolePermissions } from '../../../apis/permissions';
+import { HTTPRolePermissions } from '../../../apis/SuperAdmin/permissions';
 import secureLocalStorage from 'react-secure-storage';
-import { HTTPGetRoleID } from '../../../apis/role';
+import { HTTPGetRoleID } from '../../../apis/SuperAdmin/role';
 
 const AccessSettings = () => {
     const navigate = useNavigate()

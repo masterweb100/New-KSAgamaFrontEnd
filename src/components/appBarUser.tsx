@@ -299,8 +299,8 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
           <img src={logo} style={styles.imgLogo} alt="" />
         </Toolbar>
         <Stack direction={"column"} gap={0.5} style={{ scrollbarWidth: 'thin' }}>
-          {/* {MenuList().map((item: any, index: number) => ( */}
-          {ListUser.map((item: any, index: number) => (
+          {/* {ListUser.map((item: any, index: number) => ( */}
+          {MenuList().map((item: any, index: number) => (
             <>
               {item.expandable === false ? (
                 <Stack

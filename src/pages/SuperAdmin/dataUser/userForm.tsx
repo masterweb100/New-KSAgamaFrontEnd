@@ -9,10 +9,10 @@ import { BorderColor } from '@mui/icons-material';
 import { isMobile } from 'react-device-detect';
 import { useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { HTTPAddUser, HTTPGenerateUserID, HTTPUpdateUser } from '../../../apis/user';
+import { HTTPAddUser, HTTPGenerateUserID, HTTPUpdateUser } from '../../../apis/SuperAdmin/user';
 import secureLocalStorage from 'react-secure-storage';
-import { HTTPGetStores } from '../../../apis/store';
-import { HTTPGetRoles } from '../../../apis/role';
+import { HTTPGetStores } from '../../../apis/SuperAdmin/store';
+import { HTTPGetRoles } from '../../../apis/SuperAdmin/role';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../stores/rootReducer';
 

@@ -25,9 +25,9 @@ import { isMobile } from "react-device-detect";
 import { CENTER } from "../../../utils/stylesheet";
 import { useDispatch } from "react-redux";
 import { setStoreData } from "../../../stores/reduxes/store";
-import { HTTPDeleteUsers, HTTPGetUsers } from "../../../apis/user";
+import { HTTPDeleteUsers, HTTPGetUsers } from "../../../apis/SuperAdmin/user";
 import secureLocalStorage from "react-secure-storage";
-import { HTTPDeleteStores } from "../../../apis/store";
+import { HTTPDeleteStores } from "../../../apis/SuperAdmin/store";
 
 const columns = [
   { id: "id", label: "ID Toko" },

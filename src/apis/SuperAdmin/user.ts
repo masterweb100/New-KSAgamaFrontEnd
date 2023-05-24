@@ -1,4 +1,4 @@
-import { AxiosNormal } from "../utils/interceptors";
+import { AxiosNormal } from "../../utils/interceptors";
 import QueryString from "qs";
 
 export function HTTPGetUsers(param: {

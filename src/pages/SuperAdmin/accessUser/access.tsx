@@ -12,17 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import "./styles.css";
 import { Colors } from "../../../utils/colors";
-import { HTTPGetRoles } from "../../../apis/role";
+import { HTTPGetRoles } from "../../../apis/SuperAdmin/role";
 import { useDispatch } from "react-redux";
 import { setRoleData } from "../../../stores/reduxes/role";
 
-const user = [
-  "Admin",
-  "Staff Keuangan",
-  "Staff Gudang",
-  "Staff Penjualan",
-  "Staff Pembelian",
-];
 const AccessUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()

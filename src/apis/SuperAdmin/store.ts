@@ -1,5 +1,5 @@
 import QueryString from "qs";
-import { AxiosNormal } from "../utils/interceptors";
+import { AxiosNormal } from "../../utils/interceptors";
 
 export function HTTPGetStores(param: {
   page: string;
