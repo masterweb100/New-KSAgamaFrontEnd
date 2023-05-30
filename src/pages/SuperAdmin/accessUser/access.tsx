@@ -43,7 +43,7 @@ const AccessUser = () => {
     dispatch(setRoleData({ data: item }))
     navigate("/user-access/settings");
   }
-  
+
   return (
     <div style={{ display: "flex" }}>
       <NavigationBar
@@ -80,11 +80,18 @@ const AccessUser = () => {
           </Stack>
         </Stack>
         <Stack direction={"column"} gap={0}>
-          {DataRole.map((item, index) => (
-            <div onClick={() => SettingPage(item)} key={index} className={"list"}>
-              <span>{item.roleName}</span>
-            </div>
-          ))}
+          {
+            DataRole.length === 0 ?
+              <div className={"list"}>
+                <span style={{ textAlign: 'center', width: '100%' }}>Tidak Ada Data</span>
+              </div>
+              :
+              DataRole.map((item, index) => (
+                <div onClick={() => SettingPage(item)} key={index} className={"list"}>
+                  <span>{item.roleName}</span>
+                </div>
+              ))
+          }
         </Stack>
       </Box>
     </div>
