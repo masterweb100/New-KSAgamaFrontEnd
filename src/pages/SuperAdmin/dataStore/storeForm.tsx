@@ -16,6 +16,7 @@ import { RootState } from '../../../stores/rootReducer';
 
 const StoreForm = () => {
     const StoreData = useSelector((state: RootState) => state.storeData.data)
+    const token = secureLocalStorage.getItem("TOKEN") as string
     const { action }: any = useParams()
     const navigate = useNavigate()
     const [init, setInit] = React.useState(false)
@@ -28,6 +29,50 @@ const StoreForm = () => {
         navigate(-1)
     }
 
+    const AddStore = async (values: any) => {
+        try {
+            const resp = await HTTPAddStore({
+                address: values.address,
+                adminId: values.adminId,
+                storeName: values.storeName,
+                genId: genId,
+                token: token
+            })
+            await HTTPUpdateUser({
+                id: resp.data.id,
+                name: userStore.name,
+                roleId: userStore.roleId,
+                status: userStore.status,
+                storeId: userStore.storeId,
+                token: token
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const UpdateStore = async (values: any) => {
+        try {
+            await HTTPUpdateStore({
+                address: values.address,
+                adminId: values.adminId,
+                storeName: values.storeName,
+                id: StoreData.id,
+                token: token
+            })
+            await HTTPUpdateUser({
+                id: StoreData.id.toString(),
+                name: userStore.name,
+                roleId: userStore.roleId,
+                status: userStore.status,
+                storeId: userStore.storeId,
+                token: token
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const Formik = useFormik({
         initialValues: {
             storeName: action === 'update' ? StoreData.storeName : '',
@@ -37,33 +82,11 @@ const StoreForm = () => {
         onSubmit: async (values) => {
             setSend(true)
             try {
-                const token = secureLocalStorage.getItem("TOKEN") as string
                 if (action === 'update') {
-                    await HTTPUpdateStore({
-                        address: values.address,
-                        adminId: values.adminId,
-                        storeName: values.storeName,
-                        id: StoreData.id,
-                        token: token
-                    })
+                    await UpdateStore(values)
                 } else {
-                    const resp = await HTTPAddStore({
-                        address: values.address,
-                        adminId: values.adminId,
-                        storeName: values.storeName,
-                        genId: genId,
-                        token: token
-                    })
-                    console.log(resp)
+                    await AddStore(values)
                 }
-                // await HTTPUpdateUser({
-                //     id: UserData.id,
-                //     name: values.name,
-                //     roleId: values.role,
-                //     status: values.status === '1' ? true : false,
-                //     storeId: values.store,
-                //     token: token
-                // })
                 setSend(false)
                 navigate('/store-data')
             } catch (error) {
@@ -88,6 +111,7 @@ const StoreForm = () => {
         } else {
             const result = usersId.filter((value: any) => value.id === Formik.values.adminId)
             setUserStore(result[0])
+            
             return <span style={{ color: '#000' }}>{result[0].name}</span>;
         }
     }
@@ -231,7 +255,7 @@ const StoreForm = () => {
                                     <span style={{ fontSize: 13, color: Colors.primary }}>BATAL</span>
                                 </div>
                                 <button type="submit" style={{ all: 'unset' }}>
-                                    <div style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.primary, padding: '10px 30px', cursor: 'pointer' }}>
+                                    <div style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.primary, padding: '10px 30px', cursor: 'pointer', color: '#fff' }}>
                                         {
                                             onSend === true ?
                                                 <CircularProgress size={20} color={'inherit'} />

@@ -5,8 +5,58 @@ import { Colors } from '../../../../utils/colors';
 import { kontakData } from '../dummy';
 import EkspedisiTable from './ekspedisiTable';
 import { isMobile } from 'react-device-detect';
+import secureLocalStorage from 'react-secure-storage';
+import { HTTPGetExpeditions } from '../../../../apis/User/contact/expedition';
 
 const Ekspedisi = () => {
+    const token = secureLocalStorage.getItem("TOKEN") as string
+    const [init, setInit] = React.useState(false);
+    const [DataRole, setDataRole] = React.useState([]);
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1)
+    const [pagination, setPagination] = React.useState({})
+    const [search, setSearch] = React.useState('')
+    const [loader, setLoader] = React.useState(true)
+
+    const onChangeLimit = (param: any) => {
+        setLimit(param)
+        setPage(1)
+        setInit(!init)
+    }
+
+    const onChangePage = (param: any) => {
+        setPage(param)
+        setInit(!init)
+    }
+
+    const onSearch = (param: string) => {
+        setSearch(param)
+        setInit(!init)
+    }
+
+    const GetExpeditionTable = async () => {
+        try {
+            setLoader(true)
+            const response = await HTTPGetExpeditions({
+                token: token,
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search,
+            });
+            console.log(response)
+            setDataRole(response.data.data);
+            setPagination(response.data.pagination);
+            setLoader(false)
+        } catch (error) {
+            setLoader(false)
+            console.log(error);
+        }
+    };
+
+    React.useEffect(() => {
+        GetExpeditionTable();
+    }, [init]);
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Ekspedisi'} idPanel={7}></NavigationBarUser>
@@ -19,9 +69,9 @@ const Ekspedisi = () => {
                                 <Icon sx={{ color: Colors.primary, fontSize: 20 }}>file_upload</Icon>
                                 {
                                     isMobile ?
-                                    <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
-                                    :
-                                    <span style={{ fontSize: 13, color: Colors.primary }}>Import Data Kontak</span>
+                                        <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
+                                        :
+                                        <span style={{ fontSize: 13, color: Colors.primary }}>Import Data Kontak</span>
                                 }
                             </Stack>
                         </div>
@@ -39,7 +89,14 @@ const Ekspedisi = () => {
                         </div>
                     </Stack>
                     <div style={{ marginTop: 20 }}>
-                        <EkspedisiTable data={kontakData}></EkspedisiTable>
+                        <EkspedisiTable
+                            data={DataRole}
+                            changePage={onChangePage}
+                            itemsPerPage={onChangeLimit}
+                            pagination={pagination}
+                            search={onSearch}
+                            loader={loader}
+                        ></EkspedisiTable>
                     </div>
                 </div>
             </Box>

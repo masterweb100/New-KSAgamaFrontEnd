@@ -11,7 +11,8 @@ import {
     Stack,
     Icon,
     TextField,
-    InputAdornment
+    InputAdornment,
+    CircularProgress
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -22,11 +23,14 @@ import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 import PelangganDialog from "./pelangganDialog";
 import { isMobile } from 'react-device-detect';
+import { HTTPDeleteCustomers } from "../../../../apis/User/contact/customer";
+import secureLocalStorage from "react-secure-storage";
+import DeleteModal from "../../../../components/deleteModal";
 
 const columns = [
-    { id: "id", label: "ID Pelanggan" },
     { id: "nama", label: "Nama Pelanggan" },
     { id: "perusahaan", label: "Perusahaan" },
+    { id: "address", label: "Alamat" },
     { id: "email", label: "Email" },
     { id: "telepon", label: "Telepon" },
     { id: "hutang", label: "Hutang" },
@@ -36,70 +40,51 @@ const columns = [
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
-        // borderBottomWidth: 1,
+        fontWeight: '700'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-    return order === "desc"
-        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-    const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
-    stabilizedRowArray.sort((a: any, b: any) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const PelangganTable = (props: any) => {
     const navigate = useNavigate();
-    const [selected, setSelected] = useState<readonly string[]>([]);
-    const [page, setPage] = React.useState(0);
+    const [selected, setSelected] = useState<any[]>([]);
+    const [page, setPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [isDetailOpen, setDetailOpen] = React.useState(false);
+    const [isDeleteModal, setDeleteModal] = React.useState(false);
+    const token = secureLocalStorage.getItem("TOKEN") as string
+
+    const handleDelete = async (param: string) => {
+        if (selected.length > 0) {
+            if (param === 'yes') {
+                await HTTPDeleteCustomers({
+                    ids: selected,
+                    token: token
+                })
+                setDeleteModal(!isDeleteModal);
+                window.location.reload()
+            } else {
+                setDeleteModal(!isDeleteModal);
+            }
+        }
+    };
 
     const handleChangePage = (event: any, newPage: any) => {
-        setPage(newPage);
+        setPage(newPage + 1);
+        props.changePage(newPage + 1)
     };
 
     const handleChangeRowsPerPage = (event: any) => {
         setItemsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const [orderdirection, setOrderDirection] = useState("asc");
-    const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-    const createSortHandler = (property: any) => (event: any) => {
-        handleRequestSort(event, property);
-    };
-
-    const handleRequestSort = (event: any, property: any) => {
-        const isAscending = valuetoorderby === property && orderdirection === "asc";
-        setValueToOrderBy(property);
-        setOrderDirection(isAscending ? "desc" : "asc");
+        props.itemsPerPage(parseInt(event.target.value, 10))
+        setPage(1);
     };
 
     const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
         const selectedIndex = selected.indexOf(name);
-        let newSelected: readonly string[] = [];
+        let newSelected: any[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, name);
@@ -119,7 +104,7 @@ const PelangganTable = (props: any) => {
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.map((n: any, index: number) => index.toString());
+            const newSelected = props.data.map((item: any) => item.id);
             setSelected(newSelected);
             return;
         }
@@ -131,6 +116,9 @@ const PelangganTable = (props: any) => {
     const DetailData = React.useCallback(() => {
         setDetailOpen(true)
     }, [])
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        props.search(event.target.value)
+    }
 
     return (
         <div>
@@ -141,7 +129,21 @@ const PelangganTable = (props: any) => {
                         <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Pelanggan</p>
                     </Stack>
                 </div>
-                <div></div>
+                <div
+                    onClick={() => handleDelete('open')}
+                    style={{
+                        ...CENTER,
+                        backgroundColor:
+                            selected.length === 0 ? Colors.secondary : Colors.error,
+                        borderRadius: 5,
+                        cursor: "pointer",
+                        padding: 10,
+                    }}
+                >
+                    <Icon style={{ color: "#fff", fontSize: isMobile ? 20 : 25 }}>
+                        delete_outline
+                    </Icon>
+                </div>
             </Stack>
             <Stack
                 direction={isMobile ? "column" : "row"}
@@ -164,6 +166,7 @@ const PelangganTable = (props: any) => {
                     type="search"
                     size="small"
                     placeholder="Pencarian by ID"
+                    onChange={handleSearch}
                     sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (
@@ -184,94 +187,92 @@ const PelangganTable = (props: any) => {
             }}
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                    <TableContainer>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>
-                                        <Checkbox
-                                            color="primary"
-                                            indeterminate={selected.length > 0 && selected.length < props.data.length}
-                                            checked={props.data.length > 0 && selected.length === props.data.length}
-                                            onChange={handleSelectAllClick}
-                                        />
-                                    </StyledTableCell>
-                                    {columns.map((column: any) => (
-                                        <StyledTableCell key={column.id}>
-                                            <TableSortLabel
-                                                active={valuetoorderby === column.id}
-                                                direction={valuetoorderby === column.id ? "asc" : "desc"}
-                                                onClick={createSortHandler(column.id)}
-                                                sx={{
-                                                    fontWeight: "bold",
-                                                    whiteSpace: "nowrap",
-                                                    "& .MuiTableSortLabel-icon": {
-                                                        opacity: 1,
-                                                        fontSize: 10,
-                                                    },
-                                                }}
-                                                IconComponent={FilterList}
-                                            >
-                                                {column.label}
-                                            </TableSortLabel>
-                                        </StyledTableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
+                    {
+                        props.loader ?
+                            <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                                <CircularProgress size={40} color={'error'} />
+                            </div>
+                            :
+                            <>
+                                {
+                                    props.data.length === 0 ?
+                                        <div style={{ ...CENTER, padding: '20px 0' }}>
+                                            <span>Tidak ada data</span>
+                                        </div>
+                                        :
+                                        <TableContainer>
+                                            <Table stickyHeader aria-label="sticky table">
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <StyledTableCell>
+                                                            <Checkbox
+                                                                color="primary"
+                                                                indeterminate={selected.length > 0 && selected.length < props.data.length}
+                                                                checked={props.data.length > 0 && selected.length === props.data.length}
+                                                                onChange={handleSelectAllClick}
+                                                            />
+                                                        </StyledTableCell>
+                                                        {columns.map((column: any) => (
+                                                            <StyledTableCell key={column.id}>
+                                                                {column.label}
+                                                            </StyledTableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                </TableHead>
 
-                            <TableBody>
-                                {props.data !== undefined
-                                    ? sortedRowInformation(props.data,
-                                        getComparator(orderdirection, valuetoorderby))
-                                        .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
-                                        .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(index.toString());
-                                            const labelId = `enhanced-table-checkbox-${index}`;
+                                                <TableBody>
+                                                    {props.data.map((item: any, index: number) => {
+                                                        const isItemSelected = isSelected(item.id);
+                                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                            return (
-                                                <TableRow
-                                                    role="checkbox"
-                                                    tabIndex={-1}
-                                                    key={index}
-                                                    sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                >
-                                                    <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={isItemSelected}
-                                                            inputProps={{
-                                                                'aria-labelledby': labelId,
-                                                            }}
-                                                        />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell onClick={DetailData} align="center">{'PL/00' + (index + 1)}</StyledTableCell>
-                                                    <StyledTableCell onClick={DetailData} align="center">{item.nama}</StyledTableCell>
-                                                    <StyledTableCell onClick={DetailData} align="center">{item.perusahaan}</StyledTableCell>
-                                                    <StyledTableCell onClick={DetailData} align="center">{item.email}</StyledTableCell>
-                                                    <StyledTableCell onClick={DetailData} align="center">{item.telepon}</StyledTableCell>
-                                                    <StyledTableCell onClick={DetailData} align="center">{item.hutang}</StyledTableCell>
-                                                    <StyledTableCell onClick={DetailData} align="center">{item.piutang}</StyledTableCell>
-                                                </TableRow>
-                                            )
-                                        })
-                                    : null}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                                        return (
+                                                            <TableRow
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={index}
+                                                                sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                            >
+                                                                <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        checked={isItemSelected}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': labelId,
+                                                                        }}
+                                                                    />
+                                                                </StyledTableCell>
+                                                                <StyledTableCell onClick={DetailData} align="center">{item.nameCustomer}</StyledTableCell>
+                                                                <StyledTableCell onClick={DetailData} align="center">{item.nameCompany}</StyledTableCell>
+                                                                <StyledTableCell onClick={DetailData} align="center">{item.address}</StyledTableCell>
+                                                                <StyledTableCell onClick={DetailData} align="center">{item.email}</StyledTableCell>
+                                                                <StyledTableCell onClick={DetailData} align="center">0{item.phone}</StyledTableCell>
+                                                                <StyledTableCell onClick={DetailData} align="center">-</StyledTableCell>
+                                                                <StyledTableCell onClick={DetailData} align="center">-</StyledTableCell>
+                                                            </TableRow>
+                                                        )
+                                                    })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                }
+                            </>
+                    }
                 </Box>
                 {props.data !== undefined && (
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, 100]}
+                        rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={props.data.length}
+                        count={props.pagination.totalItem === undefined ? 0 : props.pagination.totalItem}
                         rowsPerPage={itemsPerPage}
-                        page={page}
+                        page={page - 1}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 )}
             </Box>
             <PelangganDialog isOpen={isDetailOpen} setOpen={() => setDetailOpen(false)} />
+            <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
         </div>
     );
 }

@@ -13,6 +13,7 @@ import {
   InputAdornment,
   Icon,
   Tooltip,
+  CircularProgress,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -40,7 +41,7 @@ const columns = [
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     textAlign: "center",
-    // borderBottomWidth: 1,
+    fontWeight: '700'
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -124,7 +125,7 @@ const UserTable = (props: any) => {
     dispatch(setUserData({ data: item }));
     navigate("/user-data/form-user/update");
   };
-  
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.search(event.target.value)
   }
@@ -273,133 +274,142 @@ const UserTable = (props: any) => {
         }}
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-          {props.data.length === 0 ? (
-            <div style={{ ...CENTER, padding: "20px 0" }}>
-              <span>Tidak ada data</span>
-            </div>
-          ) : (
-            <TableContainer>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>
-                      <Checkbox
-                        color="primary"
-                        indeterminate={
-                          selected.length > 0 &&
-                          selected.length < props.data.length
-                        }
-                        checked={
-                          props.data.length > 0 &&
-                          selected.length === props.data.length
-                        }
-                        onChange={handleSelectAllClick}
-                      />
-                    </StyledTableCell>
-                    {columns.map((column: any) => (
-                      <StyledTableCell key={column.id}>
-                        {column.label}
-                      </StyledTableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {props.data.map((item: any, index: number) => {
-                        const isItemSelected = isSelected(item.id.toString());
-                        const labelId = `enhanced-table-checkbox-${index}`;
-
-                        return (
-                          <TableRow
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={index}
-                            sx={{
-                              "&:hover": { bgcolor: Colors.inherit },
-                              cursor: "pointer",
-                            }}
-                          >
-                            <StyledTableCell
-                              onClick={(e) =>
-                                handleClick(e, item.id.toString())
+          {
+            props.loader ?
+              <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                <CircularProgress size={40} color={'error'} />
+              </div>
+              :
+              <>
+                {props.data.length === 0 ? (
+                  <div style={{ ...CENTER, padding: "20px 0" }}>
+                    <span>Tidak ada data</span>
+                  </div>
+                ) : (
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell>
+                            <Checkbox
+                              color="primary"
+                              indeterminate={
+                                selected.length > 0 &&
+                                selected.length < props.data.length
                               }
-                              align="center"
-                              padding="checkbox"
-                            >
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
+                              checked={
+                                props.data.length > 0 &&
+                                selected.length === props.data.length
+                              }
+                              onChange={handleSelectAllClick}
+                            />
+                          </StyledTableCell>
+                          {columns.map((column: any) => (
+                            <StyledTableCell key={column.id}>
+                              {column.label}
                             </StyledTableCell>
-                            <StyledTableCell
-                              onClick={() => FormUpdateUser(item)}
-                              align="center"
+                          ))}
+                        </TableRow>
+                      </TableHead>
+
+                      <TableBody>
+                        {props.data.map((item: any, index: number) => {
+                          const isItemSelected = isSelected(item.id.toString());
+                          const labelId = `enhanced-table-checkbox-${index}`;
+
+                          return (
+                            <TableRow
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={index}
+                              sx={{
+                                "&:hover": { bgcolor: Colors.inherit },
+                                cursor: "pointer",
+                              }}
                             >
-                              {index + 1}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={() => FormUpdateUser(item)}
-                              align="center"
-                            >
-                              {item.name}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={() => FormUpdateUser(item)}
-                              align="center"
-                            >
-                              {item.storeId === 0
-                                ? "Tidak ada Toko"
-                                : item.storeId}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={() => FormUpdateUser(item)}
-                              align="center"
-                            >
-                              {item.roleId}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={() => FormUpdateUser(item)}
-                              align="center"
-                            >
-                              {item.status === true ? (
-                                <div
-                                  style={{
-                                    ...CENTER,
-                                    backgroundColor: Colors.success,
-                                    padding: "5px 10px",
-                                    borderRadius: 10,
+                              <StyledTableCell
+                                onClick={(e) =>
+                                  handleClick(e, item.id.toString())
+                                }
+                                align="center"
+                                padding="checkbox"
+                              >
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": labelId,
                                   }}
-                                >
-                                  <p style={{ color: "#fff", margin: 0 }}>
-                                    Active
-                                  </p>
-                                </div>
-                              ) : (
-                                <div
-                                  style={{
-                                    ...CENTER,
-                                    backgroundColor: Colors.error,
-                                    padding: "5px 10px",
-                                    borderRadius: 10,
-                                  }}
-                                >
-                                  <p style={{ color: "#fff", margin: 0 }}>
-                                    Deactive
-                                  </p>
-                                </div>
-                              )}
-                            </StyledTableCell>
-                          </TableRow>
-                        );
-                      })
-                    }
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell
+                                onClick={() => FormUpdateUser(item)}
+                                align="center"
+                              >
+                                {index + 1}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                onClick={() => FormUpdateUser(item)}
+                                align="center"
+                              >
+                                {item.name}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                onClick={() => FormUpdateUser(item)}
+                                align="center"
+                              >
+                                {item.storeId === 0
+                                  ? "Tidak ada Toko"
+                                  : item.storeId}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                onClick={() => FormUpdateUser(item)}
+                                align="center"
+                              >
+                                {item.roleId}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                onClick={() => FormUpdateUser(item)}
+                                align="center"
+                              >
+                                {item.status === true ? (
+                                  <div
+                                    style={{
+                                      ...CENTER,
+                                      backgroundColor: Colors.success,
+                                      padding: "5px 10px",
+                                      borderRadius: 10,
+                                    }}
+                                  >
+                                    <p style={{ color: "#fff", margin: 0 }}>
+                                      Active
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <div
+                                    style={{
+                                      ...CENTER,
+                                      backgroundColor: Colors.error,
+                                      padding: "5px 10px",
+                                      borderRadius: 10,
+                                    }}
+                                  >
+                                    <p style={{ color: "#fff", margin: 0 }}>
+                                      Deactive
+                                    </p>
+                                  </div>
+                                )}
+                              </StyledTableCell>
+                            </TableRow>
+                          );
+                        })
+                        }
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </>
+          }
         </Box>
         {props.data !== undefined && (
           <TablePagination

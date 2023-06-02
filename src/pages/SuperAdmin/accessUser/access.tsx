@@ -6,6 +6,7 @@ import {
   InputAdornment,
   TextField,
   Icon,
+  CircularProgress,
 } from "@mui/material";
 import NavigationBar from "../../../components/appBar";
 import { useNavigate } from "react-router-dom";
@@ -15,14 +16,17 @@ import { Colors } from "../../../utils/colors";
 import { HTTPGetRoles } from "../../../apis/SuperAdmin/role";
 import { useDispatch } from "react-redux";
 import { setRoleData } from "../../../stores/reduxes/role";
+import { CENTER } from "../../../utils/stylesheet";
 
 const AccessUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const [init, setInit] = React.useState(false)
   const [DataRole, setDataRole] = React.useState<any[]>([])
+  const [loader, setLoader] = React.useState(true)
 
   const GetRoleTable = async () => {
+    setLoader(true)
     try {
       const response = await HTTPGetRoles({
         limit: '100',
@@ -30,7 +34,9 @@ const AccessUser = () => {
         q: ''
       })
       setDataRole(response.data.data)
+      setLoader(false)
     } catch (error) {
+      setLoader(false)
       console.log(error)
     }
   }
@@ -81,16 +87,25 @@ const AccessUser = () => {
         </Stack>
         <Stack direction={"column"} gap={0}>
           {
-            DataRole.length === 0 ?
-              <div className={"list"}>
-                <span style={{ textAlign: 'center', width: '100%' }}>Tidak Ada Data</span>
+            loader ?
+              <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                <CircularProgress size={40} color={'error'} />
               </div>
               :
-              DataRole.map((item, index) => (
-                <div onClick={() => SettingPage(item)} key={index} className={"list"}>
-                  <span>{item.roleName}</span>
-                </div>
-              ))
+              <>
+                {
+                  DataRole.length === 0 ?
+                    <div className={"list"}>
+                      <span style={{ textAlign: 'center', width: '100%' }}>Tidak Ada Data</span>
+                    </div>
+                    :
+                    DataRole.map((item, index) => (
+                      <div onClick={() => SettingPage(item)} key={index} className={"list"}>
+                        <span>{item.roleName}</span>
+                      </div>
+                    ))
+                }
+              </>
           }
         </Stack>
       </Box>

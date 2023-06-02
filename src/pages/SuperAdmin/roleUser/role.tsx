@@ -22,6 +22,7 @@ const DataRole = () => {
   const [page, setPage] = React.useState(1)
   const [pagination, setPagination] = React.useState({})
   const [search, setSearch] = React.useState('')
+  const [loader, setLoader] = React.useState(true)
 
   const onChangeLimit = (param: any) => {
     setLimit(param)
@@ -41,6 +42,7 @@ const DataRole = () => {
 
   const GetRoleTable = async () => {
     try {
+      setLoader(true)
       const response = await HTTPGetRoles({
         limit: limit.toString(),
         page: page.toString(),
@@ -48,7 +50,9 @@ const DataRole = () => {
       });
       setDataRole(response.data.data);
       setPagination(response.data.pagination);
+      setLoader(false)
     } catch (error) {
+      setLoader(false)
       console.log(error);
     }
   };
@@ -81,6 +85,7 @@ const DataRole = () => {
             itemsPerPage={onChangeLimit}
             pagination={pagination}
             search={onSearch}
+            loader={loader}
           />
         </div>
       </Box>

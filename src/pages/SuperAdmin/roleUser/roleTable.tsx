@@ -11,6 +11,7 @@ import {
   TextField,
   InputAdornment,
   Icon,
+  CircularProgress,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -213,82 +214,91 @@ const RoleTable = (props: any) => {
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
           {
-            props.data.length === 0 ?
-              <div style={{ ...CENTER, padding: '20px 0' }}>
-                <span>Tidak ada data</span>
+            props.loader ?
+              <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                <CircularProgress size={40} color={'error'} />
               </div>
               :
-              <TableContainer>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell>
-                        <Checkbox
-                          color="primary"
-                          indeterminate={
-                            selected.length > 0 &&
-                            selected.length < props.data.length
-                          }
-                          checked={
-                            props.data.length > 0 &&
-                            selected.length === props.data.length
-                          }
-                          onChange={handleSelectAllClick}
-                        />
-                      </StyledTableCell>
-                      {columns.map((column: any) => (
-                        <StyledTableCell key={column.id}>
-                          {column.label}
-                        </StyledTableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
+              <>
+                {
+                  props.data.length === 0 ?
+                    <div style={{ ...CENTER, padding: '20px 0' }}>
+                      <span>Tidak ada data</span>
+                    </div>
+                    :
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            <StyledTableCell>
+                              <Checkbox
+                                color="primary"
+                                indeterminate={
+                                  selected.length > 0 &&
+                                  selected.length < props.data.length
+                                }
+                                checked={
+                                  props.data.length > 0 &&
+                                  selected.length === props.data.length
+                                }
+                                onChange={handleSelectAllClick}
+                              />
+                            </StyledTableCell>
+                            {columns.map((column: any) => (
+                              <StyledTableCell key={column.id}>
+                                {column.label}
+                              </StyledTableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
 
-                  <TableBody>
-                    {props.data.map((item: any, index: number) => {
-                      const isItemSelected = isSelected(item.id);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+                        <TableBody>
+                          {props.data.map((item: any, index: number) => {
+                            const isItemSelected = isSelected(item.id);
+                            const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                          sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                        >
-                          <StyledTableCell
-                            onClick={(e) => handleClick(e, item.id)}
-                            align="center"
-                            padding="checkbox"
-                          >
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                            />
-                          </StyledTableCell>
-                          <StyledTableCell onClick={() => FormUpdateRole(item)} align="center">
-                            {item.id}
-                          </StyledTableCell>
-                          <StyledTableCell onClick={() => FormUpdateRole(item)} align="center">
-                            {item.roleName}
-                          </StyledTableCell>
-                        </TableRow>
-                      );
-                    })
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                            return (
+                              <TableRow
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={index}
+                                sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                              >
+                                <StyledTableCell
+                                  onClick={(e) => handleClick(e, item.id)}
+                                  align="center"
+                                  padding="checkbox"
+                                >
+                                  <Checkbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": labelId,
+                                    }}
+                                  />
+                                </StyledTableCell>
+                                <StyledTableCell onClick={() => FormUpdateRole(item)} align="center">
+                                  {item.id}
+                                </StyledTableCell>
+                                <StyledTableCell onClick={() => FormUpdateRole(item)} align="center">
+                                  {item.roleName}
+                                </StyledTableCell>
+                              </TableRow>
+                            );
+                          })
+                          }
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                }
+              </>
           }
         </Box>
         {props.data !== undefined && (
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={props.pagination.totalItem === undefined ? 0 : props.pagination.totalItem }
+            count={props.pagination.totalItem === undefined ? 0 : props.pagination.totalItem}
             rowsPerPage={itemsPerPage}
             page={page - 1}
             onPageChange={handleChangePage}

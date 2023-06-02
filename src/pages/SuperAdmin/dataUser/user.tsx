@@ -13,6 +13,7 @@ const DataUser = () => {
     const [page, setPage] = React.useState(1)
     const [pagination, setPagination] = React.useState({})
     const [search, setSearch] = React.useState('')
+    const [loader, setLoader] = React.useState(true)
 
     const onChangeLimit = (param: any) => {
         setLimit(param)
@@ -32,6 +33,7 @@ const DataUser = () => {
 
     const GetUserTable = async () => {
         try {
+            setLoader(true)
             const response = await HTTPGetUsers({
                 limit: limit.toString(),
                 page: page.toString(),
@@ -39,7 +41,9 @@ const DataUser = () => {
             })
             setDataUser(response.data.data)
             setPagination(response.data.pagination)
+            setLoader(false)
         } catch (error) {
+            setLoader(false)
             console.log(error)
         }
     }
@@ -63,6 +67,7 @@ const DataUser = () => {
                         itemsPerPage={onChangeLimit}
                         pagination={pagination}
                         search={onSearch}
+                        loader={loader}
                     />
                 </div>
             </Box>

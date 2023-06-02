@@ -12,6 +12,7 @@ const DataStore = () => {
     const [page, setPage] = React.useState(1)
     const [pagination, setPagination] = React.useState({})
     const [search, setSearch] = React.useState('')
+    const [loader, setLoader] = React.useState(true)
 
     const onChangeLimit = (param: any) => {
         setLimit(param)
@@ -31,6 +32,7 @@ const DataStore = () => {
 
     const GetStoreTable = async () => {
         try {
+            setLoader(true)
             const response = await HTTPGetStores({
                 limit: limit.toString(),
                 page: page.toString(),
@@ -38,7 +40,9 @@ const DataStore = () => {
             })
             setDataStore(response.data.data)
             setPagination(response.data.pagination)
+            setLoader(false)
         } catch (error) {
+            setLoader(false)
             console.log(error)
         }
     }
@@ -62,6 +66,7 @@ const DataStore = () => {
                         itemsPerPage={onChangeLimit}
                         pagination={pagination}
                         search={onSearch}
+                        loader={loader}
                     />
                 </div>
             </Box>

@@ -5,8 +5,58 @@ import { Colors } from '../../../../utils/colors';
 import { kontakData } from '../dummy';
 import PelangganTable from './pelangganTable';
 import { isMobile } from 'react-device-detect';
+import { HTTPGetCustomers } from '../../../../apis/User/contact/customer';
+import secureLocalStorage from 'react-secure-storage';
 
 const Pelanggan = () => {
+    const token = secureLocalStorage.getItem("TOKEN") as string
+    const [init, setInit] = React.useState(false);
+    const [DataRole, setDataRole] = React.useState([]);
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1)
+    const [pagination, setPagination] = React.useState({})
+    const [search, setSearch] = React.useState('')
+    const [loader, setLoader] = React.useState(true)
+
+    const onChangeLimit = (param: any) => {
+        setLimit(param)
+        setPage(1)
+        setInit(!init)
+    }
+
+    const onChangePage = (param: any) => {
+        setPage(param)
+        setInit(!init)
+    }
+
+    const onSearch = (param: string) => {
+        setSearch(param)
+        setInit(!init)
+    }
+
+    const GetCustomerTable = async () => {
+        try {
+            setLoader(true)
+            const response = await HTTPGetCustomers({
+                token: token,
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search.length === 0 ? undefined :search,
+            });
+            console.log(response)
+            setDataRole(response.data.data);
+            setPagination(response.data.pagination);
+            setLoader(false)
+        } catch (error) {
+            setLoader(false)
+            console.log(error);
+        }
+    };
+
+    React.useEffect(() => {
+        GetCustomerTable();
+    }, [init]);
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Pelanggan'} idPanel={7}></NavigationBarUser>
@@ -19,9 +69,9 @@ const Pelanggan = () => {
                                 <Icon sx={{ color: Colors.primary, fontSize: 20 }}>file_upload</Icon>
                                 {
                                     isMobile ?
-                                    <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
-                                    :
-                                    <span style={{ fontSize: 13, color: Colors.primary }}>Import Data Kontak</span>
+                                        <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
+                                        :
+                                        <span style={{ fontSize: 13, color: Colors.primary }}>Import Data Kontak</span>
                                 }
                             </Stack>
                         </div>
@@ -39,7 +89,14 @@ const Pelanggan = () => {
                         </div>
                     </Stack>
                     <div style={{ marginTop: 20 }}>
-                        <PelangganTable data={kontakData}></PelangganTable>
+                        <PelangganTable
+                            data={DataRole}
+                            changePage={onChangePage}
+                            itemsPerPage={onChangeLimit}
+                            pagination={pagination}
+                            search={onSearch}
+                            loader={loader}
+                        ></PelangganTable>
                     </div>
                 </div>
             </Box>
