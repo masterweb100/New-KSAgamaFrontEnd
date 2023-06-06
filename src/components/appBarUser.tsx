@@ -32,7 +32,7 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { styled } from "@mui/material/styles";
 import Icon from "@mui/material/Icon";
 import { isMobile } from "react-device-detect";
-import LogoutModal from './logoutModal'
+import LogoutModal from "./logoutModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../stores/rootReducer";
 
@@ -95,10 +95,12 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
   const navigate = useNavigate();
-  const PermissionsRedux = useSelector((state: RootState) => state.userPermissions.data)
+  const PermissionsRedux = useSelector(
+    (state: RootState) => state.userPermissions.data
+  );
   const [isDrawer, setDrawer] = React.useState(false);
   const [profile, setProfile] = React.useState<any>(null);
-  const [isLogout, setLogout] = React.useState(false)
+  const [isLogout, setLogout] = React.useState(false);
 
   const [expanded, setExpanded] = React.useState<string | false>(
     `panel${idPanel}`
@@ -110,7 +112,10 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
     // console.log(nav)
   };
 
-  const LogoutPopup = () => { profileClose(); setLogout(!isLogout) }
+  const LogoutPopup = () => {
+    profileClose();
+    setLogout(!isLogout);
+  };
   const toggleDrawer = () => setDrawer(!isDrawer);
   const profileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setProfile(event.currentTarget);
@@ -126,24 +131,23 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
   };
 
   const MenuList = () => {
-    let newArr = []
+    let newArr = [];
     for (let i = 0; i < ListUser.length; i++) {
       const ItemI = ListUser[i];
       const filteredArray = ItemI.children.filter((el) => {
         return PermissionsRedux.permissions.some((f: any) => {
-          return f.permissionName === el.name
-        })
-      })
+          return f.permissionName === el.name;
+        });
+      });
       if (filteredArray.length > 0) {
-        let newObj = ItemI
-        newObj.children = filteredArray
-        newArr.push(newObj)
+        let newObj = ItemI;
+        newObj.children = filteredArray;
+        newArr.push(newObj);
       }
     }
-    newArr.unshift(ListUser[0])
     PermissionsRedux.permissions.find((e: any) => {
-      if (e.permissionName === 'AKUN') {
-        newArr.push({
+      if (e.permissionName === "AKUN") {
+        newArr.unshift({
           id: 5,
           label: "Akun",
           name: "AKUN",
@@ -151,12 +155,12 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
           navigate: "/akun",
           expandable: false,
           children: [],
-        })
+        });
       }
-    }
-    )
+    });
+    newArr.unshift(ListUser[0]);
     return newArr;
-  }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -288,7 +292,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
             width: drawerWidth,
             boxSizing: "border-box",
           },
-          scrollbarWidth: 'thin'
+          scrollbarWidth: "thin",
         }}
         variant={isMobile ? "temporary" : "permanent"}
         anchor="left"
@@ -298,7 +302,11 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
         <Toolbar sx={{ ...CENTER }}>
           <img src={logo} style={styles.imgLogo} alt="" />
         </Toolbar>
-        <Stack direction={"column"} gap={0.5} style={{ scrollbarWidth: 'thin' }}>
+        <Stack
+          direction={"column"}
+          gap={0.5}
+          style={{ scrollbarWidth: "thin" }}
+        >
           {/* {ListUser.map((item: any, index: number) => ( */}
           {MenuList().map((item: any, index: number) => (
             <>
@@ -419,7 +427,11 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
           ))}
         </Stack>
       </Drawer>
-      <LogoutModal isOpen={isLogout} setOpen={LogoutPopup} navigate={navigate} />
+      <LogoutModal
+        isOpen={isLogout}
+        setOpen={LogoutPopup}
+        navigate={navigate}
+      />
     </Box>
   );
 };

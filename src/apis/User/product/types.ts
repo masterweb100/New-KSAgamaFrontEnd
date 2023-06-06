@@ -75,15 +75,24 @@ export function HTTPUpdateType(param: {
   });
 }
 
-export function HTTPDeleteType(param: {
-  id: string;
+export function HTTPDeleteTypes(param: {
+  ids: any[];
   token: string;
 }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await AxiosNormal(param.token).delete(uri, {
         params: {
-          id: param.id,
+          ids: param.ids,
+        },
+        paramsSerializer: {
+          serialize: (params: any) => {
+            let newParams = QueryString.stringify(params, {
+              encodeValuesOnly: true,
+              arrayFormat: "brackets",
+            });
+            return newParams.replace(/[\[\]']+/g, "");
+          },
         },
       });
       return resolve(response);

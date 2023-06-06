@@ -76,14 +76,23 @@ export function HTTPGenerateUnitsID(): Promise<any> {
   }
   
   export function HTTPDeleteUnits(param: {
-    id: string;
+    ids: any[];
     token: string;
   }): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await AxiosNormal(param.token).delete(uri, {
           params: {
-            id: param.id,
+            ids: param.ids,
+          },
+          paramsSerializer: {
+            serialize: (params: any) => {
+              let newParams = QueryString.stringify(params, {
+                encodeValuesOnly: true,
+                arrayFormat: "brackets",
+              });
+              return newParams.replace(/[\[\]']+/g, "");
+            },
           },
         });
         return resolve(response);

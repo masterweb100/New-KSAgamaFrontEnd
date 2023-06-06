@@ -1,7 +1,7 @@
 import { AxiosNormal } from "../../../utils/interceptors";
 import QueryString from "qs";
 
-const uri = "accounts-categories";
+const uri = "account-categories";
 export function HTTPGetAccountCategory(param: {
   token: string;
   page: string;

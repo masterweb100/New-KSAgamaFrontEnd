@@ -154,33 +154,11 @@ const DataProdukForm = () => {
                 <TextField
                   type="text"
                   size="small"
+                  disabled
                   defaultValue={"400"}
                   placeholder="Total"
-                  sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
+                  sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
-              </Stack>
-              <Stack direction={"column"} gap={1}>
-                <span>Status</span>
-                <Select
-                  size="small"
-                  value={status}
-                  displayEmpty
-                  sx={{
-                    bgcolor: "white",
-                    width: isMobile ? "40vw" : "25vw",
-                    color: "#000",
-                  }}
-                  onChange={handleChangeStatus}
-                  renderValue={(selected: any) => {
-                    if (selected.length === 0) {
-                      return <span style={{ color: "#a7a5a6" }}>Status</span>;
-                    }
-                    return selected;
-                  }}
-                >
-                  <MenuItem value={"Freeze"}>Freeze</MenuItem>
-                  <MenuItem value={"Active"}>Active</MenuItem>
-                </Select>
               </Stack>
             </Stack>
             <Stack
