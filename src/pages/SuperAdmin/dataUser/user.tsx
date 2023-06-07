@@ -39,6 +39,7 @@ const DataUser = () => {
                 page: page.toString(),
                 q: search,
             })
+            console.log(response)
             setDataUser(response.data.data)
             setPagination(response.data.pagination)
             setLoader(false)

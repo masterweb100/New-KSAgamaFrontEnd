@@ -2,9 +2,12 @@ import React from "react";
 import {
   Box,
   CircularProgress,
+  Icon,
+  IconButton,
   Stack,
   TextField,
   Toolbar,
+  Tooltip,
 } from "@mui/material";
 import NavigationBarUser from "../../../components/appBarUser";
 import { CENTER } from "../../../utils/stylesheet";
@@ -12,14 +15,15 @@ import { Colors } from "../../../utils/colors";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import secureLocalStorage from "react-secure-storage";
-import { HTTPAddAccountCategory } from "../../../apis/User/account/accountCategory";
+import {
+  HTTPAddAccountCategory,
+  HTTPGenerateAccountsID,
+} from "../../../apis/User/account/accountCategory";
 
 const KategoriForm = () => {
   const navigate = useNavigate();
   const token = secureLocalStorage.getItem("TOKEN") as string;
-  const [idCategory, setCategory] = React.useState(
-    (Math.random() + 1).toString(36).substring(7).toUpperCase()
-  );
+  const [idCategory, setIdCategory] = React.useState("");
   const [categoryName, setCategoryName] = React.useState("");
   const [onSend, setSend] = React.useState(false);
 
@@ -39,14 +43,27 @@ const KategoriForm = () => {
         token: token,
         genId: idCategory,
       });
-      console.log(resp);
       setSend(false);
-      navigate("/akun/kategori-akun");
+      navigate(-1);
     } catch (error) {
       setSend(false);
       console.log(error);
     }
   };
+
+  const GenId = async () => {
+    try {
+      const resp = await HTTPGenerateAccountsID();
+      setIdCategory(resp.data.data.genId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [init, setInit] = React.useState(false);
+  React.useEffect(() => {
+    GenId();
+  }, [init]);
 
   return (
     <div style={{ display: "flex" }}>
@@ -94,10 +111,24 @@ const KategoriForm = () => {
                 <span>ID Kategori</span>
                 <TextField
                   type="text"
-                  size="small"
+                  id="id"
+                  name="id"
                   value={idCategory}
                   disabled
+                  size="small"
+                  placeholder="ID"
                   sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
+                  InputProps={{
+                    endAdornment: (
+                      <Tooltip title="Regenerate ID">
+                        <IconButton onClick={GenId}>
+                          <Icon sx={{ fontSize: 25, color: Colors.primary }}>
+                            refresh
+                          </Icon>
+                        </IconButton>
+                      </Tooltip>
+                    ),
+                  }}
                 />
               </Stack>
               <Stack direction={"column"} gap={1}>

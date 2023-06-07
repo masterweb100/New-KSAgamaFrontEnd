@@ -40,7 +40,7 @@ const Akun = () => {
       const response = await HTTPGetAccounts({
         limit: limit.toString(),
         page: page.toString(),
-        q: search,
+        q: search.length === 0 ? undefined : search,
         token: token,
       });
       console.log(response);

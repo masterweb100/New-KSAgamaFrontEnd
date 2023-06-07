@@ -26,7 +26,7 @@ const columns = [
   { id: "kode", label: "Kode Akun" },
   { id: "nama", label: "Nama Akun" },
   { id: "kategori", label: "Kategori" },
-  { id: "saldo", label: "Brand" },
+  { id: "saldo", label: "Saldo" },
 ];
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -41,7 +41,6 @@ const StyledTableCell = styled(TableCell)(() => ({
 
 const AkunTable = (props: any) => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState<readonly string[]>([]);
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
@@ -55,39 +54,6 @@ const AkunTable = (props: any) => {
     props.itemsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
-
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = props.data.map((n: any, index: number) =>
-        index.toString()
-      );
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const isSelected = (name: any) => selected.indexOf(name) !== -1;
 
   const FormPage = () => navigate("/akun/form-akun");
   const KategoriPage = () => navigate("/akun/kategori-akun");
@@ -203,20 +169,6 @@ const AkunTable = (props: any) => {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell>
-                    <Checkbox
-                      color="primary"
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < props.data.length
-                      }
-                      checked={
-                        props.data.length > 0 &&
-                        selected.length === props.data.length
-                      }
-                      onChange={handleSelectAllClick}
-                    />
-                  </StyledTableCell>
                   {columns.map((column: any) => (
                     <StyledTableCell key={column.id}>
                       {column.label}
@@ -227,9 +179,6 @@ const AkunTable = (props: any) => {
 
               <TableBody>
                 {props.data.map((item: any, index: number) => {
-                  const isItemSelected = isSelected(index.toString());
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       role="checkbox"
@@ -240,30 +189,17 @@ const AkunTable = (props: any) => {
                         cursor: "pointer",
                       }}
                     >
-                      <StyledTableCell
-                        onClick={(e) => handleClick(e, index.toString())}
-                        align="center"
-                        padding="checkbox"
-                      >
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
+                      <StyledTableCell onClick={DetailPage} align="center">
+                        {item.accountCode}
                       </StyledTableCell>
                       <StyledTableCell onClick={DetailPage} align="center">
-                        {item.kode}
+                        {item.accountName}
                       </StyledTableCell>
                       <StyledTableCell onClick={DetailPage} align="center">
-                        {item.nama}
+                        {item.accountCategoryId}
                       </StyledTableCell>
                       <StyledTableCell onClick={DetailPage} align="center">
-                        {item.kategori}
-                      </StyledTableCell>
-                      <StyledTableCell onClick={DetailPage} align="center">
-                        {item.saldo}
+                        {item.balance}
                       </StyledTableCell>
                     </TableRow>
                   );

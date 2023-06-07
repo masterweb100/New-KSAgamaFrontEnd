@@ -78,7 +78,7 @@ const KasModal = ({ isOpen, onClose }: any) => {
                 sx={{
                   bgcolor: "white",
                   borderRadius: 1,
-                  width: isMobile ? "40vw" : "15vw",
+                  width: isMobile ? "40vw" : "25vw",
                 }}
               />
             </Stack>

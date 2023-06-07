@@ -2,6 +2,17 @@ import { AxiosNormal } from "../../../utils/interceptors";
 import QueryString from "qs";
 
 const uri = "account-categories";
+export function HTTPGenerateAccountsID(): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await AxiosNormal().get(`${uri}/id`);
+      return resolve(response);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+}
+
 export function HTTPGetAccountCategory(param: {
   token: string;
   page: string;

@@ -360,13 +360,13 @@ const UserTable = (props: any) => {
                               >
                                 {item.storeId === 0
                                   ? "Tidak ada Toko"
-                                  : item.storeId}
+                                  : item.storeName}
                               </StyledTableCell>
                               <StyledTableCell
                                 onClick={() => FormUpdateUser(item)}
                                 align="center"
                               >
-                                {item.roleId}
+                                {item.roleName}
                               </StyledTableCell>
                               <StyledTableCell
                                 onClick={() => FormUpdateUser(item)}

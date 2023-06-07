@@ -22,6 +22,7 @@ import { isMobile } from "react-device-detect";
 import moment from "moment";
 import { CENTER } from "../../../../../utils/stylesheet";
 import KasModal from "./kasModal";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { id: "tanggal", label: "Tanggal" },
@@ -44,9 +45,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const KasTable = (props: any) => {
+  const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
-  const [selected, setSelected] = useState<readonly string[]>([]);
   const [transferModal, setTransferModal] = React.useState(false);
 
   const handleChangePage = (event: any, newPage: any) => {
@@ -58,38 +59,6 @@ const KasTable = (props: any) => {
     setPage(0);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = props.data.map((n: any, index: number) =>
-        index.toString()
-      );
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const isSelected = (name: any) => selected.indexOf(name) !== -1;
   const ButtonStack = {
     ...CENTER,
     padding: "6px 15px",
@@ -121,24 +90,28 @@ const KasTable = (props: any) => {
             </Stack>
           </Box>
         </div>
-        <Box sx={{ ...ButtonStack }}>
-          <Stack direction={"row"} gap={1} alignItems={"center"}>
-            <Icon sx={{ color: "inherit", fontSize: 25 }}>send</Icon>
-            <span style={{ color: "inherit", fontWeight: 500 }}>
-              Kirim Dana
-            </span>
-          </Stack>
-        </Box>
-        <Box sx={{ ...ButtonStack }}>
-          <Stack direction={"row"} gap={1} alignItems={"center"}>
-            <Icon sx={{ color: "inherit", fontSize: 25 }}>
-              account_balance_wallet
-            </Icon>
-            <span style={{ color: "inherit", fontWeight: 500 }}>
-              Terima Dana
-            </span>
-          </Stack>
-        </Box>
+        <div onClick={() => navigate("/laporan/bank/kas/deposit")}>
+          <Box sx={{ ...ButtonStack }}>
+            <Stack direction={"row"} gap={1} alignItems={"center"}>
+              <Icon sx={{ color: "inherit", fontSize: 25 }}>send</Icon>
+              <span style={{ color: "inherit", fontWeight: 500 }}>
+                Kirim Dana
+              </span>
+            </Stack>
+          </Box>
+        </div>
+        <div onClick={() => navigate("/laporan/bank/kas/withdraw")}>
+          <Box sx={{ ...ButtonStack }}>
+            <Stack direction={"row"} gap={1} alignItems={"center"}>
+              <Icon sx={{ color: "inherit", fontSize: 25 }}>
+                account_balance_wallet
+              </Icon>
+              <span style={{ color: "inherit", fontWeight: 500 }}>
+                Terima Dana
+              </span>
+            </Stack>
+          </Box>
+        </div>
       </Stack>
       <Stack
         direction={isMobile ? "column" : "row"}
@@ -192,20 +165,6 @@ const KasTable = (props: any) => {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell>
-                    <Checkbox
-                      color="primary"
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < props.data.length
-                      }
-                      checked={
-                        props.data.length > 0 &&
-                        selected.length === props.data.length
-                      }
-                      onChange={handleSelectAllClick}
-                    />
-                  </StyledTableCell>
                   {columns.map((column: any) => (
                     <StyledTableCell key={column.id}>
                       {column.label}
@@ -216,9 +175,6 @@ const KasTable = (props: any) => {
 
               <TableBody>
                 {props.data.map((item: any, index: number) => {
-                  const isItemSelected = isSelected(index.toString());
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       role="checkbox"
@@ -226,19 +182,6 @@ const KasTable = (props: any) => {
                       key={index}
                       sx={{ "&:hover": { bgcolor: Colors.inherit } }}
                     >
-                      <StyledTableCell
-                        align="center"
-                        padding="checkbox"
-                        onClick={(e) => handleClick(e, index.toString())}
-                      >
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </StyledTableCell>
                       <StyledTableCell align="center">
                         {moment().format("DD/MM/YYYY")}
                       </StyledTableCell>

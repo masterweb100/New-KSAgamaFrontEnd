@@ -40,7 +40,6 @@ const StyledTableCell = styled(TableCell)(() => ({
 
 const KategoriTable = (props: any) => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState<readonly string[]>([]);
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
@@ -55,38 +54,6 @@ const KategoriTable = (props: any) => {
     setPage(1);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = props.data.map((n: any, index: number) =>
-        index.toString()
-      );
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const isSelected = (name: any) => selected.indexOf(name) !== -1;
   const FormPage = () => navigate("/akun/form-kategori");
 
   return (
@@ -186,20 +153,6 @@ const KategoriTable = (props: any) => {
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                       <TableRow>
-                        <StyledTableCell>
-                          <Checkbox
-                            color="primary"
-                            indeterminate={
-                              selected.length > 0 &&
-                              selected.length < props.data.length
-                            }
-                            checked={
-                              props.data.length > 0 &&
-                              selected.length === props.data.length
-                            }
-                            onChange={handleSelectAllClick}
-                          />
-                        </StyledTableCell>
                         {columns.map((column: any) => (
                           <StyledTableCell key={column.id}>
                             {column.label}
@@ -210,9 +163,6 @@ const KategoriTable = (props: any) => {
 
                     <TableBody>
                       {props.data.map((item: any, index: number) => {
-                        const isItemSelected = isSelected(index.toString());
-                        const labelId = `enhanced-table-checkbox-${index}`;
-
                         return (
                           <TableRow
                             role="checkbox"
@@ -222,17 +172,7 @@ const KategoriTable = (props: any) => {
                               "&:hover": { bgcolor: Colors.inherit },
                               cursor: "pointer",
                             }}
-                            onClick={(e) => handleClick(e, index.toString())}
                           >
-                            <StyledTableCell align="center" padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
-                            </StyledTableCell>
                             <StyledTableCell align="center">
                               {item.genId}
                             </StyledTableCell>
