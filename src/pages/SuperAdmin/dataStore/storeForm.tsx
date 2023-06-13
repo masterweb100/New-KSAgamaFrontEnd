@@ -38,14 +38,17 @@ const StoreForm = () => {
                 genId: genId,
                 token: token
             })
-            await HTTPUpdateUser({
-                id: resp.data.id,
-                name: userStore.name,
-                roleId: userStore.roleId,
-                status: userStore.status,
-                storeId: userStore.storeId,
-                token: token
-            })
+            if (resp.status === 200) {
+                const resp2 = await HTTPUpdateUser({
+                    id: userStore.id,
+                    name: userStore.name,
+                    roleId: userStore.roleId,
+                    status: userStore.status,
+                    storeId: resp.data.data.id,
+                    token: token
+                })
+                console.log(resp2)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -61,11 +64,11 @@ const StoreForm = () => {
                 token: token
             })
             await HTTPUpdateUser({
-                id: StoreData.id.toString(),
+                id: userStore.id,
                 name: userStore.name,
                 roleId: userStore.roleId,
                 status: userStore.status,
-                storeId: userStore.storeId,
+                storeId: StoreData.id,
                 token: token
             })
         } catch (error) {
@@ -111,7 +114,7 @@ const StoreForm = () => {
         } else {
             const result = usersId.filter((value: any) => value.id === Formik.values.adminId)
             setUserStore(result[0])
-            
+
             return <span style={{ color: '#000' }}>{result[0].name}</span>;
         }
     }

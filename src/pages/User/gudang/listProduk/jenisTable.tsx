@@ -11,7 +11,14 @@ import {
     Stack,
     Icon,
     TextField,
-    InputAdornment
+    InputAdornment,
+    Tooltip,
+    Button,
+    Dialog,
+    DialogTitle,
+    IconButton,
+    DialogContent,
+    CircularProgress
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -22,39 +29,50 @@ import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 import { isMobile } from 'react-device-detect';
 import secureLocalStorage from "react-secure-storage";
-import { HTTPGetTypes } from "../../../../apis/User/product/types";
+import { HTTPDeleteTypes, HTTPGetTypes, HTTPUpdateType } from "../../../../apis/User/product/types";
 import moment from "moment";
+import { HTTPGetBrands } from "../../../../apis/User/product/brand";
+import DeleteModal from "../../../../components/deleteModal";
 
 const columns = [
     { id: "id", label: "ID Jenis Produk" },
     { id: "brand", label: "Nama Brand" },
     { id: "jenis", label: "Nama Jenis Produk" },
-    { id: "updatedAt", label: "Updated At" },
+    { id: "edit", label: "Edit" },
+    { id: "updatedBy", label: "Updated By" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
-        fontWeigth: '700'
+        fontWeight: '700'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
 
-const JenisTable = (props: any) => {
+const JenisTable = () => {
     const navigate = useNavigate();
     const token = secureLocalStorage.getItem("TOKEN") as string
-    const [selected, setSelected] = useState<readonly string[]>([])
+    const [selected, setSelected] = useState<any[]>([])
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [TypesData, setTypesData] = React.useState([]);
+    const [BrandData, setBrandData] = React.useState([]);
     const [init, setInit] = React.useState(false)
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1);
     const [pagination, setPagination] = React.useState<any>({});
     const [search, setSearch] = React.useState('');
+    const [tooltipOpen, setTooltipOpen] = React.useState(false);
+    const [onSend, setSend] = React.useState(false)
+    const [editModal, setEditModal] = React.useState(false)
+    const [itemSelected, setItemSelected] = React.useState<any>({})
+    const [loader, setLoader] = React.useState(false)
+    const [isDeleteModal, setDeleteModal] = React.useState(false);
 
-    const GetBrand = async () => {
+    const GetTypes = async () => {
+        setLoader(true)
         try {
             const resp = await HTTPGetTypes({
                 limit: limit.toString(),
@@ -62,9 +80,24 @@ const JenisTable = (props: any) => {
                 q: search,
                 token: token
             })
-            console.log(resp)
             setTypesData(resp.data.data)
             setPagination(resp.data.pagination)
+            setLoader(false)
+        } catch (error) {
+            setLoader(false)
+            console.log(error)
+        }
+    }
+
+    const GetBrand = async () => {
+        try {
+            const resp = await HTTPGetBrands({
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search,
+                token: token
+            })
+            setBrandData(resp.data.data)
         } catch (error) {
             console.log(error)
         }
@@ -84,7 +117,7 @@ const JenisTable = (props: any) => {
 
     const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
         const selectedIndex = selected.indexOf(name);
-        let newSelected: readonly string[] = [];
+        let newSelected: any[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, name);
@@ -104,7 +137,7 @@ const JenisTable = (props: any) => {
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = TypesData.map((n: any, index: number) => index.toString());
+            const newSelected = TypesData.map((item: any, index: number) => item.id);
             setSelected(newSelected);
             return;
         }
@@ -112,7 +145,12 @@ const JenisTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-    const FormAddJenis = () => navigate('/gudang/list-produk/form-jenis/add')
+    const FormAddJenis = () => {
+        if (BrandData.length > 0) {
+            navigate('/gudang/list-produk/form-jenis/add')
+        }
+    }
+
     const FormUpdateJenis = () => {
         if (selected.length > 0) {
             navigate('/gudang/list-produk/form-jenis/update')
@@ -120,23 +158,67 @@ const JenisTable = (props: any) => {
     }
 
     React.useEffect(() => {
+        GetTypes()
         GetBrand()
     }, [init])
+
+    const handleOpen = () => {
+        if (BrandData.length === 0) {
+            setTooltipOpen(true)
+        } else {
+            setTooltipOpen(false)
+        }
+    }
+
+    const handleEdit = () => {
+        setEditModal(!editModal)
+    }
+
+    const onEdit = async () => {
+        setSend(true)
+        try {
+            await HTTPUpdateType({
+                typeName: itemSelected.typeName,
+                id: itemSelected.id,
+                token: token as string
+            })
+            handleEdit()
+            setSend(false)
+            await GetTypes()
+        } catch (error) {
+            setSend(false)
+            console.log(error)
+        }
+    }
+
+    const handleDelete = async (param: string) => {
+        if (selected.length > 0) {
+            if (param === 'yes') {
+                await HTTPDeleteTypes({
+                    ids: selected,
+                    token: token as string
+                })
+                setDeleteModal(!isDeleteModal);
+                await GetTypes()
+            } else {
+                setDeleteModal(!isDeleteModal);
+            }
+        }
+    };
 
     return (
         <div>
             <Stack direction={'row'} justifyContent={'space-between'}>
-                <div onClick={FormAddJenis} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '12px 15px' : '10px 30px', alignSelf: 'flex-start' }}>
-                    <Stack alignItems={'center'} direction={'row'} gap={1}>
-                        <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
-                        <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: '#fff' }}>Tambah Data Jenis Produk</p>
-                    </Stack>
-                </div>
-                <Stack direction={'row'} alignItems={'center'} gap={isMobile ? 1 : 2}>
-                    <div onClick={FormUpdateJenis} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>border_color</Icon>
+                <Tooltip title={'Brand Produk belum tersedia'} placement="right" open={tooltipOpen} onOpen={handleOpen} onClose={() => setTooltipOpen(false)}>
+                    <div onClick={FormAddJenis} style={{ ...CENTER, backgroundColor: BrandData.length === 0 ? "#ababab" : Colors.primary, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '12px 15px' : '10px 30px', alignSelf: 'flex-start' }}>
+                        <Stack alignItems={'center'} direction={'row'} gap={1}>
+                            <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
+                            <p style={{ margin: 0, fontWeight: 500, fontSize: isMobile ? 13 : 15, color: '#fff' }}>Tambah Data Jenis Produk</p>
+                        </Stack>
                     </div>
-                    <div style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
+                </Tooltip>
+                <Stack direction={'row'} alignItems={'center'} gap={isMobile ? 1 : 2}>
+                    <div onClick={() => handleDelete('open')} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
                         <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 25 }}>delete_outline</Icon>
                     </div>
                 </Stack>
@@ -184,63 +266,77 @@ const JenisTable = (props: any) => {
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
                     {
-                        TypesData.length === 0 ?
-                            <div style={{ ...CENTER, padding: '20px 0' }}>
-                                <span>Tidak ada data</span>
+                        loader ?
+                            <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                                <CircularProgress size={40} color={'error'} />
                             </div>
                             :
-                            <TableContainer>
-                                <Table stickyHeader aria-label="sticky table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <StyledTableCell>
-                                                <Checkbox
-                                                    color="primary"
-                                                    indeterminate={selected.length > 0 && selected.length < TypesData.length}
-                                                    checked={TypesData.length > 0 && selected.length === TypesData.length}
-                                                    onChange={handleSelectAllClick}
-                                                />
-                                            </StyledTableCell>
-                                            {columns.map((column: any) => (
-                                                <StyledTableCell key={column.id}>
-                                                    {column.label}
-                                                </StyledTableCell>
-                                            ))}
-                                        </TableRow>
-                                    </TableHead>
+                            <>
+                                {
+                                    TypesData.length === 0 ?
+                                        <div style={{ ...CENTER, padding: '20px 0' }}>
+                                            <span>Tidak ada data</span>
+                                        </div>
+                                        :
+                                        <TableContainer>
+                                            <Table stickyHeader aria-label="sticky table">
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <StyledTableCell>
+                                                            <Checkbox
+                                                                color="primary"
+                                                                indeterminate={selected.length > 0 && selected.length < TypesData.length}
+                                                                checked={TypesData.length > 0 && selected.length === TypesData.length}
+                                                                onChange={handleSelectAllClick}
+                                                            />
+                                                        </StyledTableCell>
+                                                        {columns.map((column: any) => (
+                                                            <StyledTableCell key={column.id}>
+                                                                {column.label}
+                                                            </StyledTableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                </TableHead>
 
-                                    <TableBody>
-                                        {TypesData.map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(index.toString());
-                                            const labelId = `enhanced-table-checkbox-${index}`;
+                                                <TableBody>
+                                                    {TypesData.map((item: any, index: number) => {
+                                                        const isItemSelected = isSelected(item.id);
+                                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                            return (
-                                                <TableRow
-                                                    role="checkbox"
-                                                    tabIndex={-1}
-                                                    key={index}
-                                                    sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                >
-                                                    <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={isItemSelected}
-                                                            inputProps={{
-                                                                'aria-labelledby': labelId,
-                                                            }}
-                                                        />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.productBrandId}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.typeName}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.updatedAt === null ? moment(item.createdAt).format('DD MMMM YYYY, hh:mm') : item.updatedAt}</StyledTableCell>
-                                                </TableRow>
-                                            )
-                                        })
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                                        return (
+                                                            <TableRow
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={index}
+                                                                sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                            >
+                                                                <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        checked={isItemSelected}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': labelId,
+                                                                        }}
+                                                                    />
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{item.id}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.productBrandId}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.typeName}</StyledTableCell>
+                                                                <StyledTableCell align="center">
+                                                                    <Button onClick={() => { setItemSelected(item); handleEdit() }} variant={'contained'} color={'success'}>
+                                                                        <Icon sx={{ color: '#fff' }} fontSize="medium">border_color</Icon>
+                                                                    </Button>
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
+                                                            </TableRow>
+                                                        )
+                                                    })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                }
+                            </>
                     }
                 </Box>
                 {TypesData !== undefined && (
@@ -255,6 +351,72 @@ const JenisTable = (props: any) => {
                     />
                 )}
             </Box>
+            <Dialog open={editModal} onClose={handleEdit} PaperProps={{ style: { maxWidth: '100vw' } }}>
+                <DialogTitle>
+                    <Stack direction={'row'} width={'100%'} alignItems={'center'} justifyContent={'space-between'}>
+                        <strong><span>Form Edit Data Jenis</span></strong>
+                        <IconButton onClick={handleEdit}>
+                            <Icon sx={{ color: '#ababab' }} fontSize="medium">close</Icon>
+                        </IconButton>
+                    </Stack>
+                </DialogTitle>
+                <DialogContent>
+                    <Stack direction={"column"} gap={1}>
+                        <span>Nama Jenis</span>
+                        <TextField
+                            type="text"
+                            size="small"
+                            placeholder="Nama Jenis"
+                            sx={{ bgcolor: "#fff", width: isMobile ? "80vw" : "15vw" }}
+                            value={itemSelected.typeName}
+                            onChange={(e) => setItemSelected({ ...itemSelected, typeName: e.target.value })}
+                        />
+                    </Stack>
+                    <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        gap={2}
+                        marginTop={5}
+                    >
+                        <div
+                            onClick={handleEdit}
+                            style={{
+                                ...CENTER,
+                                borderRadius: 10,
+                                border: `1px solid ${Colors.primary}`,
+                                padding: "10px 30px",
+                                cursor: "pointer",
+                            }}
+                        >
+                            <span style={{ fontSize: 13, color: Colors.primary }}>
+                                BATAL
+                            </span>
+                        </div>
+                        <button onClick={onEdit} style={{ all: "unset" }}>
+                            <div
+                                style={{
+                                    ...CENTER,
+                                    borderRadius: 10,
+                                    backgroundColor: Colors.primary,
+                                    padding: "10px 30px",
+                                    cursor: "pointer",
+                                    color: "#fff",
+                                }}
+                            >
+                                {onSend === true ? (
+                                    <CircularProgress size={20} color={"inherit"} />
+                                ) : (
+                                    <span style={{ fontSize: 13, color: "#fff" }}>
+                                        SIMPAN
+                                    </span>
+                                )}
+                            </div>
+                        </button>
+                    </Stack>
+                </DialogContent>
+            </Dialog>
+            <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
         </div>
     );
 }

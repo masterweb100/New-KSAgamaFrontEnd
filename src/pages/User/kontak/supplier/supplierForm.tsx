@@ -63,7 +63,7 @@ const SupplierForm = () => {
                 })
                 setSend(false)
                 console.log(resp)
-                navigate('/kontak/supplier')
+                navigate(-1)
             } catch (error) {
                 setSend(false)
                 console.log(error)

@@ -12,6 +12,12 @@ import {
   Icon,
   TextField,
   InputAdornment,
+  Button,
+  Dialog,
+  DialogTitle,
+  IconButton,
+  DialogContent,
+  CircularProgress,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -22,12 +28,14 @@ import { CENTER } from "../../../../utils/stylesheet";
 import { isMobile } from "react-device-detect";
 import secureLocalStorage from "react-secure-storage";
 import moment from "moment";
-import { HTTPGetCategories } from "../../../../apis/User/product/category";
+import { HTTPDeleteCategory, HTTPGetCategories, HTTPUpdateCategory } from "../../../../apis/User/product/category";
+import DeleteModal from "../../../../components/deleteModal";
 
 const columns = [
   { id: "id", label: "ID Kategori" },
   { id: "jenis", label: "Nama Kategori" },
-  { id: "updatedAt", label: "Updated At" },
+  { id: "Edit", label: "Edit" },
+  { id: "updatedBy", label: "Updated By" },
 ];
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -43,7 +51,7 @@ const StyledTableCell = styled(TableCell)(() => ({
 const KategoriTable = () => {
   const navigate = useNavigate();
   const token = secureLocalStorage.getItem("TOKEN") as string
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<any[]>([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [KategoriData, setKategoriData] = React.useState([]);
   const [init, setInit] = React.useState(false)
@@ -51,8 +59,14 @@ const KategoriTable = () => {
   const [page, setPage] = React.useState(1);
   const [pagination, setPagination] = React.useState<any>({});
   const [search, setSearch] = React.useState('');
+  const [onSend, setSend] = React.useState(false)
+  const [editModal, setEditModal] = React.useState(false)
+  const [itemSelected, setItemSelected] = React.useState<any>({})
+  const [loader, setLoader] = React.useState(false)
+  const [isDeleteModal, setDeleteModal] = React.useState(false);
 
   const GetCategory = async () => {
+    setLoader(true)
     try {
       const resp = await HTTPGetCategories({
         limit: limit.toString(),
@@ -62,7 +76,9 @@ const KategoriTable = () => {
       })
       setKategoriData(resp.data.data)
       setPagination(resp.data.pagination)
+      setLoader(false)
     } catch (error) {
+      setLoader(false)
       console.log(error)
     }
   }
@@ -71,7 +87,7 @@ const KategoriTable = () => {
     setPage(newPage + 1);
     setInit(!init)
   };
-  
+
   const handleChangeRowsPerPage = (event: any) => {
     setItemsPerPage(parseInt(event.target.value, 10));
     setLimit(parseInt(event.target.value, 10))
@@ -81,7 +97,7 @@ const KategoriTable = () => {
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+    let newSelected: any[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -101,9 +117,7 @@ const KategoriTable = () => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = KategoriData.map((n: any, index: number) =>
-        index.toString()
-      );
+      const newSelected = KategoriData.map((item: any, index: number) => item.id);
       setSelected(newSelected);
       return;
     }
@@ -122,6 +136,42 @@ const KategoriTable = () => {
   React.useEffect(() => {
     GetCategory()
   }, [init])
+
+  const handleEdit = () => {
+    setEditModal(!editModal)
+  }
+
+  const onEdit = async () => {
+    setSend(true)
+    try {
+      await HTTPUpdateCategory({
+        categoryName: itemSelected.categoryName,
+        id: itemSelected.id,
+        token: token as string
+      })
+      handleEdit()
+      setSend(false)
+      await GetCategory()
+    } catch (error) {
+      setSend(false)
+      console.log(error)
+    }
+  }
+
+  const handleDelete = async (param: string) => {
+    if (selected.length > 0) {
+        if (param === 'yes') {
+            await HTTPDeleteCategory({
+                ids: selected,
+                token: token
+            })
+            setDeleteModal(!isDeleteModal);
+            GetCategory()
+        } else {
+            setDeleteModal(!isDeleteModal);
+        }
+    }
+};
 
   return (
     <div>
@@ -153,21 +203,7 @@ const KategoriTable = () => {
         </div>
         <Stack direction={"row"} alignItems={"center"} gap={isMobile ? 1 : 2}>
           <div
-            onClick={FormUpdateKategori}
-            style={{
-              ...CENTER,
-              backgroundColor:
-                selected.length === 0 ? Colors.secondary : Colors.warning,
-              borderRadius: 5,
-              cursor: "pointer",
-              padding: 10,
-            }}
-          >
-            <Icon style={{ color: "#fff", fontSize: isMobile ? 20 : 25 }}>
-              border_color
-            </Icon>
-          </div>
-          <div
+            onClick={() => handleDelete('open')}
             style={{
               ...CENTER,
               backgroundColor:
@@ -232,81 +268,95 @@ const KategoriTable = () => {
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
           {
-            KategoriData.length === 0 ?
-              <div style={{ ...CENTER, padding: '20px 0' }}>
-                <span>Tidak ada data</span>
+            loader ?
+              <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                <CircularProgress size={40} color={'error'} />
               </div>
               :
-              <TableContainer>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell>
-                        <Checkbox
-                          color="primary"
-                          indeterminate={
-                            selected.length > 0 &&
-                            selected.length < KategoriData.length
-                          }
-                          checked={
-                            KategoriData.length > 0 &&
-                            selected.length === KategoriData.length
-                          }
-                          onChange={handleSelectAllClick}
-                        />
-                      </StyledTableCell>
-                      {columns.map((column: any) => (
-                        <StyledTableCell key={column.id}>
-                          {column.label}
-                        </StyledTableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
+              <>
+                {
+                  KategoriData.length === 0 ?
+                    <div style={{ ...CENTER, padding: '20px 0' }}>
+                      <span>Tidak ada data</span>
+                    </div>
+                    :
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            <StyledTableCell>
+                              <Checkbox
+                                color="primary"
+                                indeterminate={
+                                  selected.length > 0 &&
+                                  selected.length < KategoriData.length
+                                }
+                                checked={
+                                  KategoriData.length > 0 &&
+                                  selected.length === KategoriData.length
+                                }
+                                onChange={handleSelectAllClick}
+                              />
+                            </StyledTableCell>
+                            {columns.map((column: any) => (
+                              <StyledTableCell key={column.id}>
+                                {column.label}
+                              </StyledTableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
 
-                  <TableBody>
-                    {KategoriData.map((item: any, index: number) => {
-                      const isItemSelected = isSelected(index.toString());
-                      const labelId = `enhanced-table-checkbox-${index}`;
+                        <TableBody>
+                          {KategoriData.map((item: any, index: number) => {
+                            const isItemSelected = isSelected(item.id);
+                            const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                          sx={{
-                            "&:hover": { bgcolor: Colors.inherit },
-                            cursor: "pointer",
-                          }}
-                        >
-                          <StyledTableCell
-                            onClick={(e) => handleClick(e, index.toString())}
-                            align="center"
-                            padding="checkbox"
-                          >
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                            />
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {item.id}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {item.categoryName}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {item.updatedAt === null ? moment(item.createdAt).format('DD MMMM YYYY, hh:mm') : item.updatedAt}
-                          </StyledTableCell>
-                        </TableRow>
-                      );
-                    })
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                            return (
+                              <TableRow
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={index}
+                                sx={{
+                                  "&:hover": { bgcolor: Colors.inherit },
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <StyledTableCell
+                                  onClick={(e) => handleClick(e, item.id)}
+                                  align="center"
+                                  padding="checkbox"
+                                >
+                                  <Checkbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": labelId,
+                                    }}
+                                  />
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.id}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.categoryName}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  <Button onClick={() => { setItemSelected(item); handleEdit() }} variant={'contained'} color={'success'}>
+                                    <Icon sx={{ color: '#fff' }} fontSize="medium">border_color</Icon>
+                                  </Button>
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.updatedBy === null ? '-' : item.updatedBy}
+                                </StyledTableCell>
+                              </TableRow>
+                            );
+                          })
+                          }
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                }
+              </>
           }
         </Box>
         {KategoriData !== undefined && (
@@ -321,6 +371,72 @@ const KategoriTable = () => {
           />
         )}
       </Box>
+      <Dialog open={editModal} onClose={handleEdit} PaperProps={{ style: { maxWidth: '100vw' } }}>
+        <DialogTitle>
+          <Stack direction={'row'} width={'100%'} alignItems={'center'} justifyContent={'space-between'}>
+            <strong><span>Form Edit Data Kategori</span></strong>
+            <IconButton onClick={handleEdit}>
+              <Icon sx={{ color: '#ababab' }} fontSize="medium">close</Icon>
+            </IconButton>
+          </Stack>
+        </DialogTitle>
+        <DialogContent>
+          <Stack direction={"column"} gap={1}>
+            <span>Nama Kategori</span>
+            <TextField
+              type="text"
+              size="small"
+              placeholder="Nama Kategori"
+              sx={{ bgcolor: "#fff", width: isMobile ? "80vw" : "15vw" }}
+              value={itemSelected.categoryName}
+              onChange={(e) => setItemSelected({ ...itemSelected, categoryName: e.target.value })}
+            />
+          </Stack>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={2}
+            marginTop={5}
+          >
+            <div
+              onClick={handleEdit}
+              style={{
+                ...CENTER,
+                borderRadius: 10,
+                border: `1px solid ${Colors.primary}`,
+                padding: "10px 30px",
+                cursor: "pointer",
+              }}
+            >
+              <span style={{ fontSize: 13, color: Colors.primary }}>
+                BATAL
+              </span>
+            </div>
+            <button onClick={onEdit} style={{ all: "unset" }}>
+              <div
+                style={{
+                  ...CENTER,
+                  borderRadius: 10,
+                  backgroundColor: Colors.primary,
+                  padding: "10px 30px",
+                  cursor: "pointer",
+                  color: "#fff",
+                }}
+              >
+                {onSend === true ? (
+                  <CircularProgress size={20} color={"inherit"} />
+                ) : (
+                  <span style={{ fontSize: 13, color: "#fff" }}>
+                    SIMPAN
+                  </span>
+                )}
+              </div>
+            </button>
+          </Stack>
+        </DialogContent>
+      </Dialog>
+      <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
     </div>
   );
 };

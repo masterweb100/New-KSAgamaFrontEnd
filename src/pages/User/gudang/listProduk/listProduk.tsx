@@ -60,7 +60,7 @@ const ListProduk = () => {
                                     <KategoriTable></KategoriTable>
                                 :
                                 value === 'jenis' ?
-                                    <JenisTable data={listProdukTable}></JenisTable>
+                                    <JenisTable></JenisTable>
                                     :
                                     <SatuanTable data={listProdukTable}></SatuanTable>
                         }

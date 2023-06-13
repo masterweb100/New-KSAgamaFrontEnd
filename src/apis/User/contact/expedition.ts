@@ -17,7 +17,7 @@ export function HTTPGetExpeditions(param: {
   token: string;
   page: string;
   limit: string;
-  q: string;
+  q: any;
 }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {

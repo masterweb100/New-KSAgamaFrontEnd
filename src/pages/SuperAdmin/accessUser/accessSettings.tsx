@@ -15,7 +15,6 @@ import { HTTPGetRoleID } from '../../../apis/SuperAdmin/role';
 const AccessSettings = () => {
     const navigate = useNavigate()
     const RoleData = useSelector((state: RootState) => state.roleData.data)
-    const [expanded, setExpanded] = React.useState<string | false>(false);
     const [onSend, setSend] = React.useState(false)
     const [init, setInit] = React.useState(false)
 
@@ -23,15 +22,11 @@ const AccessSettings = () => {
         navigate(-1)
     }
 
-    const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? panel : false);
-    };
-
     const [gudang, setGudang] = React.useState<any>({ DATA_PRODUK: false, MUTASI: false, LIST_PRODUK: false });
     const [penjualan, setPenjualan] = React.useState<any>({ PENJUALAN: false, RETURN: false });
     const [pembelian, setPembelian] = React.useState<any>({ PEMBELIAN: false, TRACKING: false });
     const [akun, setAkun] = React.useState<any>({ AKUN: false });
-    const [laporan, setLaporan] = React.useState<any>({ LAP_KEUANGAN: false, LAP_PENJUALAN: false });
+    const [laporan, setLaporan] = React.useState<any>({ LAP_KEUANGAN: false, LAP_PENJUALAN: false, LAP_BANK: false });
     const [approval, setApproval] = React.useState<any>({ APV_GUDANG: false, APV_PENJUALAN: false, APV_PEMBELIAN: false });
     const [kontak, setKontak] = React.useState<any>({ PELANGGAN: false, SUPPLIER: false, EKSPEDISI: false });
     const [pengaturan, setPengaturan] = React.useState<any>({ DATA_TOKO: false, PENOMORAN: false, PERAN: false });
@@ -62,7 +57,7 @@ const AccessSettings = () => {
     };
 
     const handleLaporanAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setLaporan({ LAP_KEUANGAN: event.target.checked, LAP_PENJUALAN: event.target.checked })
+        setLaporan({ LAP_KEUANGAN: event.target.checked, LAP_PENJUALAN: event.target.checked, LAP_BANK: event.target.checked })
     };
     const handleLaporan = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLaporan({ ...laporan, [event.target.name]: event.target.checked })
@@ -98,13 +93,11 @@ const AccessSettings = () => {
             const filtered = objectKeys.filter((key: any) => {
                 return newObject[key]
             });
-            console.log(filtered)
             const resp = await HTTPRolePermissions({
                 permissions: filtered,
                 roleId: RoleData.id,
                 token: token
             })
-            console.log(resp)
             setSend(false)
             navigate('/user-access')
         } catch (error) {
@@ -137,7 +130,7 @@ const AccessSettings = () => {
                         objPembelian = Object.assign(objPembelian, { [item]: true })
                     } else if (item === 'AKUN') {
                         objAkun = Object.assign(objAkun, { [item]: true })
-                    } else if (item === 'LAP_KEUANGAN' || item === 'LAP_PENJUALAN') {
+                    } else if (item === 'LAP_KEUANGAN' || item === 'LAP_PENJUALAN' || item === 'LAP_BANK') {
                         objLaporan = Object.assign(objLaporan, { [item]: true })
                     } else if (item === 'PELANGGAN' || item === 'SUPPLIER' || item === 'EKSPEDISI') {
                         objKontak = Object.assign(objKontak, { [item]: true })
@@ -319,7 +312,7 @@ const AccessSettings = () => {
                                 control={
                                     <Checkbox
                                         sx={{ '&.Mui-checked': { color: Colors.primary } }}
-                                        checked={laporan.LAP_KEUANGAN && laporan.LAP_PENJUALAN}
+                                        checked={laporan.LAP_KEUANGAN && laporan.LAP_PENJUALAN && laporan.LAP_BANK}
                                         onChange={handleLaporanAll}
                                     />
                                 }

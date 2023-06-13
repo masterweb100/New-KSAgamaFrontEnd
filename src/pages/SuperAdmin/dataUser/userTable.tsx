@@ -66,9 +66,8 @@ const UserTable = (props: any) => {
           ids: selected,
           token: token,
         });
-        console.log(respDelete);
         setDeleteModal(!isDeleteModal);
-        window.location.reload();
+        props.getData()
       } else {
         setDeleteModal(!isDeleteModal);
       }

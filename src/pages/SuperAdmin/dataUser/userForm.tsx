@@ -145,11 +145,11 @@ const UserForm = () => {
     const Initial = async () => {
         try {
             const respID = await HTTPGenerateUserID()
-            const respStore = await HTTPGetStores({ limit: '50', page: '', q: '' })
-            const respRole = await HTTPGetRoles({ limit: '50', page: '', q: '' })
             setGenId(respID.data.data.genId)
-            setStoresId(respStore.data.data)
+            const respRole = await HTTPGetRoles({ limit: '50', page: '', q: '' })
             setRolesId(respRole.data.data)
+            const respStore = await HTTPGetStores({ limit: '50', page: '', q: '' })
+            setStoresId(respStore.data.data)
         } catch (error) {
             console.log(error)
         }

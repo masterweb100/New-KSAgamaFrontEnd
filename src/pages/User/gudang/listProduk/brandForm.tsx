@@ -37,7 +37,6 @@ const BrandForm = () => {
                     productCategoryId: parseInt(values.categoryId),
                     token: token
                 })
-                console.log(resp)
                 setSend(false)
                 navigate('/gudang/list-produk')
             } catch (error) {
@@ -132,7 +131,7 @@ const BrandForm = () => {
                                         name="brandName"
                                         value={Formik.values.brandName}
                                         onChange={Formik.handleChange}
-                                        placeholder={'Nama'}
+                                        placeholder={'Nama Brand'}
                                         sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                     />
                                 </Stack>

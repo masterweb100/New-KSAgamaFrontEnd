@@ -63,7 +63,7 @@ export function HTTPUpdateAccounts(param: {
 }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await AxiosNormal(param.token).post(`${uri}/${param.id}`, {
+      const response = await AxiosNormal(param.token).put(`${uri}/${param.id}`, {
         accountName: param.accountName,
         accountCode: param.accountCode,
       });

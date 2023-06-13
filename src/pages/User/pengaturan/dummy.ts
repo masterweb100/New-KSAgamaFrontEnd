@@ -60,6 +60,10 @@ export const LaporanList = [
     name: "transaksi",
     label: "Laporan Penjualan & Pembelian",
     value: "LAP_PENJUALAN"
+  },{
+    name: "bank",
+    label: "Laporan Bank & Kas",
+    value: "LAP_BANK"
   },
 ];
 

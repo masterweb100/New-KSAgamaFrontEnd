@@ -67,6 +67,7 @@ const DataStore = () => {
                         pagination={pagination}
                         search={onSearch}
                         loader={loader}
+                        getData={GetStoreTable}
                     />
                 </div>
             </Box>

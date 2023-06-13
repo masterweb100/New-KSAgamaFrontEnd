@@ -37,7 +37,6 @@ const JenisForm = () => {
                     productBrandId: parseInt(values.brandId),
                     token: token
                 })
-                console.log(resp)
                 setSend(false)
                 navigate('/gudang/list-produk')
             } catch (error) {
@@ -128,6 +127,7 @@ const JenisForm = () => {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        placeholder='Jenis Produk'
                                         id="typeName"
                                         name="typeName"
                                         value={Formik.values.typeName}

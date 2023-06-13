@@ -84,6 +84,7 @@ const Akun = () => {
               pagination={pagination}
               search={onSearch}
               loader={loader}
+              getData={GetAccountsTable}
             ></AkunTable>
           </div>
         </div>

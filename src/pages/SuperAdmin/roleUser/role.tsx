@@ -86,6 +86,7 @@ const DataRole = () => {
             pagination={pagination}
             search={onSearch}
             loader={loader}
+            getData={GetRoleTable}
           />
         </div>
       </Box>

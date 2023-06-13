@@ -123,7 +123,7 @@ const KategoriForm = () => {
                                     value={name}
                                     onKeyDown={handleSubmit}
                                     onChange={handleName}
-                                    placeholder={'Nama'}
+                                    placeholder={'Nama Kategori'}
                                     sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
                                 />
                                 {

@@ -73,7 +73,7 @@ export function HTTPUpdateCategory(param: {
   });
 }
 
-export function HTTPDeleteCetegory(param: {
+export function HTTPDeleteCategory(param: {
   ids: any[];
   token: string;
 }): Promise<any> {

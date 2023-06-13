@@ -35,6 +35,7 @@ import { isMobile } from "react-device-detect";
 import LogoutModal from "./logoutModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../stores/rootReducer";
+import secureLocalStorage from "react-secure-storage";
 
 const drawerWidth = 240;
 const logo = require("../assets/images/ksa-logo-purple.png");
@@ -307,124 +308,124 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
           gap={0.5}
           style={{ scrollbarWidth: "thin" }}
         >
-          {/* {ListUser.map((item: any, index: number) => ( */}
-          {MenuList().map((item: any, index: number) => (
-            <>
-              {item.expandable === false ? (
-                <Stack
-                  key={index}
-                  onClick={() =>
-                    handleClick(item.id, item.expandable, item.navigate)
-                  }
-                  direction={"row"}
-                  alignItems={"center"}
-                  gap={1}
-                  sx={{
-                    ...styles.tab,
-                    padding: "15px 20px",
-                    borderTopRightRadius: 100,
-                    borderBottomRightRadius: 100,
-                    backgroundColor:
-                      name === item.label ? Colors.inherit : "#fff",
-                    color:
-                      name === item.label ? Colors.primary : Colors.secondary,
-                    marginTop: index === 0 ? 5 : 0,
-                    "&:hover": {
-                      backgroundColor: Colors.inherit,
-                      color: Colors.primary,
+          {
+            MenuList().map((item: any, index: number) => (
+              <>
+                {item.expandable === false ? (
+                  <Stack
+                    key={index}
+                    onClick={() =>
+                      handleClick(item.id, item.expandable, item.navigate)
+                    }
+                    direction={"row"}
+                    alignItems={"center"}
+                    gap={1}
+                    sx={{
+                      ...styles.tab,
+                      padding: "15px 20px",
                       borderTopRightRadius: 100,
                       borderBottomRightRadius: 100,
-                    },
-                    width: "95%",
-                  }}
-                >
-                  <Icon
-                    sx={{
+                      backgroundColor:
+                        name === item.label ? Colors.inherit : "#fff",
                       color:
                         name === item.label ? Colors.primary : Colors.secondary,
-                      ...styles.iconHover,
+                      marginTop: index === 0 ? 5 : 0,
+                      "&:hover": {
+                        backgroundColor: Colors.inherit,
+                        color: Colors.primary,
+                        borderTopRightRadius: 100,
+                        borderBottomRightRadius: 100,
+                      },
+                      width: "95%",
                     }}
                   >
-                    {item.icon}
-                  </Icon>
-                  <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
-                    {item.label}
-                  </p>
-                </Stack>
-              ) : (
-                <Accordion
-                  key={index}
-                  expanded={expanded === `panel${item.id}`}
-                >
-                  <AccordionSummary
-                    onClick={() => handleClick(item.id, item.expandable, "")}
+                    <Icon
+                      sx={{
+                        color:
+                          name === item.label ? Colors.primary : Colors.secondary,
+                        ...styles.iconHover,
+                      }}
+                    >
+                      {item.icon}
+                    </Icon>
+                    <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
+                      {item.label}
+                    </p>
+                  </Stack>
+                ) : (
+                  <Accordion
+                    key={index}
+                    expanded={expanded === `panel${item.id}`}
                   >
-                    <Stack direction={"row"} alignItems={"center"} gap={1}>
-                      <Icon
-                        sx={{
-                          color:
-                            name === item.label
-                              ? Colors.primary
-                              : Colors.secondary,
-                          ...styles.iconHover,
-                        }}
-                      >
-                        {item.icon}
-                      </Icon>
-                      <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
-                        {item.label}
-                      </p>
-                    </Stack>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ paddingLeft: 0 }}>
-                    <Stack direction={"column"} gap={0.5}>
-                      {item.children.map((val: any, index: number) => (
-                        <Stack
-                          key={index}
-                          direction={"row"}
-                          alignItems={"center"}
-                          gap={1}
-                          onClick={() =>
-                            handleClick(item.id, item.expandable, val.navigate)
-                          }
+                    <AccordionSummary
+                      onClick={() => handleClick(item.id, item.expandable, "")}
+                    >
+                      <Stack direction={"row"} alignItems={"center"} gap={1}>
+                        <Icon
                           sx={{
-                            ...styles.tab,
-                            padding: "10px",
-                            paddingLeft: "30px",
-                            borderTopRightRadius: 100,
-                            borderBottomRightRadius: 100,
-                            borderLeft:
-                              name === val.label
-                                ? `3px solid ${Colors.primary}`
-                                : "none",
-                            "&:hover": {
-                              backgroundColor: Colors.inherit,
-                              color: Colors.primary,
-                              borderTopRightRadius: 100,
-                              borderBottomRightRadius: 100,
-                            },
-                            backgroundColor:
-                              name === val.label ? Colors.inherit : "#fff",
                             color:
-                              name === val.label
+                              name === item.label
                                 ? Colors.primary
                                 : Colors.secondary,
+                            ...styles.iconHover,
                           }}
                         >
-                          <Icon sx={{ ...styles.iconHover }}>{val.icon}</Icon>
-                          <p
-                            style={{ fontSize: 13, margin: 0, fontWeight: 500 }}
+                          {item.icon}
+                        </Icon>
+                        <p style={{ fontSize: 14, margin: 0, fontWeight: 500 }}>
+                          {item.label}
+                        </p>
+                      </Stack>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ paddingLeft: 0 }}>
+                      <Stack direction={"column"} gap={0.5}>
+                        {item.children.map((val: any, index: number) => (
+                          <Stack
+                            key={index}
+                            direction={"row"}
+                            alignItems={"center"}
+                            gap={1}
+                            onClick={() =>
+                              handleClick(item.id, item.expandable, val.navigate)
+                            }
+                            sx={{
+                              ...styles.tab,
+                              padding: "10px",
+                              paddingLeft: "30px",
+                              borderTopRightRadius: 100,
+                              borderBottomRightRadius: 100,
+                              borderLeft:
+                                name === val.label
+                                  ? `3px solid ${Colors.primary}`
+                                  : "none",
+                              "&:hover": {
+                                backgroundColor: Colors.inherit,
+                                color: Colors.primary,
+                                borderTopRightRadius: 100,
+                                borderBottomRightRadius: 100,
+                              },
+                              backgroundColor:
+                                name === val.label ? Colors.inherit : "#fff",
+                              color:
+                                name === val.label
+                                  ? Colors.primary
+                                  : Colors.secondary,
+                            }}
                           >
-                            {val.label}
-                          </p>
-                        </Stack>
-                      ))}
-                    </Stack>
-                  </AccordionDetails>
-                </Accordion>
-              )}
-            </>
-          ))}
+                            <Icon sx={{ ...styles.iconHover }}>{val.icon}</Icon>
+                            <p
+                              style={{ fontSize: 13, margin: 0, fontWeight: 500 }}
+                            >
+                              {val.label}
+                            </p>
+                          </Stack>
+                        ))}
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
+                )}
+              </>
+            ))}
         </Stack>
       </Drawer>
       <LogoutModal

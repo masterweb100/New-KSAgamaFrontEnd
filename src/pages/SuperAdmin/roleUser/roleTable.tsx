@@ -58,9 +58,8 @@ const RoleTable = (props: any) => {
           ids: selected.map(String),
           token: token
         })
-        console.log(respDelete)
         setDeleteModal(!isDeleteModal);
-        window.location.reload()
+        props.getData()
       } else {
         setDeleteModal(!isDeleteModal);
       }

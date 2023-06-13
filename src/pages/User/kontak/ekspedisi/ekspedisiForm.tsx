@@ -40,7 +40,7 @@ const EkspedisiForm = () => {
                 })
                 console.log(resp)
                 setSend(false)
-                navigate('/kontak/ekspedisi')
+                navigate(-1)
             } catch (error) {
                 setSend(false)
                 console.log(error)

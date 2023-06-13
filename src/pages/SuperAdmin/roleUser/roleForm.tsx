@@ -44,7 +44,6 @@ const RoleForm = () => {
                         roleName: name,
                         token: token
                     })
-                    console.log(resp)
                 } else {
                     await HTTPAddRole({
                         genId: id,

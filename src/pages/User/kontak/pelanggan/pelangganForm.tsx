@@ -69,7 +69,7 @@ const PelangganForm = () => {
                 })
                 setSend(false)
                 console.log(resp)
-                navigate('/kontak/pelanggan')
+                navigate(-1)
             } catch (error) {
                 setSend(false)
                 console.log(error)
