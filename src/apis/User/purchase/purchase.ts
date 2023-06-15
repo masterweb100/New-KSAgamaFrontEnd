@@ -1,36 +1,26 @@
 import QueryString from "qs";
 import { AxiosNormal } from "../../../utils/interceptors";
 
-export interface AddSales {
+export interface AddPurchase {
   token: string;
-  customerId: string;
-  invoice: string;
+  genId: string;
+  supplierId: string;
+  productBrandId: number;
   transactionDate: string;
   dueDate: string;
-  reference: string;
-  shippingDate: string;
-  salesType: string;
-  expeditionId: string;
   shippingCostPerKg: number;
-  receipt: string;
-  notes: string;
-  saleProducts: SaleProduct[];
+  purchasingProducts: PurchasingProduct[];
 }
 
-export interface SaleProduct {
+export interface PurchasingProduct {
   productUnitId: number;
   productUnitType: string;
   qty: number;
-  isPPN: boolean;
-  discount1: number;
-  discount2: number;
-  discount3: number;
-  discount4: number;
 }
 
 
-const uri = 'sales';
-export function HTTPGenerateSalesID(): Promise<any> {
+const uri = 'purchasing';
+export function HTTPGeneratePurchaseID(): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
@@ -41,7 +31,7 @@ export function HTTPGenerateSalesID(): Promise<any> {
   });
 }
 
-export function HTTPGetSales(param: {
+export function HTTPGetPurchases(param: {
   token: string;
   page: string;
   limit: string;
@@ -63,22 +53,18 @@ export function HTTPGetSales(param: {
   });
 }
 
-export function HTTPAddSales(param: AddSales): Promise<any> {
+export function HTTPAddPurchase(param: AddPurchase): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await AxiosNormal(param.token).post(uri, {
-        customerId: param.customerId,
-        invoice: param.invoice,
+        token: param.token,
+        genId: param.genId,
+        supplierId: param.supplierId,
+        productBrandId: param.productBrandId,
         transactionDate: param.transactionDate,
         dueDate: param.dueDate,
-        reference: param.reference,
-        shippingDate: param.shippingDate,
-        salesType: param.salesType,
-        expeditionId: param.expeditionId,
         shippingCostPerKg: param.shippingCostPerKg,
-        receipt: param.receipt,
-        notes: param.notes,
-        saleProducts: param.saleProducts
+        purchasingProducts: param.purchasingProducts,
       });
       return resolve(response);
     } catch (error) {
@@ -87,9 +73,9 @@ export function HTTPAddSales(param: AddSales): Promise<any> {
   });
 }
 
-export function HTTPPaySales(param: {
+export function HTTPPayPurchase(param: {
   token: string
-  saleId: string,
+  purchasingId: string,
   method: string,
   totalPayment: number,
 }): Promise<any> {
@@ -98,7 +84,7 @@ export function HTTPPaySales(param: {
       const response = await AxiosNormal(param.token).post(
         `${uri}/pay`,
         {
-          saleId: param.saleId,
+          purchasingId: param.purchasingId,
           method: param.method,
           totalPayment: param.totalPayment,
         }
@@ -110,7 +96,7 @@ export function HTTPPaySales(param: {
   });
 }
 
-export function HTTPUpdateSales(param: {
+export function HTTPUpdatePurchase(param: {
   categoryName: string;
   id: string;
   token: string;
@@ -130,7 +116,7 @@ export function HTTPUpdateSales(param: {
   });
 }
 
-export function HTTPDeleteSales(param: {
+export function HTTPDeletePurchase(param: {
   ids: any[];
   token: string;
 }): Promise<any> {

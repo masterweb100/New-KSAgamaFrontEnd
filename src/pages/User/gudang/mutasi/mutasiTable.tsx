@@ -39,41 +39,12 @@ const columns = [
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     textAlign: "center",
-    // borderBottomWidth: 1,
+    fontWeight: '700'
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
   },
 }));
-
-function descendingComparator(a: any, b: any, orderBy: any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-  return order === "desc"
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-  const stabilizedRowArray = rowArray.map((el: any, index: number) => [
-    el,
-    index,
-  ]);
-  stabilizedRowArray.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedRowArray.map((el: any) => el[0]);
-};
 
 const MutasiTable = (props: any) => {
   const navigate = useNavigate();
@@ -103,19 +74,6 @@ const MutasiTable = (props: any) => {
   const handleChangeRowsPerPage = (event: any) => {
     setItemsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const [orderdirection, setOrderDirection] = useState("asc");
-  const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-  const createSortHandler = (property: any) => (event: any) => {
-    handleRequestSort(event, property);
-  };
-
-  const handleRequestSort = (event: any, property: any) => {
-    console.log(event);
-    const isAscending = valuetoorderby === property && orderdirection === "asc";
-    setValueToOrderBy(property);
-    setOrderDirection(isAscending ? "desc" : "asc");
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
@@ -254,148 +212,124 @@ const MutasiTable = (props: any) => {
                   </StyledTableCell>
                   {columns.map((column: any) => (
                     <StyledTableCell key={column.id}>
-                      <TableSortLabel
-                        active={valuetoorderby === column.id}
-                        direction={
-                          valuetoorderby === column.id ? "asc" : "desc"
-                        }
-                        onClick={createSortHandler(column.id)}
-                        sx={{
-                          fontWeight: "bold",
-                          whiteSpace: "nowrap",
-                          "& .MuiTableSortLabel-icon": {
-                            opacity: 1,
-                            fontSize: 10,
-                          },
-                        }}
-                        IconComponent={FilterList}
-                      >
+                      <div style={{ width: 120 }}>
                         {column.label}
-                      </TableSortLabel>
+                      </div>
                     </StyledTableCell>
                   ))}
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {props.data.content !== undefined
-                  ? sortedRowInformation(
-                      props.data.content,
-                      getComparator(orderdirection, valuetoorderby)
-                    )
-                      .slice(
-                        page * itemsPerPage,
-                        page * itemsPerPage + itemsPerPage
-                      )
-                      .map((item: any, index: number) => {
-                        const isItemSelected = isSelected(index.toString());
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                {props.data.content.map((item: any, index: number) => {
+                  const isItemSelected = isSelected(index.toString());
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={index}
-                            sx={{
-                              "&:hover": { bgcolor: Colors.inherit },
-                              cursor: "pointer",
-                            }}
-                          >
-                            <StyledTableCell
-                              onClick={(e) => handleClick(e, index.toString())}
-                              align="center"
-                              padding="checkbox"
-                            >
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.tanggal}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.no}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.jenisBarang}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.jumlah}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.asal}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.tujuan}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.jenisMutasi}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              {item.updatedBy}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              onClick={StatusDialog}
-                              align="center"
-                            >
-                              <div
-                                style={{
-                                  ...CENTER,
-                                  backgroundColor:
-                                    index < 2
-                                      ? "#d38b00"
-                                      : index < 5
-                                      ? Colors.success
-                                      : index < 7
-                                      ? Colors.secondary
-                                      : Colors.error,
-                                  padding: "5px 10px",
-                                  borderRadius: 10,
-                                }}
-                              >
-                                <p style={{ color: "#fff", margin: 0 }}>
-                                  {index < 2
-                                    ? "Menunggu Approval"
-                                    : index < 5
-                                    ? "Sukses"
-                                    : index < 7
-                                    ? "Pending"
-                                    : "Tidak Disetujui"}
-                                </p>
-                              </div>
-                            </StyledTableCell>
-                          </TableRow>
-                        );
-                      })
-                  : null}
+                  return (
+                    <TableRow
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={index}
+                      sx={{
+                        "&:hover": { bgcolor: Colors.inherit },
+                        cursor: "pointer",
+                      }}
+                    >
+                      <StyledTableCell
+                        onClick={(e) => handleClick(e, index.toString())}
+                        align="center"
+                        padding="checkbox"
+                      >
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.tanggal}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.no}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.jenisBarang}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.jumlah}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.asal}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.tujuan}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.jenisMutasi}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        {item.updatedBy}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        onClick={StatusDialog}
+                        align="center"
+                      >
+                        <div
+                          style={{
+                            ...CENTER,
+                            backgroundColor:
+                              index < 2
+                                ? "#d38b00"
+                                : index < 5
+                                  ? Colors.success
+                                  : index < 7
+                                    ? Colors.secondary
+                                    : Colors.error,
+                            padding: "5px 10px",
+                            borderRadius: 10,
+                          }}
+                        >
+                          <p style={{ color: "#fff", margin: 0 }}>
+                            {index < 2
+                              ? "Menunggu Approval"
+                              : index < 5
+                                ? "Sukses"
+                                : index < 7
+                                  ? "Pending"
+                                  : "Tidak Disetujui"}
+                          </p>
+                        </div>
+                      </StyledTableCell>
+                    </TableRow>
+                  );
+                })
+                }
               </TableBody>
             </Table>
           </TableContainer>

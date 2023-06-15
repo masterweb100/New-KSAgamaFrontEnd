@@ -116,7 +116,7 @@ const ProdukList = (data: any) => {
                 expeditionId: data.data.expeditionId,
                 shippingCostPerKg: data.data.shippingCostPerKg,
                 receipt: data.data.receipt,
-                notes: '',
+                notes: notes,
                 saleProducts: cleanProduct,
             })
             setLoader(false)

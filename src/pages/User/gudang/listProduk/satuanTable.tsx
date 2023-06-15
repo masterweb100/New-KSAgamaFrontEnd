@@ -392,13 +392,13 @@ const SatuanTable = (props: any) => {
                                   {'item'}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
-                                  {item.sellPriceInPcs}
+                                  {(item.sellPriceInPcs).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
-                                  {item.sellPriceInDozens}
+                                  {(item.sellPriceInDozens).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
-                                  {item.sellPriceInBox}
+                                  {(item.sellPriceInBox).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
                                   <Button onClick={() => { setItemSelected(item); handleEdit() }} variant={'contained'} color={'success'}>

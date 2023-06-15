@@ -65,7 +65,6 @@ const PenjualanForm = () => {
     const getExpedition = async () => {
         try {
             const resp = await HTTPGetExpeditions({ limit: '50', page: '1', q: undefined, token: token })
-            console.log(resp)
             let newArr = resp.data.data
             newArr.unshift({})
             setExpeditions(newArr)

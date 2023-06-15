@@ -312,7 +312,13 @@ const ReturnPenjualanTable = (props: any) => {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 )}
-                <PelunasanDialog isOpen={isLunasOpen} setOpen={() => setLunasOpen(false)} />
+                <PelunasanDialog
+                    type={'return'}
+                    isOpen={isLunasOpen}
+                    setOpen={() => setLunasOpen(false)}
+                    item={{ invoice: 'INV/001', bill: 9000, totalBill: 10000 }}
+                    refresh={() => console.log('hehe')}
+                />
                 <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
             </Box>
         </div>

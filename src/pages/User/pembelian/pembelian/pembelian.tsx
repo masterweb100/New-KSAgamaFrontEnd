@@ -5,6 +5,8 @@ import { Colors } from '../../../../utils/colors';
 import { pembelianData } from '../dummy';
 import PembelianTable from './pembelianTable';
 import { isMobile } from 'react-device-detect';
+import secureLocalStorage from 'react-secure-storage';
+import { HTTPGetPurchases } from '../../../../apis/User/purchase/purchase';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -21,11 +23,59 @@ const CustomTab = styled(Tab)({
 
 const Pembelian = () => {
     const [value, setValue] = React.useState('semua');
+    const token = secureLocalStorage.getItem("TOKEN") as string
+    const [init, setInit] = React.useState(false);
+    const [DataRole, setDataPurchase] = React.useState([]);
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1)
+    const [pagination, setPagination] = React.useState({})
+    const [search, setSearch] = React.useState('')
+    const [loader, setLoader] = React.useState(true)
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         event.preventDefault()
         setValue(newValue);
     };
+
+
+    const onChangeLimit = (param: any) => {
+        setLimit(param)
+        setPage(1)
+        setInit(!init)
+    }
+
+    const onChangePage = (param: any) => {
+        setPage(param)
+        setInit(!init)
+    }
+
+    const onSearch = (param: string) => {
+        setSearch(param)
+        setInit(!init)
+    }
+
+    const GetPurchasesTable = async () => {
+        try {
+            setLoader(true)
+            const response = await HTTPGetPurchases({
+                token: token,
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search.length === 0 ? undefined : search,
+            });
+            console.log(response)
+            setDataPurchase(response.data.data);
+            setPagination(response.data.pagination);
+            setLoader(false)
+        } catch (error) {
+            setLoader(false)
+            console.log(error);
+        }
+    };
+
+    React.useEffect(() => {
+        GetPurchasesTable();
+    }, [init]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -51,7 +101,15 @@ const Pembelian = () => {
                         </CustomTabs>
                     </Box>
                     <div style={{ marginTop: 20 }}>
-                        <PembelianTable data={pembelianData}></PembelianTable>
+                        <PembelianTable
+                            data={DataRole}
+                            changePage={onChangePage}
+                            itemsPerPage={onChangeLimit}
+                            pagination={pagination}
+                            search={onSearch}
+                            loader={loader}
+                            getData={GetPurchasesTable}
+                        ></PembelianTable>
                     </div>
                 </div>
             </Box>

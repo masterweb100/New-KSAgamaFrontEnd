@@ -42,7 +42,6 @@ const Penjualan = () => {
                 page: page.toString(),
                 q: search.length === 0 ? undefined : search,
             });
-            console.log(response)
             setDataRole(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)

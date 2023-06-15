@@ -59,6 +59,7 @@ const PenjualanTable = (props: any) => {
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [isLunasOpen, setLunasOpen] = React.useState(false)
     const [isDeleteModal, setDeleteModal] = React.useState(false);
+    const [ItemSelected, setItemSelected] = React.useState({})
 
     const handleDelete = async (param: string) => {
         if (selected.length > 0) {
@@ -118,10 +119,9 @@ const PenjualanTable = (props: any) => {
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
     const FormAdd = () => navigate('/penjualan/penjualan/form-penjualan/add')
 
-    const FormLunas = () => {
-        if (selected.length > 0) {
-            setLunasOpen(true)
-        }
+    const FormLunas = (item: any) => {
+        setLunasOpen(true)
+        setItemSelected(item)
     }
 
     return (
@@ -208,7 +208,9 @@ const PenjualanTable = (props: any) => {
                                                     </StyledTableCell>
                                                     {columns.map((column: any) => (
                                                         <StyledTableCell key={column.id}>
-                                                            {column.label}
+                                                            <div style={{ width: 100 }}>
+                                                                {column.label}
+                                                            </div>
                                                         </StyledTableCell>
                                                     ))}
                                                 </TableRow>
@@ -224,10 +226,9 @@ const PenjualanTable = (props: any) => {
                                                             role="checkbox"
                                                             tabIndex={-1}
                                                             key={index}
-                                                            sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                            onClick={(e) => handleClick(e, item.id)}
+                                                            sx={{ "&:hover": { bgcolor: Colors.inherit } }}
                                                         >
-                                                            <StyledTableCell align="center" padding="checkbox">
+                                                            <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
                                                                 <Checkbox
                                                                     color="primary"
                                                                     checked={isItemSelected}
@@ -245,12 +246,12 @@ const PenjualanTable = (props: any) => {
                                                                 {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
                                                             </StyledTableCell>
                                                             <StyledTableCell align="center">
-                                                                <div onClick={FormLunas} style={{ ...CENTER, backgroundColor: Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                <div onClick={() => !item.isPaidOff && FormLunas(item)} style={{ ...CENTER, backgroundColor: item.isPaidOff ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
                                                                     <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
                                                                 </div>
                                                             </StyledTableCell>
-                                                            <StyledTableCell align="center">{item.bill}</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.totalBill}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
                                                         </TableRow>
                                                     )
@@ -286,7 +287,13 @@ const PenjualanTable = (props: any) => {
                     />
                 )}
             </Box>
-            <PelunasanDialog isOpen={isLunasOpen} setOpen={() => setLunasOpen(false)} />
+            <PelunasanDialog
+                type={'sales'}
+                isOpen={isLunasOpen}
+                setOpen={() => setLunasOpen(false)}
+                item={ItemSelected}
+                refresh={() => props.getData()}
+            />
             <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
         </div>
     );
