@@ -96,6 +96,7 @@ const Pelanggan = () => {
                             pagination={pagination}
                             search={onSearch}
                             loader={loader}
+                            getData={GetCustomerTable}
                         ></PelangganTable>
                     </div>
                 </div>

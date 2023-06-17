@@ -5,8 +5,57 @@ import { Colors } from '../../../../utils/colors';
 import { pembelianDataTable } from '../dummy';
 import PembelianTable from './pembelianTable';
 import { isMobile } from 'react-device-detect';
+import { HTTPGetApprovalsPurchasing } from '../../../../apis/User/approval/purchasing';
+import secureLocalStorage from 'react-secure-storage';
 
 const AppPembelian = () => {
+    const [init, setInit] = React.useState(false);
+    const [DataPurchasing, setDataPurchasing] = React.useState([]);
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1);
+    const [pagination, setPagination] = React.useState({});
+    const [search, setSearch] = React.useState("");
+    const [loader, setLoader] = React.useState(true);
+    const token = secureLocalStorage.getItem("TOKEN") as string;
+
+    const onChangeLimit = (param: any) => {
+        setLimit(param);
+        setPage(1);
+        setInit(!init);
+    };
+
+    const onChangePage = (param: any) => {
+        setPage(param);
+        setInit(!init);
+    };
+
+    const onSearch = (param: string) => {
+        setSearch(param);
+        setInit(!init);
+    };
+
+    const GetPurchasingTable = async () => {
+        try {
+            setLoader(true);
+            const response = await HTTPGetApprovalsPurchasing({
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search.length === 0 ? undefined : search,
+                token: token,
+            });
+            setDataPurchasing(response.data.data);
+            setPagination(response.data.pagination);
+            setLoader(false);
+        } catch (error) {
+            setLoader(false);
+            console.log(error);
+        }
+    };
+
+    React.useEffect(() => {
+        GetPurchasingTable();
+    }, [init]);
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Pembelian'} isChild={false} name={'App. Pembelian'} idPanel={8}></NavigationBarUser>
@@ -44,7 +93,15 @@ const AppPembelian = () => {
                             }}
                         />
                     </Stack>
-                    <PembelianTable data={pembelianDataTable} />
+                    <PembelianTable
+                        data={DataPurchasing}
+                        changePage={onChangePage}
+                        itemsPerPage={onChangeLimit}
+                        pagination={pagination}
+                        search={onSearch}
+                        loader={loader}
+                        getData={GetPurchasingTable}
+                    />
                 </div>
             </Box>
         </div>

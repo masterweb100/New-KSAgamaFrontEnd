@@ -20,7 +20,7 @@ const PenjualanForm = () => {
     const token = secureLocalStorage.getItem('TOKEN') as string
     const [SalesData, setSalesData] = React.useState({
         customerId: '',
-        invoice: `INV/${Math.floor(1000 + Math.random() * 9000)}`,
+        invoice: `INV/${Math.floor(100000 + Math.random() * 900000)}`,
         transactionDate: null,
         dueDate: null,
         reference: '',

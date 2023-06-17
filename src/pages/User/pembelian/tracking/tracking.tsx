@@ -5,6 +5,8 @@ import { Colors } from '../../../../utils/colors';
 import { pembelianData } from '../dummy';
 import TrackingTable from './trackingTable';
 import { isMobile } from 'react-device-detect';
+import { HTTPGetTracking } from '../../../../apis/User/purchase/tracking';
+import secureLocalStorage from 'react-secure-storage';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -21,11 +23,58 @@ const CustomTab = styled(Tab)({
 
 const Tracking = () => {
     const [value, setValue] = React.useState('semua');
+    const token = secureLocalStorage.getItem("TOKEN") as string
+    const [init, setInit] = React.useState(false);
+    const [DataTracking, setDataTracking] = React.useState([]);
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1)
+    const [pagination, setPagination] = React.useState({})
+    const [search, setSearch] = React.useState('')
+    const [loader, setLoader] = React.useState(true)
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         event.preventDefault()
         setValue(newValue);
     };
+
+
+    const onChangeLimit = (param: any) => {
+        setLimit(param)
+        setPage(1)
+        setInit(!init)
+    }
+
+    const onChangePage = (param: any) => {
+        setPage(param)
+        setInit(!init)
+    }
+
+    const onSearch = (param: string) => {
+        setSearch(param)
+        setInit(!init)
+    }
+
+    const GetTrackingTable = async () => {
+        try {
+            setLoader(true)
+            const response = await HTTPGetTracking({
+                token: token,
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search.length === 0 ? undefined : search,
+            });
+            setDataTracking(response.data.data);
+            setPagination(response.data.pagination);
+            setLoader(false)
+        } catch (error) {
+            setLoader(false)
+            console.log(error);
+        }
+    };
+
+    React.useEffect(() => {
+        GetTrackingTable();
+    }, [init]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -52,7 +101,15 @@ const Tracking = () => {
                         </CustomTabs>
                     </Box>
                     <div style={{ marginTop: 20 }}>
-                        <TrackingTable data={pembelianData}></TrackingTable>
+                        <TrackingTable
+                            data={DataTracking}
+                            changePage={onChangePage}
+                            itemsPerPage={onChangeLimit}
+                            pagination={pagination}
+                            search={onSearch}
+                            loader={loader}
+                            getData={GetTrackingTable}
+                        ></TrackingTable>
                     </div>
                 </div>
             </Box>

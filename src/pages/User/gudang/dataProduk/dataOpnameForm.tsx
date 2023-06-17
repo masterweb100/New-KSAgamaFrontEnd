@@ -7,24 +7,49 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
 import NavigationBarUser from "../../../../components/appBarUser";
 import { CENTER } from "../../../../utils/stylesheet";
 import { Colors } from "../../../../utils/colors";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../stores/rootReducer";
+import moment from "moment";
+import { HTTPUpdateStatusOpnames } from "../../../../apis/User/dataProducts/dataOpnames";
+import secureLocalStorage from "react-secure-storage";
 
 const DataProdukForm = () => {
-  const [status, setStatus] = React.useState("");
   const navigate = useNavigate();
-
-  const handleChangeStatus = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
-  };
+  const OpnameRedux = useSelector((state: RootState) => state.OpnamesData.data)
+  const [GoodProducts, setGoodProducts] = React.useState('')
+  const [BadProducts, setBadProducts] = React.useState('')
+  const token = secureLocalStorage.getItem('TOKEN')
+  const [loader, setLoader] = React.useState(false)
 
   const GoBack = () => {
     navigate(-1);
   };
+
+  const handleSubmit = async () => {
+    setLoader(true)
+    try {
+      const data = {
+        purchasingProductId: OpnameRedux.id,
+        date: moment().format('YYYY-MM-DD'),
+        goodQty: parseInt(GoodProducts),
+        damagedQty: parseInt(BadProducts),
+        token: token as string
+      }
+      await HTTPUpdateStatusOpnames(data)
+      setLoader(false)
+      GoBack()
+    } catch (error) {
+      setLoader(false)
+      console.log(error)
+    }
+  }
 
   return (
     <div style={{ display: "flex" }}>
@@ -73,7 +98,7 @@ const DataProdukForm = () => {
                 <TextField
                   type="text"
                   disabled
-                  defaultValue={"09/04/2023"}
+                  defaultValue={moment(OpnameRedux.createdAt).format('YYYY-MM-DD')}
                   size="small"
                   sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
@@ -84,7 +109,7 @@ const DataProdukForm = () => {
                   type="text"
                   disabled
                   size="small"
-                  defaultValue={"8OI843SDKJ"}
+                  defaultValue={OpnameRedux.productUnitGenId}
                   sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
               </Stack>
@@ -100,7 +125,7 @@ const DataProdukForm = () => {
                 <TextField
                   type="text"
                   disabled
-                  defaultValue={"Sanex"}
+                  defaultValue={OpnameRedux.productBrandName}
                   size="small"
                   sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
@@ -111,7 +136,7 @@ const DataProdukForm = () => {
                   type="text"
                   size="small"
                   disabled
-                  defaultValue={"Kipas Angin Mantap"}
+                  defaultValue={OpnameRedux.productTypeName}
                   sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
               </Stack>
@@ -127,7 +152,8 @@ const DataProdukForm = () => {
                 <TextField
                   type="text"
                   size="small"
-                  defaultValue={"90"}
+                  value={GoodProducts}
+                  onChange={(text) => setGoodProducts(text.target.value)}
                   placeholder="Barang"
                   sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
                 />
@@ -137,7 +163,8 @@ const DataProdukForm = () => {
                 <TextField
                   type="text"
                   size="small"
-                  defaultValue={"200"}
+                  value={BadProducts}
+                  onChange={(text) => setBadProducts(text.target.value)}
                   placeholder="Barang"
                   sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
                 />
@@ -155,7 +182,7 @@ const DataProdukForm = () => {
                   type="text"
                   size="small"
                   disabled
-                  defaultValue={"400"}
+                  defaultValue={OpnameRedux.qty}
                   placeholder="Total"
                   sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
@@ -183,15 +210,22 @@ const DataProdukForm = () => {
                 </span>
               </div>
               <div
+                onClick={handleSubmit}
                 style={{
                   ...CENTER,
                   borderRadius: 10,
                   backgroundColor: Colors.primary,
                   padding: "10px 30px",
                   cursor: "pointer",
+                  color: '#fff'
                 }}
               >
-                <span style={{ fontSize: 13, color: "#fff" }}>SIMPAN</span>
+                {
+                  loader ?
+                    <CircularProgress size={20} sx={{ color: 'inherit' }}></CircularProgress>
+                    :
+                    <span style={{ fontSize: 13, color: "#fff" }}>SIMPAN</span>
+                }
               </div>
             </Stack>
           </Stack>

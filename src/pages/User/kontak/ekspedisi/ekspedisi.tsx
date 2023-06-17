@@ -96,6 +96,7 @@ const Ekspedisi = () => {
                             pagination={pagination}
                             search={onSearch}
                             loader={loader}
+                            getData={GetExpeditionTable}
                         ></EkspedisiTable>
                     </div>
                 </div>

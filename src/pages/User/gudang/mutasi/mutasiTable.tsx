@@ -12,6 +12,7 @@ import {
   Icon,
   TextField,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -23,17 +24,19 @@ import { CENTER } from "../../../../utils/stylesheet";
 import MutasiDialog from "./mutasiDialog";
 import { isMobile } from "react-device-detect";
 import DeleteModal from "../../../../components/deleteModal";
+import moment from "moment";
+import { HTTPDeleteMutations, HTTPGetMutations } from "../../../../apis/User/mutationReturn/mutations";
+import secureLocalStorage from "react-secure-storage";
 
 const columns = [
   { id: "tanggal", label: "Tanggal" },
   { id: "no", label: "Nomor Mutasi" },
+  { id: "status", label: "Status" },
   { id: "jenisBarang", label: "Jenis Barang" },
   { id: "jumlah", label: "Jumlah Barang" },
   { id: "asal", label: "Gudang Asal" },
   { id: "tujuan", label: "Gudang Tujuan" },
-  { id: "jenisMutasi", label: "Jenis Mutasi" },
   { id: "updatedBy", label: "Updated By" },
-  { id: "status", label: "Status" },
 ];
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -46,39 +49,74 @@ const StyledTableCell = styled(TableCell)(() => ({
   },
 }));
 
-const MutasiTable = (props: any) => {
+const MutasiTable = () => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState<readonly string[]>([]);
-  const [page, setPage] = React.useState(0);
+  const token = secureLocalStorage.getItem('TOKEN') as string
+  const [selected, setSelected] = useState<any[]>([]);
+  const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [isStatus, setStatus] = React.useState(false);
   const [isDeleteModal, setDeleteModal] = React.useState(false);
+  const [ItemSelected, setItemSelected] = React.useState({})
+  const [init, setInit] = React.useState(false);
+  const [DataMutations, setDataMutations] = React.useState([]);
+  const [pagination, setPagination] = React.useState<any>({})
+  const [search, setSearch] = React.useState('')
+  const [loader, setLoader] = React.useState(true)
 
-  const handleDelete = () => {
-    if (selected.length > 0) {
-      setDeleteModal(!isDeleteModal);
+  const onSearch = (param: string) => {
+    setSearch(param)
+    setInit(!init)
+  }
+
+  const GetMutationsTable = async () => {
+    try {
+      setLoader(true)
+      const response = await HTTPGetMutations({
+        token: token,
+        limit: itemsPerPage.toString(),
+        page: page.toString(),
+        q: search.length === 0 ? undefined : search,
+      });
+      setDataMutations(response.data.data);
+      setPagination(response.data.pagination);
+      setLoader(false)
+    } catch (error) {
+      setLoader(false)
+      console.log(error);
     }
   };
 
-  const handleUpdate = () => {
+  const handleDelete = async (param: string) => {
     if (selected.length > 0) {
-      StatusDialog();
+      if (param === 'yes') {
+        await HTTPDeleteMutations({
+          ids: selected,
+          token: token as string
+        })
+        setDeleteModal(!isDeleteModal);
+        GetMutationsTable()
+        setSelected([])
+      } else {
+        setDeleteModal(!isDeleteModal);
+      }
     }
   };
 
   const handleChangePage = (event: any, newPage: any) => {
-    console.log(event);
     setPage(newPage);
+    setInit(!init)
   };
 
   const handleChangeRowsPerPage = (event: any) => {
     setItemsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
+    setInit(!init)
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+    let newSelected: any[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -98,9 +136,7 @@ const MutasiTable = (props: any) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = props.data.content.map((n: any, index: number) =>
-        index.toString()
-      );
+      const newSelected = DataMutations.map((item: any, index: number) => item.id);
       setSelected(newSelected);
       return;
     }
@@ -113,7 +149,14 @@ const MutasiTable = (props: any) => {
     navigate("/gudang/mutasi/form-mutasi");
   };
 
-  const StatusDialog = React.useCallback(() => setStatus(true), []);
+  const StatusDialog = (item: any) => {
+    setItemSelected(item)
+    setStatus(true)
+  }
+
+  React.useEffect(() => {
+    GetMutationsTable();
+  }, [init]);
 
   return (
     <div>
@@ -142,6 +185,21 @@ const MutasiTable = (props: any) => {
               Tambah Data Mutasi
             </p>
           </Stack>
+        </div>
+        <div
+          onClick={() => handleDelete('open')}
+          style={{
+            ...CENTER,
+            backgroundColor:
+              selected.length === 0 ? Colors.secondary : Colors.error,
+            borderRadius: 5,
+            cursor: "pointer",
+            padding: 10,
+          }}
+        >
+          <Icon style={{ color: "#fff", fontSize: isMobile ? 20 : 25 }}>
+            delete_outline
+          </Icon>
         </div>
       </Stack>
       <Stack
@@ -192,155 +250,151 @@ const MutasiTable = (props: any) => {
         }}
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-          <TableContainer>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>
-                    <Checkbox
-                      color="primary"
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < props.data.content.length
-                      }
-                      checked={
-                        props.data.content.length > 0 &&
-                        selected.length === props.data.content.length
-                      }
-                      onChange={handleSelectAllClick}
-                    />
-                  </StyledTableCell>
-                  {columns.map((column: any) => (
-                    <StyledTableCell key={column.id}>
-                      <div style={{ width: 120 }}>
-                        {column.label}
-                      </div>
-                    </StyledTableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
+          {
+            loader ?
+              <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                <CircularProgress size={40} color={'error'} />
+              </div>
+              :
+              <>
+                {
+                  DataMutations.length === 0 ?
+                    <div style={{ ...CENTER, padding: '20px 0' }}>
+                      <span>Tidak ada data</span>
+                    </div>
+                    :
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            <StyledTableCell>
+                              <Checkbox
+                                color="primary"
+                                indeterminate={
+                                  selected.length > 0 &&
+                                  selected.length < DataMutations.length
+                                }
+                                checked={
+                                  DataMutations.length > 0 &&
+                                  selected.length === DataMutations.length
+                                }
+                                onChange={handleSelectAllClick}
+                              />
+                            </StyledTableCell>
+                            {columns.map((column: any) => (
+                              <StyledTableCell key={column.id}>
+                                <div style={{ width: 120 }}>
+                                  {column.label}
+                                </div>
+                              </StyledTableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {DataMutations.map((item: any, index: number) => {
+                            const isItemSelected = isSelected(item.id);
+                            const labelId = `enhanced-table-checkbox-${index}`;
 
-              <TableBody>
-                {props.data.content.map((item: any, index: number) => {
-                  const isItemSelected = isSelected(index.toString());
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={index}
-                      sx={{
-                        "&:hover": { bgcolor: Colors.inherit },
-                        cursor: "pointer",
-                      }}
-                    >
-                      <StyledTableCell
-                        onClick={(e) => handleClick(e, index.toString())}
-                        align="center"
-                        padding="checkbox"
-                      >
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.tanggal}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.no}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.jenisBarang}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.jumlah}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.asal}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.tujuan}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.jenisMutasi}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        {item.updatedBy}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={StatusDialog}
-                        align="center"
-                      >
-                        <div
-                          style={{
-                            ...CENTER,
-                            backgroundColor:
-                              index < 2
-                                ? "#d38b00"
-                                : index < 5
-                                  ? Colors.success
-                                  : index < 7
-                                    ? Colors.secondary
-                                    : Colors.error,
-                            padding: "5px 10px",
-                            borderRadius: 10,
-                          }}
-                        >
-                          <p style={{ color: "#fff", margin: 0 }}>
-                            {index < 2
-                              ? "Menunggu Approval"
-                              : index < 5
-                                ? "Sukses"
-                                : index < 7
-                                  ? "Pending"
-                                  : "Tidak Disetujui"}
-                          </p>
-                        </div>
-                      </StyledTableCell>
-                    </TableRow>
-                  );
-                })
+                            return (
+                              <TableRow
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={index}
+                                sx={{
+                                  "&:hover": { bgcolor: Colors.inherit },
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <StyledTableCell
+                                  onClick={(e) => handleClick(e, item.id)}
+                                  align="center"
+                                  padding="checkbox"
+                                >
+                                  <Checkbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": labelId,
+                                    }}
+                                  />
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  {moment(item.date).format('YYYY-MM-DD')}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  {item.genId}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  <div
+                                    style={{
+                                      ...CENTER,
+                                      backgroundColor: Colors.warning,
+                                      padding: "5px 10px",
+                                      borderRadius: 10,
+                                    }}
+                                  >
+                                    <p style={{ color: "#fff", margin: 0 }}>
+                                      {item.status.replace(/_/g, ' ')}
+                                    </p>
+                                  </div>
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  {item.productUnitTypeName}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  {item.qty}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  {item.storeOriginName}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  {item.storeDestinationName}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  onClick={() => StatusDialog(item)}
+                                  align="center"
+                                >
+                                  {item.updatedBy === null ? '-' : item.updatedBy}
+                                </StyledTableCell>
+                              </TableRow>
+                            );
+                          })
+                          }
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                 }
-              </TableBody>
-            </Table>
-          </TableContainer>
+              </>
+          }
         </Box>
-        {props.data.content !== undefined && (
+        {DataMutations !== undefined && (
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 100]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={props.data.content.length}
+            count={pagination.totalItem === undefined ? 0 : pagination.totalItem}
             rowsPerPage={itemsPerPage}
-            page={page}
+            page={page - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
@@ -349,6 +403,8 @@ const MutasiTable = (props: any) => {
       <MutasiDialog
         isOpen={isStatus}
         setOpen={() => setStatus(false)}
+        item={ItemSelected}
+        getData={GetMutationsTable}
       ></MutasiDialog>
       <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
     </div>

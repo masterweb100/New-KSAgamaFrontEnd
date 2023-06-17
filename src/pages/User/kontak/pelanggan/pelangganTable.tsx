@@ -64,7 +64,8 @@ const PelangganTable = (props: any) => {
                     token: token
                 })
                 setDeleteModal(!isDeleteModal);
-                window.location.reload()
+                props.getData()
+                setSelected([])
             } else {
                 setDeleteModal(!isDeleteModal);
             }

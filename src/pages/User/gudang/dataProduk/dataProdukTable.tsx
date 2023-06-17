@@ -11,6 +11,7 @@ import {
   TextField,
   Icon,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -18,81 +19,80 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { isMobile } from "react-device-detect";
+import { HTTPGetProducts } from "../../../../apis/User/dataProducts/dataProducts";
+import secureLocalStorage from "react-secure-storage";
+import moment from "moment";
+import { CENTER } from "../../../../utils/stylesheet";
 
 const columns = [
   { id: "date", label: "Tanggal" },
   { id: "id", label: "ID Barang" },
   { id: "brand", label: "Nama Brand" },
-  { id: "category", label: "Jenis Barang" },
+  { id: "category", label: "Kategori" },
+  { id: "type", label: "Jenis Barang" },
   { id: "unit", label: "Satuan" },
   { id: "status", label: "Status" },
   { id: "quantity", label: "Qty" },
-  { id: "updatedby", label: "Updated By" },
+  { id: "source", label: "Sumber" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     textAlign: "center",
-    // borderBottomWidth: 1,
+    fontWeight: '700'
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
   },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-  return order === "desc"
-    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-  const stabilizedRowArray = rowArray.map((el: any, index: number) => [
-    el,
-    index,
-  ]);
-  stabilizedRowArray.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const DataProdukTable = (props: any) => {
-  const [page, setPage] = React.useState(0);
+  const token = secureLocalStorage.getItem('TOKEN') as string
+  const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
+  const [init, setInit] = React.useState(false);
+  const [DataProducts, setDataProducts] = React.useState([]);
+  const [pagination, setPagination] = React.useState<any>({})
+  const [search, setSearch] = React.useState('')
+  const [loader, setLoader] = React.useState(true)
+
+  const onSearch = (param: string) => {
+    setSearch(param)
+    setInit(!init)
+  }
+
+  const GetProductsTable = async () => {
+    try {
+      setLoader(true)
+      const response = await HTTPGetProducts({
+        token: token,
+        limit: itemsPerPage.toString(),
+        page: page.toString(),
+        q: search.length === 0 ? undefined : search,
+      });
+      setDataProducts(response.data.data);
+      setPagination(response.data.pagination);
+      setLoader(false)
+    } catch (error) {
+      setLoader(false)
+      console.log(error);
+    }
+  };
 
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage);
+    setInit(!init)
   };
 
   const handleChangeRowsPerPage = (event: any) => {
     setItemsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
+    setInit(!init)
   };
 
-  const [orderdirection, setOrderDirection] = useState("asc");
-  const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-  const createSortHandler = (property: any) => (event: any) => {
-    handleRequestSort(event, property);
-  };
-
-  const handleRequestSort = (event: any, property: any) => {
-    const isAscending = valuetoorderby === property && orderdirection === "asc";
-    setValueToOrderBy(property);
-    setOrderDirection(isAscending ? "desc" : "asc");
-  };
+  React.useEffect(() => {
+    GetProductsTable();
+  }, [init]);
 
   return (
     <div>
@@ -144,84 +144,78 @@ const DataProdukTable = (props: any) => {
         }}
       >
         <Box>
-          <TableContainer>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column: any) => (
-                    <StyledTableCell key={column.id}>
-                      <TableSortLabel
-                        active={valuetoorderby === column.id}
-                        direction={
-                          valuetoorderby === column.id ? "asc" : "desc"
-                        }
-                        onClick={createSortHandler(column.id)}
-                        sx={{
-                          fontWeight: "bold",
-                          whiteSpace: "nowrap",
-                          "& .MuiTableSortLabel-icon": {
-                            opacity: 1,
-                            fontSize: 10,
-                          },
-                        }}
-                        IconComponent={FilterList}
-                      >
-                        {column.label}
-                      </TableSortLabel>
-                    </StyledTableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {props.data.content !== undefined
-                  ? sortedRowInformation(
-                      props.data.content,
-                      getComparator(orderdirection, valuetoorderby)
-                    )
-                      .slice(
-                        page * itemsPerPage,
-                        page * itemsPerPage + itemsPerPage
-                      )
-                      .map((item: any, index: number) => {
-                        return (
-                          <TableRow
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={index}
-                            sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                          >
-                            <StyledTableCell align="center">
-                              {item.date}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              P/00{item.id}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.brand}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.category}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.unit}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.status}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.qty}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {item.updatedby}
-                            </StyledTableCell>
+          {
+            loader ?
+              <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                <CircularProgress size={40} color={'error'} />
+              </div>
+              :
+              <>
+                {
+                  DataProducts.length === 0 ?
+                    <div style={{ ...CENTER, padding: '20px 0' }}>
+                      <span>Tidak ada data</span>
+                    </div>
+                    :
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            {columns.map((column: any) => (
+                              <StyledTableCell key={column.id}>
+                                <div style={{ width: 120 }}>
+                                  {column.label}
+                                </div>
+                              </StyledTableCell>
+                            ))}
                           </TableRow>
-                        );
-                      })
-                  : null}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                          {DataProducts.map((item: any, index: number) => {
+                            return (
+                              <TableRow
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={index}
+                                sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                              >
+                                <StyledTableCell align="center">
+                                  {moment(item.createdAt).format('YYYY-MM-DD')}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.productUnitGenId}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.productBrandName}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.productCategoryName}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.productTypeName}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.productUnitType}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.productStatus.replace(/_/g, ' ')}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  {item.qty}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                  <span style={{ fontWeight: '700' }}>{item.source}</span>
+                                </StyledTableCell>
+                              </TableRow>
+                            );
+                          })
+                          }
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                }
+              </>
+          }
         </Box>
         <Stack
           direction={"column"}
@@ -261,13 +255,13 @@ const DataProdukTable = (props: any) => {
             </span>
           </Stack>
         </Stack>
-        {props.data.content !== undefined && (
+        {DataProducts !== undefined && (
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 100]}
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={props.data.content.length}
+            count={pagination.totalItem === undefined ? 0 : pagination.totalItem}
             rowsPerPage={itemsPerPage}
-            page={page}
+            page={page - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />

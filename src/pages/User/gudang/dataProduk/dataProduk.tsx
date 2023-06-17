@@ -50,7 +50,7 @@ const DataProduk = () => {
                     <div style={{ marginTop: 20 }}>
                         {
                             value === 'barang' ?
-                                <DataProdukTable data={produkTable} />
+                                <DataProdukTable />
                                 :
                                 <DataOpnameTabs></DataOpnameTabs>
                         }

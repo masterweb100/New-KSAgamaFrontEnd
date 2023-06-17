@@ -6,6 +6,8 @@ import { mutasiTable, returnTable } from '../dummy';
 import MutasiTable from './mutasiTable';
 import ReturnTable from './returnTable';
 import { isMobile } from 'react-device-detect';
+import secureLocalStorage from 'react-secure-storage';
+import { HTTPGetMutations } from '../../../../apis/User/mutationReturn/mutations';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -22,7 +24,7 @@ const CustomTab = styled(Tab)({
 
 const Mutasi = () => {
     const [value, setValue] = React.useState('mutasi');
-
+    
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         event.preventDefault()
         setValue(newValue);
@@ -48,7 +50,7 @@ const Mutasi = () => {
                     <div style={{ marginTop: 20 }}>
                         {
                             value === 'mutasi' ?
-                                <MutasiTable data={mutasiTable}></MutasiTable>
+                                <MutasiTable></MutasiTable>
                                 :
                                 <ReturnTable data={returnTable}></ReturnTable>
                         }

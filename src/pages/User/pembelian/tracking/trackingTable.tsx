@@ -11,21 +11,23 @@ import {
     Stack,
     Icon,
     TextField,
-    InputAdornment
+    InputAdornment,
+    CircularProgress
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { isMobile } from 'react-device-detect';
+import moment from "moment";
+import { CENTER } from "../../../../utils/stylesheet";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
     { id: "id", label: "ID SKU" },
     { id: "brand", label: "Nama Brand" },
     { id: "kategori", label: "Nama Kategori" },
-    { id: "supplier", label: "Nama Supplier" },
+    { id: "price", label: "Total Price" },
     { id: "qty", label: "Qty" },
     { id: "status", label: "Status" },
     { id: "updatedBy", label: "Updated By" },
@@ -34,95 +36,27 @@ const columns = [
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
-        // borderBottomWidth: 1,
+        fontWeight: '700'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-    return order === "desc"
-        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-    const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
-    stabilizedRowArray.sort((a: any, b: any) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const TrackingTable = (props: any) => {
-    const [selected, setSelected] = useState<readonly string[]>([])
-    const [page, setPage] = React.useState(0);
+    const [page, setPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
     const handleChangePage = (event: any, newPage: any) => {
-        setPage(newPage);
+        setPage(newPage + 1);
+        props.changePage(newPage + 1)
     };
 
     const handleChangeRowsPerPage = (event: any) => {
         setItemsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        props.itemsPerPage(parseInt(event.target.value, 10))
+        setPage(1);
     };
-
-    const [orderdirection, setOrderDirection] = useState("asc");
-    const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-    const createSortHandler = (property: any) => (event: any) => {
-        handleRequestSort(event, property);
-    };
-
-    const handleRequestSort = (event: any, property: any) => {
-        const isAscending = valuetoorderby === property && orderdirection === "asc";
-        setValueToOrderBy(property);
-        setOrderDirection(isAscending ? "desc" : "asc");
-    };
-
-    const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-        const selectedIndex = selected.indexOf(name);
-        let newSelected: readonly string[] = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
-    };
-
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked) {
-            const newSelected = props.data.map((n: any, index: number) => index.toString());
-            setSelected(newSelected);
-            return;
-        }
-        setSelected([]);
-    };
-
-    const isSelected = (name: any) => selected.indexOf(name) !== -1;
 
     return (
         <div>
@@ -167,90 +101,67 @@ const TrackingTable = (props: any) => {
             }}
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                    <TableContainer>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>
-                                        <Checkbox
-                                            color="primary"
-                                            indeterminate={selected.length > 0 && selected.length < props.data.length}
-                                            checked={props.data.length > 0 && selected.length === props.data.length}
-                                            onChange={handleSelectAllClick}
-                                        />
-                                    </StyledTableCell>
-                                    {columns.map((column: any) => (
-                                        <StyledTableCell key={column.id}>
-                                            <TableSortLabel
-                                                active={valuetoorderby === column.id}
-                                                direction={valuetoorderby === column.id ? "asc" : "desc"}
-                                                onClick={createSortHandler(column.id)}
-                                                sx={{
-                                                    fontWeight: "bold",
-                                                    whiteSpace: "nowrap",
-                                                    "& .MuiTableSortLabel-icon": {
-                                                        opacity: 1,
-                                                        fontSize: 10,
-                                                    },
-                                                }}
-                                                IconComponent={FilterList}
-                                            >
-                                                {column.label}
-                                            </TableSortLabel>
-                                        </StyledTableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-
-                            <TableBody>
-                                {props.data !== undefined
-                                    ? sortedRowInformation(props.data,
-                                        getComparator(orderdirection, valuetoorderby))
-                                        .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
-                                        .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(index.toString());
-                                            const labelId = `enhanced-table-checkbox-${index}`;
-
-                                            return (
-                                                <TableRow
-                                                    role="checkbox"
-                                                    tabIndex={-1}
-                                                    key={index}
-                                                    sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    onClick={(e) => handleClick(e, index.toString())}
-                                                >
-                                                    <StyledTableCell align="center" padding="checkbox">
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={isItemSelected}
-                                                            inputProps={{
-                                                                'aria-labelledby': labelId,
-                                                            }}
-                                                        />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.brand}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.kategori}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.supplier}</StyledTableCell>
-                                                    <StyledTableCell align="center">7809</StyledTableCell>
-                                                    <StyledTableCell align="center" sx={{ color: Colors.success }}>Selesai</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
-                                                </TableRow>
-                                            )
-                                        })
-                                    : null}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    {
+                        props.loader ?
+                            <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                                <CircularProgress size={40} color={'error'} />
+                            </div>
+                            :
+                            <>
+                                {
+                                    props.data.length === 0 ?
+                                        <div style={{ ...CENTER, padding: '20px 0' }}>
+                                            <span>Tidak ada data</span>
+                                        </div>
+                                        :
+                                        <TableContainer>
+                                            <Table stickyHeader aria-label="sticky table">
+                                                <TableHead>
+                                                    <TableRow>
+                                                        {columns.map((column: any) => (
+                                                            <StyledTableCell key={column.id}>
+                                                                <div style={{ width: 100 }}>
+                                                                    {column.label}
+                                                                </div>
+                                                            </StyledTableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {props.data.map((item: any, index: number) => {
+                                                        return (
+                                                            <TableRow
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={index}
+                                                                sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                            >
+                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.purchasingGenId}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.productBrandName}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.productCategoryName}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.totalPrice}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.qty}</StyledTableCell>
+                                                                <StyledTableCell align="center" sx={{ fontWeight: '700' }}>{item.status}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
+                                                            </TableRow>
+                                                        )
+                                                    })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                }
+                            </>
+                    }
                 </Box>
                 {props.data !== undefined && (
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, 100]}
+                        rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={props.data.length}
+                        count={props.pagination.totalItem === undefined ? 0 : props.pagination.totalItem}
                         rowsPerPage={itemsPerPage}
-                        page={page}
+                        page={page - 1}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />

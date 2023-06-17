@@ -70,6 +70,7 @@ const PenjualanTable = (props: any) => {
                 })
                 setDeleteModal(!isDeleteModal);
                 props.getData()
+                setSelected([])
             } else {
                 setDeleteModal(!isDeleteModal);
             }

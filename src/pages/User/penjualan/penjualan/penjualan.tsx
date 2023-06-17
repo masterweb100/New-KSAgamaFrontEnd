@@ -10,7 +10,7 @@ import secureLocalStorage from 'react-secure-storage';
 const Penjualan = () => {
     const token = secureLocalStorage.getItem("TOKEN") as string
     const [init, setInit] = React.useState(false);
-    const [DataRole, setDataRole] = React.useState([]);
+    const [DataSales, setDataSales] = React.useState([]);
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1)
     const [pagination, setPagination] = React.useState({})
@@ -42,7 +42,7 @@ const Penjualan = () => {
                 page: page.toString(),
                 q: search.length === 0 ? undefined : search,
             });
-            setDataRole(response.data.data);
+            setDataSales(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
         } catch (error) {
@@ -62,7 +62,7 @@ const Penjualan = () => {
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <PenjualanTable
-                        data={DataRole}
+                        data={DataSales}
                         changePage={onChangePage}
                         itemsPerPage={onChangeLimit}
                         pagination={pagination}

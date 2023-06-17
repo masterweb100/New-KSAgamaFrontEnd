@@ -11,7 +11,8 @@ import {
     Stack,
     Icon,
     TextField,
-    InputAdornment
+    InputAdornment,
+    CircularProgress
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -23,6 +24,9 @@ import { CENTER } from "../../../../utils/stylesheet";
 import { isMobile } from 'react-device-detect';
 import DeleteModal from "../../../../components/deleteModal";
 import PelunasanDialog from "../../../../components/pelunasanDialog";
+import moment from "moment";
+import { HTTPDeleteReturn } from "../../../../apis/User/sales/return";
+import secureLocalStorage from "react-secure-storage";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -32,83 +36,57 @@ const columns = [
     { id: "jumlah", label: "Jumlah Barang" },
     { id: "jenis", label: "Jenis Penjualan" },
     { id: "status", label: "Status" },
-    { id: "updatedBy", label: "Updated By" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
-        // borderBottomWidth: 1,
+        fontWeight: '700'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-    return order === "desc"
-        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-    const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
-    stabilizedRowArray.sort((a: any, b: any) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const ReturnPenjualanTable = (props: any) => {
     const navigate = useNavigate();
-    const [selected, setSelected] = useState<readonly string[]>([])
-    const [page, setPage] = React.useState(0);
+    const token = secureLocalStorage.getItem('TOKEN')
+    const [selected, setSelected] = useState<any[]>([])
+    const [page, setPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [isLunasOpen, setLunasOpen] = React.useState(false)
     const [isDeleteModal, setDeleteModal] = React.useState(false);
 
-    const handleDelete = () => {
+    const handleDelete = async (param: string) => {
         if (selected.length > 0) {
-            setDeleteModal(!isDeleteModal);
+            if (param === 'yes') {
+                await HTTPDeleteReturn({
+                    ids: selected,
+                    token: token as string
+                })
+                setDeleteModal(!isDeleteModal);
+                props.getData()
+                setSelected([])
+            } else {
+                setDeleteModal(!isDeleteModal);
+            }
         }
     };
 
     const handleChangePage = (event: any, newPage: any) => {
-        setPage(newPage);
+        setPage(newPage + 1);
+        props.changePage(newPage + 1)
     };
 
     const handleChangeRowsPerPage = (event: any) => {
         setItemsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const [orderdirection, setOrderDirection] = useState("asc");
-    const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-    const createSortHandler = (property: any) => (event: any) => {
-        handleRequestSort(event, property);
-    };
-
-    const handleRequestSort = (event: any, property: any) => {
-        const isAscending = valuetoorderby === property && orderdirection === "asc";
-        setValueToOrderBy(property);
-        setOrderDirection(isAscending ? "desc" : "asc");
+        props.itemsPerPage(parseInt(event.target.value, 10))
+        setPage(1);
     };
 
     const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
         const selectedIndex = selected.indexOf(name);
-        let newSelected: readonly string[] = [];
+        let newSelected: any[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, name);
@@ -128,7 +106,7 @@ const ReturnPenjualanTable = (props: any) => {
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any, index: number) => index.toString());
+            const newSelected = props.data.map((item: any, index: number) => item.id);
             setSelected(newSelected);
             return;
         }
@@ -136,18 +114,7 @@ const ReturnPenjualanTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-
-    const FormLunas = () => {
-        if (selected.length > 0) {
-            setLunasOpen(true)
-        }
-    }
     const FormAdd = () => navigate('/penjualan/return-penjualan/form-return/add')
-    const FormUpdate = () => {
-        if (selected.length > 0) {
-            navigate('/penjualan/return-penjualan/form-return/update')
-        }
-    }
 
     return (
         <div>
@@ -159,13 +126,7 @@ const ReturnPenjualanTable = (props: any) => {
                     </Stack>
                 </div>
                 <Stack direction={'row'} alignItems={'center'} gap={isMobile ? 1 : 2}>
-                    <div onClick={FormLunas} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
-                        <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
-                    </div>
-                    <div onClick={FormUpdate} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.warning, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
-                        <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 21 }}>border_color</Icon>
-                    </div>
-                    <div onClick={handleDelete} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
+                    <div onClick={() => handleDelete('open')} style={{ ...CENTER, backgroundColor: selected.length === 0 ? Colors.secondary : Colors.error, borderRadius: 5, cursor: 'pointer', padding: 10 }}>
                         <Icon style={{ color: '#fff', fontSize: isMobile ? 20 : 23 }}>delete_outline</Icon>
                     </div>
                 </Stack>
@@ -212,83 +173,87 @@ const ReturnPenjualanTable = (props: any) => {
                 }}
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                    <TableContainer>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>
-                                        <Checkbox
-                                            color="primary"
-                                            indeterminate={selected.length > 0 && selected.length < props.data.content.length}
-                                            checked={props.data.content.length > 0 && selected.length === props.data.content.length}
-                                            onChange={handleSelectAllClick}
-                                        />
-                                    </StyledTableCell>
-                                    {columns.map((column: any) => (
-                                        <StyledTableCell key={column.id}>
-                                            <TableSortLabel
-                                                active={valuetoorderby === column.id}
-                                                direction={valuetoorderby === column.id ? "asc" : "desc"}
-                                                onClick={createSortHandler(column.id)}
-                                                sx={{
-                                                    fontWeight: "bold",
-                                                    whiteSpace: "nowrap",
-                                                    "& .MuiTableSortLabel-icon": {
-                                                        opacity: 1,
-                                                        fontSize: 10,
-                                                    },
-                                                }}
-                                                IconComponent={FilterList}
-                                            >
-                                                {column.label}
-                                            </TableSortLabel>
-                                        </StyledTableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
+                    {
+                        props.loader ?
+                            <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                                <CircularProgress size={40} color={'error'} />
+                            </div>
+                            :
+                            <>
+                                {
+                                    props.data.length === 0 ?
+                                        <div style={{ ...CENTER, padding: '20px 0' }}>
+                                            <span>Tidak ada data</span>
+                                        </div>
+                                        :
+                                        <TableContainer>
+                                            <Table stickyHeader aria-label="sticky table">
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <StyledTableCell>
+                                                            <Checkbox
+                                                                color="primary"
+                                                                indeterminate={selected.length > 0 && selected.length < props.data.length}
+                                                                checked={props.data.length > 0 && selected.length === props.data.length}
+                                                                onChange={handleSelectAllClick}
+                                                            />
+                                                        </StyledTableCell>
+                                                        {columns.map((column: any) => (
+                                                            <StyledTableCell key={column.id}>
+                                                                <div style={{ width: 130 }}>
+                                                                    {column.label}
+                                                                </div>
+                                                            </StyledTableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                </TableHead>
 
-                            <TableBody>
-                                {props.data.content !== undefined
-                                    ? sortedRowInformation(
-                                        props.data.content,
-                                        getComparator(orderdirection, valuetoorderby))
-                                        .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
-                                        .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(index.toString());
-                                            const labelId = `enhanced-table-checkbox-${index}`;
+                                                <TableBody>
+                                                    {props.data.map((item: any, index: number) => {
+                                                        const isItemSelected = isSelected(item.id);
+                                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                            return (
-                                                <TableRow
-                                                    role="checkbox"
-                                                    tabIndex={-1}
-                                                    key={index}
-                                                    sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    onClick={(e) => handleClick(e, index.toString())}
-                                                >
-                                                    <StyledTableCell align="center" padding="checkbox">
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={isItemSelected}
-                                                            inputProps={{
-                                                                'aria-labelledby': labelId,
-                                                            }}
-                                                        />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.nama}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.barang}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.jumlah}</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.jenis}</StyledTableCell>
-                                                    <StyledTableCell align="center" sx={{ color: Colors.error }}>Return</StyledTableCell>
-                                                    <StyledTableCell align="center">{item.updatedBy}</StyledTableCell>
-                                                </TableRow>
-                                            )
-                                        })
-                                    : null}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                                        return (
+                                                            <TableRow
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={index}
+                                                                sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                                onClick={(e) => handleClick(e, item.id)}
+                                                            >
+                                                                <StyledTableCell align="center" padding="checkbox">
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        checked={isItemSelected}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': labelId,
+                                                                        }}
+                                                                    />
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.invoice}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.customerName}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.productTypeName}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.qtyReturn}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.salesType}</StyledTableCell>
+                                                                <StyledTableCell
+                                                                    align="center"
+                                                                    sx={{
+                                                                        color: item.saleReturnStatus === 'REFUND' ?
+                                                                            Colors.success : item.saleReturnStatus === 'DISCOUNT' ?
+                                                                                Colors.error : Colors.warning
+                                                                    }}
+                                                                >{item.saleReturnStatus}</StyledTableCell>
+                                                            </TableRow>
+                                                        )
+                                                    })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                }
+                            </>
+                    }
                 </Box>
                 <Stack direction={'column'} gap={1} sx={{ backgroundColor: '#f8f8f8', border: '1px solid #909090' }} padding={3}>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={1} sx={{ backgroundColor: '#f8f8f8' }}>
@@ -301,13 +266,13 @@ const ReturnPenjualanTable = (props: any) => {
                         <span><b>18.960</b></span>
                     </Stack>
                 </Stack>
-                {props.data.content !== undefined && (
+                {props.data !== undefined && (
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, 100]}
+                        rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={props.data.content.length}
+                        count={props.pagination.totalItem === undefined ? 0 : props.pagination.totalItem}
                         rowsPerPage={itemsPerPage}
-                        page={page}
+                        page={page - 1}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />

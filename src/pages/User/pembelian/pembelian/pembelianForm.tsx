@@ -22,7 +22,7 @@ const PembelianForm = () => {
     const [isSupplierOpen, setSupplierOpen] = React.useState(false);
     const [CategoryName, setCategoryName] = React.useState('')
     const [PurchaseData, setPurchaseData] = React.useState({
-        genId: '',
+        genId: `SKU/${Math.floor(100000 + Math.random() * 900000)}`,
         supplierId: '',
         productBrandId: '',
         transactionDate: null,
@@ -92,7 +92,7 @@ const PembelianForm = () => {
 
     const Initial = async () => {
         try {
-            await GenId()
+            // await GenId()
             await getSupplier()
             await getBrand()
             await getProducts()

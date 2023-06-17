@@ -57,9 +57,9 @@ const DataOpnameTabs = () => {
             </StyledTabs>
             {
                 value === 'stok' ?
-                    <DataOpnameTable data={opnameTable}></DataOpnameTable>
+                    <DataOpnameTable></DataOpnameTable>
                     :
-                    <DataHasilOpnameTable data={opnameTable}></DataHasilOpnameTable>
+                    <DataHasilOpnameTable></DataHasilOpnameTable>
             }
         </div>
 

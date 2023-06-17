@@ -152,13 +152,13 @@ export const ListUser = [
         icon: "swap_vert",
         navigate: "/laporan/transaksi",
       },
-      {
-        id: 6.2,
-        label: "Kelola Kas & Bank",
-        name: "LAP_BANK",
-        icon: "account_balance",
-        navigate: "/laporan/bank",
-      },
+      // {
+      //   id: 6.2,
+      //   label: "Kelola Kas & Bank",
+      //   name: "LAP_BANK",
+      //   icon: "account_balance",
+      //   navigate: "/laporan/bank",
+      // },
     ],
   },
   {

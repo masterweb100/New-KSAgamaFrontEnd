@@ -25,7 +25,7 @@ const Pembelian = () => {
     const [value, setValue] = React.useState('semua');
     const token = secureLocalStorage.getItem("TOKEN") as string
     const [init, setInit] = React.useState(false);
-    const [DataRole, setDataPurchase] = React.useState([]);
+    const [DataPurchase, setDataPurchase] = React.useState([]);
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1)
     const [pagination, setPagination] = React.useState({})
@@ -63,7 +63,6 @@ const Pembelian = () => {
                 page: page.toString(),
                 q: search.length === 0 ? undefined : search,
             });
-            console.log(response)
             setDataPurchase(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
@@ -102,7 +101,7 @@ const Pembelian = () => {
                     </Box>
                     <div style={{ marginTop: 20 }}>
                         <PembelianTable
-                            data={DataRole}
+                            data={DataPurchase}
                             changePage={onChangePage}
                             itemsPerPage={onChangeLimit}
                             pagination={pagination}

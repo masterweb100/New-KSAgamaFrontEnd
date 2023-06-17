@@ -22,10 +22,10 @@ export function HTTPGetStores(param: {
   });
 }
 
-export function HTTPGetStoreID(param: { id: number }): Promise<any> {
+export function HTTPGetStoreID(param: { id: number, token: string }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await AxiosNormal().get(`stores/${param.id}`);
+      const response = await AxiosNormal(param.token).get(`stores/${param.id}`);
       return resolve(response);
     } catch (error) {
       return reject(error);

@@ -96,6 +96,7 @@ const Supplier = () => {
                             pagination={pagination}
                             search={onSearch}
                             loader={loader}
+                            getData={GetSupplierTable}
                         ></SupplierTable>
                     </div>
                 </div>

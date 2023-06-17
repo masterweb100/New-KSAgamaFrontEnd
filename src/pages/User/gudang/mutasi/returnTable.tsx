@@ -11,7 +11,8 @@ import {
     Stack,
     Icon,
     TextField,
-    InputAdornment
+    InputAdornment,
+    CircularProgress
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -21,6 +22,9 @@ import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 import ReturnDialog from "./returnDialog";
 import { isMobile } from 'react-device-detect';
+import { HTTPGetReturns } from "../../../../apis/User/mutationReturn/returns";
+import secureLocalStorage from "react-secure-storage";
+import moment from "moment";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -35,70 +39,65 @@ const columns = [
 const StyledTableCell = styled(TableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
-        // borderBottomWidth: 1,
+        fontWeight: '700'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-    return order === "desc"
-        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-    const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
-    stabilizedRowArray.sort((a: any, b: any) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const ReturnTable = (props: any) => {
-    const [selected, setSelected] = useState<readonly string[]>([])
-    const [page, setPage] = React.useState(0);
+    const token = secureLocalStorage.getItem('TOKEN') as string
+    const [selected, setSelected] = useState<any[]>([]);
+    const [page, setPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
-    const [isStatus, setStatus] = React.useState(false)
+    const [isStatus, setStatus] = React.useState(false);
+    const [isDeleteModal, setDeleteModal] = React.useState(false);
+    const [ItemSelected, setItemSelected] = React.useState({})
+    const [init, setInit] = React.useState(false);
+    const [DataMutations, setDataMutations] = React.useState([]);
+    const [pagination, setPagination] = React.useState<any>({})
+    const [search, setSearch] = React.useState('')
+    const [loader, setLoader] = React.useState(true)
+
+    const onSearch = (param: string) => {
+        setSearch(param)
+        setInit(!init)
+    }
+
+    const GetMutationsTable = async () => {
+        try {
+            setLoader(true)
+            const response = await HTTPGetReturns({
+                token: token,
+                limit: itemsPerPage.toString(),
+                page: page.toString(),
+                q: search.length === 0 ? undefined : search,
+            });
+            console.log(response)
+            setDataMutations(response.data.data);
+            setPagination(response.data.pagination);
+            setLoader(false)
+        } catch (error) {
+            setLoader(false)
+            console.log(error);
+        }
+    };
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
+        setInit(!init)
     };
 
     const handleChangeRowsPerPage = (event: any) => {
         setItemsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const [orderdirection, setOrderDirection] = useState("asc");
-    const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-    const createSortHandler = (property: any) => (event: any) => {
-        handleRequestSort(event, property);
-    };
-
-    const handleRequestSort = (event: any, property: any) => {
-        console.log(event)
-        const isAscending = valuetoorderby === property && orderdirection === "asc";
-        setValueToOrderBy(property);
-        setOrderDirection(isAscending ? "desc" : "asc");
+        setPage(1);
+        setInit(!init)
     };
 
     const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
         const selectedIndex = selected.indexOf(name);
-        let newSelected: readonly string[] = [];
+        let newSelected: any[] = [];
 
         if (selectedIndex === -1) {
             newSelected = newSelected.concat(selected, name);
@@ -109,7 +108,7 @@ const ReturnTable = (props: any) => {
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
                 selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
+                selected.slice(selectedIndex + 1)
             );
         }
 
@@ -118,7 +117,7 @@ const ReturnTable = (props: any) => {
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = props.data.content.map((n: any, index: number) => index.toString());
+            const newSelected = DataMutations.map((item: any, index: number) => item.id);
             setSelected(newSelected);
             return;
         }
@@ -126,7 +125,15 @@ const ReturnTable = (props: any) => {
     };
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
-    const StatusDialog = React.useCallback(() => setStatus(true), [])
+
+    const StatusDialog = (item: any) => {
+        setItemSelected(item)
+        setStatus(true)
+    }
+
+    React.useEffect(() => {
+        GetMutationsTable();
+    }, [init]);
 
     return (
         <div>
@@ -172,98 +179,100 @@ const ReturnTable = (props: any) => {
                 }}
             >
                 <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                    <TableContainer>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>
-                                        <Checkbox
-                                            color="primary"
-                                            indeterminate={selected.length > 0 && selected.length < props.data.content.length}
-                                            checked={props.data.content.length > 0 && selected.length === props.data.content.length}
-                                            onChange={handleSelectAllClick}
-                                        />
-                                    </StyledTableCell>
-                                    {columns.map((column: any) => (
-                                        <StyledTableCell key={column.id}>
-                                            <TableSortLabel
-                                                active={valuetoorderby === column.id}
-                                                direction={valuetoorderby === column.id ? "asc" : "desc"}
-                                                onClick={createSortHandler(column.id)}
-                                                sx={{
-                                                    fontWeight: "bold",
-                                                    whiteSpace: "nowrap",
-                                                    "& .MuiTableSortLabel-icon": {
-                                                        opacity: 1,
-                                                        fontSize: 10,
-                                                    },
-                                                }}
-                                                IconComponent={FilterList}
-                                            >
-                                                {column.label}
-                                            </TableSortLabel>
-                                        </StyledTableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
+                    {
+                        loader ?
+                            <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                                <CircularProgress size={40} color={'error'} />
+                            </div>
+                            :
+                            <>
+                                {
+                                    DataMutations.length === 0 ?
+                                        <div style={{ ...CENTER, padding: '20px 0' }}>
+                                            <span>Tidak ada data</span>
+                                        </div>
+                                        :
+                                        <TableContainer>
+                                            <Table stickyHeader aria-label="sticky table">
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <StyledTableCell>
+                                                            <Checkbox
+                                                                color="primary"
+                                                                indeterminate={selected.length > 0 && selected.length < props.data.content.length}
+                                                                checked={props.data.content.length > 0 && selected.length === props.data.content.length}
+                                                                onChange={handleSelectAllClick}
+                                                            />
+                                                        </StyledTableCell>
+                                                        {columns.map((column: any) => (
+                                                            <StyledTableCell key={column.id}>
+                                                                <div style={{ width: 120 }}>
+                                                                    {column.label}
+                                                                </div>
+                                                            </StyledTableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {props.data.content.map((item: any, index: number) => {
+                                                        const isItemSelected = isSelected(index.toString());
+                                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                            <TableBody>
-                                {props.data.content !== undefined
-                                    ? sortedRowInformation(
-                                        props.data.content,
-                                        getComparator(orderdirection, valuetoorderby))
-                                        .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
-                                        .map((item: any, index: number) => {
-                                            const isItemSelected = isSelected(index.toString());
-                                            const labelId = `enhanced-table-checkbox-${index}`;
-
-                                            return (
-                                                <TableRow
-                                                    role="checkbox"
-                                                    tabIndex={-1}
-                                                    key={index}
-                                                    sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                >
-                                                    <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
-                                                        <Checkbox
-                                                            color="primary"
-                                                            checked={isItemSelected}
-                                                            inputProps={{
-                                                                'aria-labelledby': labelId,
-                                                            }}
-                                                        />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.tanggal}</StyledTableCell>
-                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.id}</StyledTableCell>
-                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.brand}</StyledTableCell>
-                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.jenis}</StyledTableCell>
-                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.qty}</StyledTableCell>
-                                                    <StyledTableCell onClick={StatusDialog} align="center">{item.updatedBy}</StyledTableCell>
-                                                    <StyledTableCell onClick={StatusDialog} align="center">
-                                                        <div style={{ ...CENTER, backgroundColor: index % 2 === 1 ? Colors.success : '#0499a3', padding: '10px 10px', borderRadius: 10 }}>
-                                                            <p style={{ color: '#fff', margin: 0 }}>{index % 2 === 1 ? 'Barang Diterima Gudang' : 'Menunggu Diterima Gudang'}</p>
-                                                        </div>
-                                                    </StyledTableCell>
-                                                </TableRow>
-                                            )
-                                        })
-                                    : null}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                                        return (
+                                                            <TableRow
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={index}
+                                                                sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                            >
+                                                                <StyledTableCell onClick={(e) => handleClick(e, index.toString())} align="center" padding="checkbox">
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        checked={isItemSelected}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': labelId,
+                                                                        }}
+                                                                    />
+                                                                </StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.productUnitGenId}</StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.productBrandName}</StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.productTypeName}</StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.qty}</StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">
+                                                                    <div style={{ ...CENTER, backgroundColor: index % 2 === 1 ? Colors.success : '#0499a3', padding: '10px 10px', borderRadius: 10 }}>
+                                                                        <p style={{ color: '#fff', margin: 0 }}>{index % 2 === 1 ? 'Barang Diterima Gudang' : 'Menunggu Diterima Gudang'}</p>
+                                                                    </div>
+                                                                </StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
+                                                            </TableRow>
+                                                        )
+                                                    })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                }
+                            </>
+                    }
                 </Box>
-                {props.data.content !== undefined && (
+                {DataMutations !== undefined && (
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, 100]}
+                        rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={props.data.content.length}
+                        count={pagination.totalItem === undefined ? 0 : pagination.totalItem}
                         rowsPerPage={itemsPerPage}
-                        page={page}
+                        page={page - 1}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 )}
-                <ReturnDialog isOpen={isStatus} setOpen={() => setStatus(false)}></ReturnDialog>
+                <ReturnDialog
+                    isOpen={isStatus}
+                    setOpen={() => setStatus(false)}
+                    item={ItemSelected}
+                    getData={GetMutationsTable}
+                ></ReturnDialog>
             </Box>
         </div>
     );

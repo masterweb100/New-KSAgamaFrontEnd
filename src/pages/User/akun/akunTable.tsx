@@ -294,7 +294,7 @@ const AkunTable = (props: any) => {
                                   {item.accountCategoryName}
                                 </StyledTableCell>
                                 <StyledTableCell style={{ cursor: "pointer" }} onClick={DetailPage} align="center">
-                                  {item.balance}
+                                  {(item.balance).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
                                   <Button onClick={() => { setItemSelected(item); handleEdit() }} variant={'contained'} color={'success'}>

@@ -5,8 +5,57 @@ import { Colors } from '../../../../utils/colors';
 import { penjualanDataTable } from '../dummy';
 import PenjualanTable from './penjualanTable';
 import { isMobile } from 'react-device-detect';
+import { HTTPGetApprovalsReturn } from '../../../../apis/User/approval/return';
+import secureLocalStorage from 'react-secure-storage';
 
 const AppPenjualan = () => {
+    const [init, setInit] = React.useState(false);
+    const [DataReturn, setDataReturn] = React.useState([]);
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1);
+    const [pagination, setPagination] = React.useState({});
+    const [search, setSearch] = React.useState("");
+    const [loader, setLoader] = React.useState(true);
+    const token = secureLocalStorage.getItem("TOKEN") as string;
+
+    const onChangeLimit = (param: any) => {
+        setLimit(param);
+        setPage(1);
+        setInit(!init);
+    };
+
+    const onChangePage = (param: any) => {
+        setPage(param);
+        setInit(!init);
+    };
+
+    const onSearch = (param: string) => {
+        setSearch(param);
+        setInit(!init);
+    };
+
+    const GetReturnTable = async () => {
+        try {
+            setLoader(true);
+            const response = await HTTPGetApprovalsReturn({
+                limit: limit.toString(),
+                page: page.toString(),
+                q: search.length === 0 ? undefined : search,
+                token: token,
+            });
+            setDataReturn(response.data.data);
+            setPagination(response.data.pagination);
+            setLoader(false);
+        } catch (error) {
+            setLoader(false);
+            console.log(error);
+        }
+    };
+
+    React.useEffect(() => {
+        GetReturnTable();
+    }, [init]);
+    
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Return Penjualan'} isChild={false} name={'App. Penjualan'} idPanel={8}></NavigationBarUser>
@@ -44,7 +93,15 @@ const AppPenjualan = () => {
                             }}
                         />
                     </Stack>
-                    <PenjualanTable data={penjualanDataTable} />
+                    <PenjualanTable
+                        data={DataReturn}
+                        changePage={onChangePage}
+                        itemsPerPage={onChangeLimit}
+                        pagination={pagination}
+                        search={onSearch}
+                        loader={loader}
+                        getData={GetReturnTable}
+                    />
                 </div>
             </Box>
         </div>
