@@ -72,7 +72,6 @@ const DetailAkunTable = (props: any) => {
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
     const handleChangePage = (event: any, newPage: any) => {
-        console.log(event)
         setPage(newPage);
     };
 
@@ -88,7 +87,6 @@ const DetailAkunTable = (props: any) => {
     };
 
     const handleRequestSort = (event: any, property: any) => {
-        console.log(event)
         const isAscending = valuetoorderby === property && orderdirection === "asc";
         setValueToOrderBy(property);
         setOrderDirection(isAscending ? "desc" : "asc");

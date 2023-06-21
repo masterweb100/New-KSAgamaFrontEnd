@@ -24,13 +24,23 @@ const DataProdukForm = () => {
   const navigate = useNavigate();
   const OpnameRedux = useSelector((state: RootState) => state.OpnamesData.data)
   const [GoodProducts, setGoodProducts] = React.useState('')
-  const [BadProducts, setBadProducts] = React.useState('')
+  const [BadProducts, setBadProducts] = React.useState(0)
   const token = secureLocalStorage.getItem('TOKEN')
   const [loader, setLoader] = React.useState(false)
 
   const GoBack = () => {
     navigate(-1);
   };
+
+  const handleProducts = (event: any) => {
+    if (event.target.value > OpnameRedux.qty) {
+      setGoodProducts(OpnameRedux.qty.toString())
+      setBadProducts(0)
+    } else {
+      setGoodProducts(event.target.value)
+      setBadProducts(OpnameRedux.qty - parseInt(event.target.value))
+    }
+  }
 
   const handleSubmit = async () => {
     setLoader(true)
@@ -39,7 +49,7 @@ const DataProdukForm = () => {
         purchasingProductId: OpnameRedux.id,
         date: moment().format('YYYY-MM-DD'),
         goodQty: parseInt(GoodProducts),
-        damagedQty: parseInt(BadProducts),
+        damagedQty: BadProducts,
         token: token as string
       }
       await HTTPUpdateStatusOpnames(data)
@@ -98,7 +108,7 @@ const DataProdukForm = () => {
                 <TextField
                   type="text"
                   disabled
-                  defaultValue={moment(OpnameRedux.createdAt).format('YYYY-MM-DD')}
+                  defaultValue={moment(OpnameRedux.createdAt).format('YYYY/MM/DD')}
                   size="small"
                   sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
@@ -153,7 +163,7 @@ const DataProdukForm = () => {
                   type="text"
                   size="small"
                   value={GoodProducts}
-                  onChange={(text) => setGoodProducts(text.target.value)}
+                  onChange={handleProducts}
                   placeholder="Barang"
                   sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
                 />
@@ -163,10 +173,10 @@ const DataProdukForm = () => {
                 <TextField
                   type="text"
                   size="small"
-                  value={BadProducts}
-                  onChange={(text) => setBadProducts(text.target.value)}
+                  value={isNaN(BadProducts) ? 0 : BadProducts}
+                  disabled
                   placeholder="Barang"
-                  sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
+                  sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
                 />
               </Stack>
             </Stack>

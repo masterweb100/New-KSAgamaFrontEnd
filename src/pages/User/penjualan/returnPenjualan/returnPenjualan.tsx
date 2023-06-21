@@ -42,7 +42,6 @@ const ReturnPenjualan = () => {
                 page: page.toString(),
                 q: search.length === 0 ? undefined : search,
             });
-            console.log(response)
             setDataReturn(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)

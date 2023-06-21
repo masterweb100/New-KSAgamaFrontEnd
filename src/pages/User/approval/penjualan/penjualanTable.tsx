@@ -111,7 +111,7 @@ const PenjualanTable = (props: any) => {
                                                             sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                             onClick={() => ApproveDialog(item)}
                                                         >
-                                                            <StyledTableCell align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell>
+                                                            <StyledTableCell align="center">{moment(item.createdAt).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center" style={{ color: item.isPending ? Colors.error : Colors.success }}>{item.isPending ? 'Tertunda' : 'Terkirim'}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.invoice}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.customerName}</StyledTableCell>

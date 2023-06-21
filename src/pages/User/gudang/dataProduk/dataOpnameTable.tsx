@@ -171,7 +171,7 @@ const DataOpnameTable = () => {
                                                                 sx={{ "&:hover": { bgcolor: Colors.inherit, cursor: 'pointer' } }}
                                                                 onClick={() => FormPage(item)}
                                                             >
-                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell >
+                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY/MM/DD')}</StyledTableCell >
                                                                 <StyledTableCell align="center">{item.productUnitGenId}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.purchasingGenId}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.productBrandName}</StyledTableCell>
@@ -186,7 +186,7 @@ const DataOpnameTable = () => {
                                                                 </StyledTableCell>
                                                                 <StyledTableCell align="center">
                                                                     <Stack direction={'row'} gap={2} width={'100%'} justifyContent={'center'} alignItems={'center'}>
-                                                                        <span style={{ margin: 0, display: 'flex', alignSelf: 'center' }}>{moment(item.updatedAt).format('YYYY-MM-DD')}</span>
+                                                                        <span style={{ margin: 0, display: 'flex', alignSelf: 'center' }}>{moment(item.updatedAt).format('YYYY/MM/DD')}</span>
                                                                         <IconButton style={{ width: '15%' }}>
                                                                             <Icon style={{ color: Colors.primary, fontSize: 20 }}>chevron_right</Icon>
                                                                         </IconButton>

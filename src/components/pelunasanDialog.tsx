@@ -21,13 +21,14 @@ const PelunasanDialog = ({ isOpen, setOpen, item, type, refresh }: { isOpen: boo
             method: '',
             totalPayment: ''
         },
+
         onSubmit: async (values) => {
             setLoader(true)
             try {
                 const data = {
                     token: token,
                     method: (values.method).toUpperCase(),
-                    totalPayment: parseInt(values.totalPayment)
+                    totalPayment: parseInt(values.totalPayment) > item.bill ? item.bill : parseInt(values.totalPayment)
                 }
                 if (type === 'sales') {
                     await HTTPPaySales({...data, saleId: item.id})
@@ -81,11 +82,11 @@ const PelunasanDialog = ({ isOpen, setOpen, item, type, refresh }: { isOpen: boo
                         <Stack direction={'row'} style={{ ...styles.cell }}>
                             <span>Pembayaran</span>
                             <TextField
-                                type="text"
+                                type="number"
                                 size="small"
                                 placeholder='0'
                                 name="totalPayment"
-                                value={Formik.values.totalPayment}
+                                value={parseInt(Formik.values.totalPayment) > item.bill ? item.bill.toString() : Formik.values.totalPayment}
                                 onChange={Formik.handleChange}
                                 sx={{ bgcolor: "#fff", width: isMobile ? '25vw' : '15vw' }}
                             />

@@ -35,7 +35,6 @@ const AkunForm = () => {
         accountName: values.name,
         token: token,
       });
-      console.log(resp);
       navigate("/akun");
       setSend(false);
     } catch (error) {

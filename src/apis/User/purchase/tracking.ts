@@ -22,3 +22,21 @@ export function HTTPGetTracking(param: {
         }
     });
 }
+
+export function HTTPPatchTracking(param: {
+    purchasingProductId: string;
+    status: string;
+    token: string;
+}): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await AxiosNormal(param.token).patch(`${uri}/status`, {
+                purchasingProductId: param.purchasingProductId,
+                status: param.status
+            });
+            return resolve(response);
+        } catch (error) {
+            return reject(error);
+        }
+    });
+}

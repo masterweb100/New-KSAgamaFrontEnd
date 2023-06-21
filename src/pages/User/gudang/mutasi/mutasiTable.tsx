@@ -322,7 +322,7 @@ const MutasiTable = () => {
                                   onClick={() => StatusDialog(item)}
                                   align="center"
                                 >
-                                  {moment(item.date).format('YYYY-MM-DD')}
+                                  {moment(item.date).format('YYYY/MM/DD')}
                                 </StyledTableCell>
                                 <StyledTableCell
                                   onClick={() => StatusDialog(item)}

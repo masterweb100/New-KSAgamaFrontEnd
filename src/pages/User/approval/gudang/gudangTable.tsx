@@ -111,7 +111,7 @@ const GudangTable = (props: any) => {
                                                             sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                             onClick={() => ApproveDialog(item)}
                                                         >
-                                                            <StyledTableCell align="center">{moment(item.date).format('YYYY-MM-DD')}</StyledTableCell>
+                                                            <StyledTableCell align="center">{moment(item.date).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.genId}</StyledTableCell>
                                                             <StyledTableCell align="center">
                                                                 <div style={{ ...CENTER, backgroundColor: '#d38b00', padding: '5px 10px', borderRadius: 10 }}>

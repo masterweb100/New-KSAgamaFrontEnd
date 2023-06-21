@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, TextField, Select, MenuItem, SelectChangeEvent, InputAdornment, CircularProgress } from '@mui/material';
+import { Stack, TextField, Select, MenuItem, SelectChangeEvent, InputAdornment, CircularProgress, Autocomplete } from '@mui/material';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
 import { isMobile } from 'react-device-detect';
@@ -7,6 +7,7 @@ import moment from 'moment';
 import secureLocalStorage from 'react-secure-storage';
 import { useNavigate } from 'react-router-dom';
 import { HTTPAddSales } from '../../../../apis/User/sales/sales';
+import { HTTPGetUnits } from '../../../../apis/User/product/units';
 
 const ProdukList = (data: any) => {
     const navigate = useNavigate()
@@ -14,16 +15,18 @@ const ProdukList = (data: any) => {
     const [latestProduct, setLatestChange] = React.useState<any>({})
     const [notes, setNotes] = React.useState('')
     const [loader, setLoader] = React.useState(false)
+    const [Units, setUnits] = React.useState<any>([])
+    const [search, setSearch] = React.useState('')
     const [productList, setProductList] = React.useState([{
         id: '1186457694123',
         productUnitId: '',
         productUnitType: '',
-        qty: '',
+        qty: 0,
         isPPN: '',
-        discount1: '',
-        discount2: '',
-        discount3: '',
-        discount4: '',
+        discount1: 0,
+        discount2: 0,
+        discount3: 0,
+        discount4: 0,
         price: '0'
     }])
 
@@ -49,6 +52,14 @@ const ProdukList = (data: any) => {
                 { ...productList[index], [type]: value, price: currentPrice.toString(), },
                 ...productList.slice(index + 1)
             ])
+        } else if (type === 'qty' || type.includes('discount')) {
+            if (!isNaN(value)) {
+                setProductList([
+                    ...productList.slice(0, index),
+                    { ...productList[index], [type]: value.length === 0 ? 0 : parseInt(value) },
+                    ...productList.slice(index + 1)
+                ])
+            }
         } else {
             setProductList([
                 ...productList.slice(0, index),
@@ -60,12 +71,12 @@ const ProdukList = (data: any) => {
 
     const handlePrice = (index: number) => {
         const item = productList[index]
-        let Price = parseInt(item.price) * parseInt(item.qty)
+        let Price = parseInt(item.price) * item.qty
         let isPPN = item.isPPN === 'Ya' ? Price + ((Price / 100) * 11) : Price
-        let Discount1 = (isPPN / 100) * parseInt(item.discount1.length === 0 ? '0' : item.discount1)
-        let Discount2 = (Discount1 / 100) * parseInt(item.discount2.length === 0 ? '0' : item.discount2)
-        let Discount3 = (Discount2 / 100) * parseInt(item.discount3.length === 0 ? '0' : item.discount3)
-        let Discount4 = (Discount3 / 100) * parseInt(item.discount4.length === 0 ? '0' : item.discount4)
+        let Discount1 = (isPPN / 100) * item.discount1
+        let Discount2 = (Discount1 / 100) * item.discount2
+        let Discount3 = (Discount2 / 100) * item.discount3
+        let Discount4 = (Discount3 / 100) * item.discount4
         Price = isPPN - Discount1 - Discount2 - Discount3 - Discount4
 
         return isNaN(Price) ? 'Rp 0,00' : (Math.round(Price)).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
@@ -76,12 +87,12 @@ const ProdukList = (data: any) => {
             id: id.toUpperCase(),
             productUnitId: '',
             productUnitType: '',
-            qty: '',
+            qty: 0,
             isPPN: '',
-            discount1: '',
-            discount2: '',
-            discount3: '',
-            discount4: '',
+            discount1: 0,
+            discount2: 0,
+            discount3: 0,
+            discount4: 0,
             price: '0'
         }
         let newArr = productList
@@ -139,7 +150,7 @@ const ProdukList = (data: any) => {
     const TotalQty = () => {
         let total = 0
         for (let i = 0; i < productList.length; i++) {
-            const item = isNaN(parseInt(productList[i].qty)) ? 0 : parseInt(productList[i].qty);
+            const item = isNaN(productList[i].qty) ? 0 : productList[i].qty;
             total = total + item
         }
         return total
@@ -149,14 +160,14 @@ const ProdukList = (data: any) => {
         let total = 0
         for (let i = 0; i < productList.length; i++) {
             const item = productList[i];
-            let Price = parseInt(item.price) * parseInt(item.qty)
+            let Price = parseInt(item.price) * item.qty
             let isPPN = item.isPPN === 'Ya' ? Price + ((Price / 100) * 11) : Price
-            let Discount1 = (isPPN / 100) * parseInt(item.discount1.length === 0 ? '0' : item.discount1)
-            let Discount2 = (Discount1 / 100) * parseInt(item.discount2.length === 0 ? '0' : item.discount2)
-            let Discount3 = (Discount2 / 100) * parseInt(item.discount3.length === 0 ? '0' : item.discount3)
-            let Discount4 = (Discount3 / 100) * parseInt(item.discount4.length === 0 ? '0' : item.discount4)
+            let Discount1 = (isPPN / 100) * item.discount1
+            let Discount2 = (Discount1 / 100) * item.discount2
+            let Discount3 = (Discount2 / 100) * item.discount3
+            let Discount4 = (Discount3 / 100) * item.discount4
             Price = isPPN - Discount1 - Discount2 - Discount3 - Discount4
-            total = total + (isNaN(Price) ? 0 : Price)
+            total = total + (isNaN(Price) ? 0 : Price) + data.data.shippingCostPerKg
         }
         return (Math.round(total)).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
     }
@@ -185,6 +196,25 @@ const ProdukList = (data: any) => {
                                             ))
                                         }
                                     </Select>
+                                    {/* <Autocomplete
+                                        disablePortal
+                                        options={Units}
+                                        onOpen={getProducts}
+                                        size={'medium'}
+                                        onChange={(event: any, newValue: any) => (
+                                            setProductList([
+                                                ...productList.slice(0, index),
+                                                { ...productList[index], productUnitId: newValue.id },
+                                                ...productList.slice(index + 1)
+                                            ])
+                                        )}
+                                        isOptionEqualToValue={(option: any, value: any) => option.id === value.id}
+                                        getOptionLabel={(option: any) => option.productTypeName}
+                                        sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                        renderInput={(params) => (
+                                            <TextField {...params} placeholder='Pilih Produk' />
+                                        )}
+                                    /> */}
                                 </Stack>
                                 <Stack direction={'column'} gap={1}>
                                     <span>Satuan</span>

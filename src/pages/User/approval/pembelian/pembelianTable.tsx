@@ -111,13 +111,13 @@ const PenjualanTable = (props: any) => {
                                                             sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                             onClick={() => ApproveDialog(item)}
                                                         >
-                                                            <StyledTableCell align="center">{moment(item.transactionDate).format('YYYY-MM-DD')}</StyledTableCell>
+                                                            <StyledTableCell align="center">{moment(item.transactionDate).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center" style={{ color: '#d38b00' }}>{(item.purchasingStatus).replace(/_/g, ' ')}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.genId}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.productBrandName}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.productCategoryName}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.supplierName}</StyledTableCell>
-                                                            <StyledTableCell align="center">{moment(item.dueDate).format('YYYY-MM-DD')}</StyledTableCell>
+                                                            <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
                                                             <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>

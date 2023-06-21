@@ -27,6 +27,7 @@ import DeleteModal from "../../../../components/deleteModal";
 import { HTTPDeletePurchase } from "../../../../apis/User/purchase/purchase";
 import secureLocalStorage from "react-secure-storage";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -65,13 +66,19 @@ const PembelianTable = (props: any) => {
     const handleDelete = async (param: string) => {
         if (selected.length > 0) {
             if (param === 'yes') {
-                await HTTPDeletePurchase({
-                    ids: selected,
-                    token: token as string
-                })
-                setDeleteModal(!isDeleteModal);
-                props.getData()
-                setSelected([])
+                try {
+                    await HTTPDeletePurchase({
+                        ids: selected,
+                        token: token as string
+                    })
+                    setDeleteModal(!isDeleteModal);
+                    props.getData()
+                    toast.success('Berhasil menghapus data pembelian!')
+                    setSelected([])
+                } catch (error) {
+                    toast.error('Terjadi kesalahan!')
+                    console.log(error)
+                }
             } else {
                 setDeleteModal(!isDeleteModal);
             }
@@ -234,7 +241,7 @@ const PembelianTable = (props: any) => {
                                                                 role="checkbox"
                                                                 tabIndex={-1}
                                                                 key={index}
-                                                                sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                                sx={{ "&:hover": { bgcolor: Colors.inherit } }}
                                                             >
                                                                 <StyledTableCell align="center" padding="checkbox" onClick={(e) => handleClick(e, item.id)}>
                                                                     <Checkbox
@@ -245,27 +252,28 @@ const PembelianTable = (props: any) => {
                                                                         }}
                                                                     />
                                                                 </StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">
-                                                                    <span>{moment(item.transactionDate).format('YYYY-MM-DD')}</span>
-                                                                </StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">{item.genId}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">{item.productBrandName}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">{item.productCategoryName}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">{item.supplierName}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">
-                                                                    <span>{moment(item.dueDate).format('YYYY-MM-DD')}</span>
-                                                                </StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
                                                                 <StyledTableCell align="center">
-                                                                    <div onClick={() => !item.isPaidOff && FormLunas(item)} style={{ ...CENTER, backgroundColor: item.isPaidOff ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                    <span>{moment(item.transactionDate).format('YYYY/MM/DD')}</span>
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{item.genId}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.productBrandName}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.productCategoryName}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.supplierName}</StyledTableCell>
+                                                                <StyledTableCell align="center">
+                                                                    <span>{moment(item.dueDate).format('YYYY/MM/DD')}</span>
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                <StyledTableCell align="center">
+                                                                    <div onClick={() => item.purchasingStatus === 'UNPAID' ? FormLunas(item) : null} style={{ ...CENTER, backgroundColor: item.purchasingStatus !== 'UNPAID' ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
                                                                         <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
                                                                     </div>
                                                                 </StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
-                                                                <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
+                                                                <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                {/* <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
                                                                     {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
-                                                                </StyledTableCell>
-                                                                <StyledTableCell onClick={DetailPage} align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
+                                                                </StyledTableCell> */}
+                                                                <StyledTableCell align="center">{item.purchasingStatus}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
                                                             </TableRow>
                                                         )
                                                     })

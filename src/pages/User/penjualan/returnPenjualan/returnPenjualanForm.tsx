@@ -40,7 +40,7 @@ const ReturnPenjualanForm = () => {
                 saleProductId: ''
             })
             const result: any = SalesData.filter((value: any) => value.id === event.target.value)
-            setSelectedId(result[0])
+            console.log(result[0])
             await GetProducts(event.target.value)
         } else if (key === 'saleProductId') {
             setReturnData({
@@ -49,6 +49,7 @@ const ReturnPenjualanForm = () => {
             })
             const result: any = ProductData.filter((value: any) => value.id === event.target.value)
             setSelectedProduct(result[0])
+            console.log(result[0])
         } else {
             setReturnData({
                 ...ReturnData,

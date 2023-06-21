@@ -74,7 +74,6 @@ const ReturnTable = (props: any) => {
                 page: page.toString(),
                 q: search.length === 0 ? undefined : search,
             });
-            console.log(response)
             setDataMutations(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
@@ -234,7 +233,7 @@ const ReturnTable = (props: any) => {
                                                                         }}
                                                                     />
                                                                 </StyledTableCell>
-                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell>
+                                                                <StyledTableCell onClick={() => StatusDialog(item)} align="center">{moment(item.createdAt).format('YYYY/MM/DD')}</StyledTableCell>
                                                                 <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.productUnitGenId}</StyledTableCell>
                                                                 <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.productBrandName}</StyledTableCell>
                                                                 <StyledTableCell onClick={() => StatusDialog(item)} align="center">{item.productTypeName}</StyledTableCell>

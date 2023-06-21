@@ -43,7 +43,6 @@ const Ekspedisi = () => {
                 page: page.toString(),
                 q: search,
             });
-            console.log(response)
             setDataRole(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)

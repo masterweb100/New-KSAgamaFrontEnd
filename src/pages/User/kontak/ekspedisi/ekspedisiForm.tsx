@@ -38,7 +38,6 @@ const EkspedisiForm = () => {
                     shippingCostPerKg: parseInt(values.shippingCostPerKg),
                     token: token
                 })
-                console.log(resp)
                 setSend(false)
                 navigate(-1)
             } catch (error) {

@@ -180,7 +180,7 @@ const DataProdukTable = (props: any) => {
                                 sx={{ "&:hover": { bgcolor: Colors.inherit } }}
                               >
                                 <StyledTableCell align="center">
-                                  {moment(item.createdAt).format('YYYY-MM-DD')}
+                                  {moment(item.createdAt).format('YYYY/MM/DD')}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">
                                   {item.productUnitGenId}

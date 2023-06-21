@@ -62,7 +62,6 @@ const SupplierForm = () => {
                     npwp: values.npwp,
                 })
                 setSend(false)
-                console.log(resp)
                 navigate(-1)
             } catch (error) {
                 setSend(false)
@@ -78,7 +77,6 @@ const SupplierForm = () => {
     const GetProvinces = async () => {
         try {
             const resp = await HTTPLocProvinces()
-            console.log(resp)
             setProvinces(resp.data.data)
         } catch (error) {
             console.log(error)
@@ -88,7 +86,6 @@ const SupplierForm = () => {
     const GetCities = async (value: string) => {
         try {
             const resp = await HTTPLocCities({ provinceId: value })
-            console.log(resp)
             setCities(resp.data.data)
         } catch (error) {
             console.log(error)

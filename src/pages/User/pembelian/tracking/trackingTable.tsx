@@ -21,6 +21,7 @@ import { Colors } from "../../../../utils/colors";
 import { isMobile } from 'react-device-detect';
 import moment from "moment";
 import { CENTER } from "../../../../utils/stylesheet";
+import TrackingDialog from "./trackingDialog";
 
 const columns = [
     { id: "tanggal", label: "Tanggal" },
@@ -46,6 +47,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const TrackingTable = (props: any) => {
     const [page, setPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [isApprove, setApprove] = React.useState(false)
+    const [ItemSelected, setItemSelected] = React.useState({})
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage + 1);
@@ -57,6 +60,13 @@ const TrackingTable = (props: any) => {
         props.itemsPerPage(parseInt(event.target.value, 10))
         setPage(1);
     };
+
+    const ApproveDialog = React.useCallback((item: any) => {
+        if (item.status === "WAITING_TO_BE_RECEIVED") {
+            setItemSelected(item)
+            setApprove(true)
+        }
+    }, [])
 
     return (
         <div>
@@ -135,14 +145,15 @@ const TrackingTable = (props: any) => {
                                                                 tabIndex={-1}
                                                                 key={index}
                                                                 sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                                onClick={() => ApproveDialog(item)}
                                                             >
-                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell>
+                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY/MM/DD')}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.purchasingGenId}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.productBrandName}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.productCategoryName}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.totalPrice}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.qty}</StyledTableCell>
-                                                                <StyledTableCell align="center" sx={{ fontWeight: '700' }}>{item.status}</StyledTableCell>
+                                                                <StyledTableCell align="center" sx={{ fontWeight: '700' }}>{item.status.replace(/_/g, ' ')}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
                                                             </TableRow>
                                                         )
@@ -167,6 +178,12 @@ const TrackingTable = (props: any) => {
                     />
                 )}
             </Box>
+            <TrackingDialog
+                isOpen={isApprove}
+                setOpen={() => setApprove(false)}
+                item={ItemSelected}
+                getData={() => props.getData()}
+            ></TrackingDialog>
         </div>
     );
 }

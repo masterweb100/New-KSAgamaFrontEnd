@@ -230,7 +230,7 @@ const ReturnPenjualanTable = (props: any) => {
                                                                         }}
                                                                     />
                                                                 </StyledTableCell>
-                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell>
+                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY/MM/DD')}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.invoice}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.customerName}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.productTypeName}</StyledTableCell>
@@ -282,7 +282,7 @@ const ReturnPenjualanTable = (props: any) => {
                     isOpen={isLunasOpen}
                     setOpen={() => setLunasOpen(false)}
                     item={{ invoice: 'INV/001', bill: 9000, totalBill: 10000 }}
-                    refresh={() => console.log('hehe')}
+                    refresh={props.getData}
                 />
                 <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
             </Box>

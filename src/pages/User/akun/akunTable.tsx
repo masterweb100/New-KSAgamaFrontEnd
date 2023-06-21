@@ -131,7 +131,6 @@ const AkunTable = (props: any) => {
           id: itemSelected.id,
           token: token as string
         })
-        console.log(resp)
         setSend(false)
         handleEdit()
         props.getData()

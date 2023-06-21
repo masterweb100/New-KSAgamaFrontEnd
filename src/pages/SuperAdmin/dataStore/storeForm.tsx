@@ -47,7 +47,6 @@ const StoreForm = () => {
                     storeId: resp.data.data.id,
                     token: token
                 })
-                console.log(resp2)
             }
         } catch (error) {
             console.log(error)

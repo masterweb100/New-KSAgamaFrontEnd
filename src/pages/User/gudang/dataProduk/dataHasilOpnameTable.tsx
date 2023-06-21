@@ -11,6 +11,7 @@ import { HTTPGetReturns } from "../../../../apis/User/mutationReturn/returns";
 import { useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import moment from "moment";
+import { HTTPGetResultOpnames } from "../../../../apis/User/dataProducts/dataOpnames";
 
 const columns = [
     { id: "data", label: "Tanggal" },
@@ -22,8 +23,6 @@ const columns = [
     { id: "in", label: "Barang Bagus" },
     { id: "out", label: "Barang Rusak" },
     { id: "qty", label: "Total Qty" },
-    // { id: "updatedby", label: "Updated By" },
-    // { id: "status", label: "Status" },
 ];
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -59,12 +58,7 @@ const DataHasilOpnameTable = (props: any) => {
     const GetReturnsTable = async () => {
         try {
             setLoader(true)
-            const response = await HTTPGetReturns({
-                token: token,
-                limit: itemsPerPage.toString(),
-                page: page.toString(),
-                q: search.length === 0 ? undefined : search,
-            });
+            const response = await HTTPGetResultOpnames({ token: token })
             setDataReturns(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
@@ -172,15 +166,15 @@ const DataHasilOpnameTable = (props: any) => {
                                                                 key={index}
                                                                 sx={{ "&:hover": { bgcolor: Colors.inherit } }}
                                                             >
-                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY-MM-DD')}</StyledTableCell >
+                                                                <StyledTableCell align="center">{moment(item.createdAt).format('YYYY/MM/DD')}</StyledTableCell >
                                                                 <StyledTableCell align="center">{item.productUnitGenId}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.purchasingGenId}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.productBrandName}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.productCategoryName}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.productTypeName}</StyledTableCell>
-                                                                <StyledTableCell align="center">{item.qty}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.goodQty}</StyledTableCell>
                                                                 <StyledTableCell align="center">{item.damagedQty}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.totalQty}</StyledTableCell>
                                                                 {/* <StyledTableCell align="center">
                                                                     <Stack direction={'row'} gap={2} width={'100%'}>
                                                                         <div style={{ backgroundColor: index % 2 === 1 ? Colors.error : Colors.success, padding: '3px 10px', borderRadius: 10, width: '80%', ...CENTER }}>

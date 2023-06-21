@@ -27,7 +27,7 @@ const PembelianForm = () => {
         productBrandId: '',
         transactionDate: null,
         dueDate: null,
-        shippingCostPerKg: '',
+        shippingCostPerKg: 0,
     })
     const [init, setInit] = React.useState(false)
     const [Suppliers, setSuppliers] = React.useState([])
@@ -49,10 +49,19 @@ const PembelianForm = () => {
     }
 
     const handleInput = (event: any, key: any) => {
-        setPurchaseData({
-            ...PurchaseData,
-            [key]: key === 'transactionDate' || key === 'dueDate' ? event : event.target.value
-        })
+        if (key === 'shippingCostPerKg') {
+            if (!isNaN(event.target.value)) {
+                setPurchaseData({
+                    ...PurchaseData,
+                    shippingCostPerKg: event.target.value.length === 0 ? 0 : parseInt(event.target.value)
+                })
+            }
+        } else {
+            setPurchaseData({
+                ...PurchaseData,
+                [key]: key === 'transactionDate' || key === 'dueDate' ? event : event.target.value
+            })
+        }
     }
 
     const handleBrand = (event: any) => {

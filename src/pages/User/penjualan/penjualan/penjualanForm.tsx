@@ -27,7 +27,7 @@ const PenjualanForm = () => {
         shippingDate: null,
         salesType: '',
         expeditionId: '',
-        shippingCostPerKg: '',
+        shippingCostPerKg: 0,
         receipt: '',
     })
     const [init, setInit] = React.useState(false)
@@ -39,14 +39,20 @@ const PenjualanForm = () => {
     const [isEkspedisiOpen, setEkspedisiOpen] = React.useState(false);
 
     const handleInput = (event: any, key: any) => {
-        setSalesData({
-            ...SalesData,
-            [key]: key === 'transactionDate' || key === 'dueDate' || key === 'shippingDate' ? event : event.target.value
-        })
+        if (key === 'shippingCostPerKg') {
+            if (!isNaN(event.target.value)) {
+                setSalesData({
+                    ...SalesData,
+                    shippingCostPerKg: event.target.value.length === 0 ? 0 : parseInt(event.target.value)
+                })
+            }
+        } else {
+            setSalesData({
+                ...SalesData,
+                [key]: key === 'transactionDate' || key === 'dueDate' || key === 'shippingDate' ? event : event.target.value
+            })
+        }
     }
-
-    // const AddPelanggan = React.useCallback(() => setPelangganOpen(true), [])
-    // const AddEkspedisi = React.useCallback(() => setEkspedisiOpen(true), [])
 
     const AddPelanggan = () => navigate('/kontak/pelanggan/form-pelanggan')
     const AddEkspedisi = () => navigate('/kontak/ekspedisi/form-ekspedisi')
@@ -225,12 +231,12 @@ const PenjualanForm = () => {
                                         if (selected.length === 0) {
                                             return <span style={{ color: '#a7a5a6' }}>Retail / Besar</span>;
                                         }
-                                        return selected === 'Big' ? 'Besar' : selected
+                                        return selected === 'Large' ? 'Besar' : selected
                                     }}
                                 >
                                     {
-                                        ['Retail', 'Big'].map((item, index) => (
-                                            <MenuItem key={index} value={item}>{item === 'Big' ? 'Besar' : item}</MenuItem>
+                                        ['Retail', 'Large'].map((item, index) => (
+                                            <MenuItem key={index} value={item}>{item === 'Large' ? 'Besar' : item}</MenuItem>
                                         ))
                                     }
                                 </Select>

@@ -238,11 +238,11 @@ const PenjualanTable = (props: any) => {
                                                                     }}
                                                                 />
                                                             </StyledTableCell>
-                                                            <StyledTableCell align="center">{moment(item.shippingDate).format('YYYY-MM-DD')}</StyledTableCell>
+                                                            <StyledTableCell align="center">{moment(item.shippingDate).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.invoice}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.customerName}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.salesType}</StyledTableCell>
-                                                            <StyledTableCell align="center">{moment(item.dueDate).format('YYYY-MM-DD')}</StyledTableCell>
+                                                            <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
                                                                 {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
                                                             </StyledTableCell>

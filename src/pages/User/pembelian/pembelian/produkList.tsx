@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { HTTPAddPurchase } from '../../../../apis/User/purchase/purchase';
 import secureLocalStorage from 'react-secure-storage';
+import { toast } from 'react-toastify';
 
 const ProdukList = (data: any) => {
     const token = secureLocalStorage.getItem('TOKEN') as string
@@ -96,16 +97,18 @@ const ProdukList = (data: any) => {
                 genId: data.data.genId,
                 dueDate: moment(data.data.dueDate).format('YYYY-MM-DD'),
                 productBrandId: data.data.productBrandId,
-                shippingCostPerKg: parseInt(data.data.shippingCostPerKg),
+                shippingCostPerKg: data.data.shippingCostPerKg,
                 supplierId: data.data.supplierId,
                 token: token,
                 transactionDate: moment(data.data.transactionDate).format('YYYY-MM-DD'),
                 purchasingProducts: cleanProduct,
             })
+            toast.error('Berhasil menambahkan pembelian baru!')
             setLoader(false)
             navigate(-1)
         } catch (error) {
             setLoader(false)
+            toast.error('Terjadi kesalahan')
             console.log(error)
         }
     }
@@ -130,7 +133,7 @@ const ProdukList = (data: any) => {
         for (let i = 0; i < productList.length; i++) {
             const item = productList[i];
             let newPrice = parseInt(item.price) * item.qty
-            total = total + (isNaN(newPrice) ? 0 : newPrice)
+            total = total + (isNaN(newPrice) ? 0 : newPrice) + data.data.shippingCostPerKg
         }
         return (Math.round(total)).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
     }
@@ -168,6 +171,7 @@ const ProdukList = (data: any) => {
                                         displayEmpty
                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                         value={item.productUnitType}
+                                        disabled={productList[index].productUnitId.length === 0}
                                         onChange={(e) => handleInput(e, index, 'productUnitType')}
                                         renderValue={(selected: any) => {
                                             if (selected.length === 0) {

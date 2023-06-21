@@ -46,7 +46,6 @@ const MutasiForm = () => {
                     storeDestinationId: parseInt(values.storeDestinationId),
                     token: token
                 })
-                console.log(resp)
                 setLoader(false)
                 GoBack()
             } catch (error) {
