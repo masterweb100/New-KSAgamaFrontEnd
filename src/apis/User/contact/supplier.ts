@@ -18,7 +18,7 @@ export function HTTPGetSuppliers(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -54,7 +54,7 @@ export function HTTPAddSupplier(param: {
         npwp: param.npwp,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -67,7 +67,7 @@ export function HTTPGetSupplierID(param: { id: number }): Promise<any> {
         params: { id: param.id },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -94,7 +94,7 @@ export function HTTPDeleteSuppliers(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

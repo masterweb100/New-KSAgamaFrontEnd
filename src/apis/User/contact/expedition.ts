@@ -7,7 +7,7 @@ export function HTTPGenerateExpeditionID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -29,7 +29,7 @@ export function HTTPGetExpeditions(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -53,7 +53,7 @@ export function HTTPAddExpedition(param: {
         shippingCostPerKg: param.shippingCostPerKg,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -66,7 +66,7 @@ export function HTTPGetExpeditionID(param: { id: number }): Promise<any> {
         params: { id: param.id },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -93,7 +93,7 @@ export function HTTPDeleteExpeditions(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

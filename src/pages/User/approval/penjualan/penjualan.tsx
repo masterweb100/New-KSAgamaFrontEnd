@@ -7,6 +7,7 @@ import PenjualanTable from './penjualanTable';
 import { isMobile } from 'react-device-detect';
 import { HTTPGetApprovalsReturn } from '../../../../apis/User/approval/return';
 import secureLocalStorage from 'react-secure-storage';
+import { toast } from 'react-toastify';
 
 const AppPenjualan = () => {
     const [init, setInit] = React.useState(false);
@@ -46,16 +47,21 @@ const AppPenjualan = () => {
             setDataReturn(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false);
-            console.log(error);
+            console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 
     React.useEffect(() => {
         GetReturnTable();
     }, [init]);
-    
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Approval Return Penjualan'} isChild={false} name={'App. Penjualan'} idPanel={8}></NavigationBarUser>

@@ -19,7 +19,7 @@ export function HTTPGetCustomers(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -57,7 +57,7 @@ export function HTTPAddCustomer(param: {
         npwp: param.npwp,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -70,7 +70,7 @@ export function HTTPGetCustomerID(param: { id: number }): Promise<any> {
         params: { id: param.id },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -97,7 +97,7 @@ export function HTTPDeleteCustomers(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

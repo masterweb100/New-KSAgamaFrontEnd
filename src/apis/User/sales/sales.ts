@@ -35,7 +35,7 @@ export function HTTPGenerateSalesID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -57,7 +57,7 @@ export function HTTPGetSales(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -81,7 +81,7 @@ export function HTTPAddSales(param: AddSales): Promise<any> {
         saleProducts: param.saleProducts
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -104,7 +104,7 @@ export function HTTPPaySales(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -124,7 +124,7 @@ export function HTTPUpdateSales(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -151,7 +151,7 @@ export function HTTPDeleteSales(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

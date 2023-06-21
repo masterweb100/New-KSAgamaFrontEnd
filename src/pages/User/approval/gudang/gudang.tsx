@@ -7,6 +7,7 @@ import GudangTable from './gudangTable';
 import { isMobile } from 'react-device-detect';
 import secureLocalStorage from 'react-secure-storage';
 import { HTTPGetApprovalsMutations } from '../../../../apis/User/approval/mutations';
+import { toast } from 'react-toastify';
 
 const AppGudang = () => {
     const [init, setInit] = React.useState(false);
@@ -46,9 +47,14 @@ const AppGudang = () => {
             setDataMutations(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false);
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false);
-            console.log(error);
+            console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 

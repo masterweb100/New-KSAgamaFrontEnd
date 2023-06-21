@@ -43,7 +43,7 @@ export function AxiosNormal(token?: string) {
         } else if (error.request) {
         } else {
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log(error)
       }
 

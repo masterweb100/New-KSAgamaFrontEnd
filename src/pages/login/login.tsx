@@ -18,6 +18,7 @@ import { useFormik } from "formik";
 import { HTTPGetRoleID } from "../../apis/SuperAdmin/role";
 import { useDispatch } from "react-redux";
 import { setUserPermissions } from "../../stores/reduxes/userPermissions";
+import { toast } from "react-toastify";
 
 const topBg = require("../../assets/images/top-login.png");
 const redCircle = require("../../assets/images/circle-red.png");
@@ -76,7 +77,7 @@ const Login = () => {
             const roleResp = await HTTPGetRoleID({
               id: (response.data.data.user.roleId).toString()
             })
-            dispatch(setUserPermissions({data: roleResp.data.data}))
+            dispatch(setUserPermissions({ data: roleResp.data.data }))
             navigate('/dashboard-user')
           }
         }
@@ -84,7 +85,7 @@ const Login = () => {
         if (username.length === 0) {
           setUsernameErr(true)
           setUsernameErrText('Pastikan Username Terisi')
-        } 
+        }
         if (password.length === 0) {
           setPasswordErr(true)
           setPasswordErrText('Pastikan Password Terisi')
@@ -92,6 +93,11 @@ const Login = () => {
       }
     } catch (error: any) {
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
       setProgress(false)
       setPasswordErr(true)
       if (error.data.errors[0].message === 'Bad credentials') {
@@ -118,7 +124,7 @@ const Login = () => {
   }
 
   const TestToken = () => {
-    
+
   }
 
   const Auth = () => {

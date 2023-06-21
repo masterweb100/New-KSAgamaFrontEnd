@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
     Dialog,
     DialogActions,
@@ -43,10 +43,15 @@ const TrackingDialog = ({ isOpen, setOpen, item, getData }: { isOpen: boolean, s
             setOpen(false);
             toast.success('Tracking berhasil di perbarui!')
             await getData()
-        } catch (error) {
+        } catch (error: any) {
             toast.error('Terjadi Kesalahan!')
             setLoader(false)
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     };
 

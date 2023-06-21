@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Stack, TextField, Select, MenuItem, SelectChangeEvent, InputAdornment, CircularProgress, Autocomplete } from '@mui/material';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
@@ -132,9 +133,14 @@ const ProdukList = (data: any) => {
             })
             setLoader(false)
             navigate(-1)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

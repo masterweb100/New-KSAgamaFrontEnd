@@ -16,7 +16,7 @@ export function HTTPGetUsers(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -27,7 +27,7 @@ export function HTTPGenerateUserID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`users/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -38,7 +38,7 @@ export function HTTPGetUserID(param: { id: number }): Promise<any> {
     try {
       const response = await AxiosNormal().get(`users/${param.id}`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -68,7 +68,7 @@ export function HTTPAddUser(param: {
         password: param.password,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -91,7 +91,7 @@ export function HTTPUpdateUser(param: {
         status: param.status,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -118,7 +118,7 @@ export function HTTPDeleteUsers(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

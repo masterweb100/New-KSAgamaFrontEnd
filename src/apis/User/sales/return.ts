@@ -7,7 +7,7 @@ export function HTTPGenerateReturnID(): Promise<any> {
         try {
             const response = await AxiosNormal().get(`${uri}/id`);
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -29,7 +29,7 @@ export function HTTPGetReturn(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -47,7 +47,7 @@ export function HTTPGetReturnBySaleID(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -69,7 +69,7 @@ export function HTTPAddReturn(param: {
                 saleReturnStatus: param.saleReturnStatus,
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -96,7 +96,7 @@ export function HTTPDeleteReturn(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

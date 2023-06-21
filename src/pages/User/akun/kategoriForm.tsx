@@ -19,6 +19,7 @@ import {
   HTTPAddAccountCategory,
   HTTPGenerateAccountsID,
 } from "../../../apis/User/account/accountCategory";
+import { toast } from "react-toastify";
 
 const KategoriForm = () => {
   const navigate = useNavigate();
@@ -45,9 +46,14 @@ const KategoriForm = () => {
       });
       setSend(false);
       navigate(-1);
-    } catch (error) {
+    } catch (error: any) {
       setSend(false);
-      console.log(error);
+      console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      };
     }
   };
 
@@ -55,8 +61,13 @@ const KategoriForm = () => {
     try {
       const resp = await HTTPGenerateAccountsID();
       setIdCategory(resp.data.data.genId);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      };
     }
   };
 

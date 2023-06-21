@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, CircularProgress, Icon, IconButton, Stack, TextField, Toolbar, Tooltip } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import { CENTER } from '../../../utils/stylesheet';
@@ -54,7 +55,7 @@ const RoleForm = () => {
                 setSend(false)
                 navigate('/user-role')
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log('ERR', error)
             setNameErr(true)
             setNameErrText('Nama Role sudah tersedia')
@@ -70,8 +71,13 @@ const RoleForm = () => {
                 const resp = await HTTPGenerateRoleID()
                 setId(resp.data.data.genId)
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

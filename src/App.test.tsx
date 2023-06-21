@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 

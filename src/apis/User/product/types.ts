@@ -7,7 +7,7 @@ export function HTTPGenerateTypeID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -29,7 +29,7 @@ export function HTTPGetTypes(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -49,7 +49,7 @@ export function HTTPAddType(param: {
         productBrandId: param.productBrandId,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -69,7 +69,7 @@ export function HTTPUpdateType(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -96,7 +96,7 @@ export function HTTPDeleteTypes(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

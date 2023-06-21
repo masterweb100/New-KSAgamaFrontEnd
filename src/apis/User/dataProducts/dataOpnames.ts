@@ -5,7 +5,7 @@ export function HTTPGetOpnames(param: { token: string }): Promise<any> {
         try {
             const response = await AxiosNormal(param.token).get('purchasing/opname');
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -16,7 +16,7 @@ export function HTTPGetResultOpnames(param: { token: string }): Promise<any> {
         try {
             const response = await AxiosNormal(param.token).get('opname');
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -38,7 +38,7 @@ export function HTTPUpdateStatusOpnames(param: {
                 damagedQty: param.damagedQty,
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

@@ -75,9 +75,14 @@ const PembelianTable = (props: any) => {
                     props.getData()
                     toast.success('Berhasil menghapus data pembelian!')
                     setSelected([])
-                } catch (error) {
+                } catch (error: any) {
                     toast.error('Terjadi kesalahan!')
                     console.log(error)
+                    if (error.status === 500) {
+                        toast.error('Server sedang mengalami gangguan!')
+                    } else {
+                        toast.error('Terjadi Kesalahan!')
+                    }
                 }
             } else {
                 setDeleteModal(!isDeleteModal);

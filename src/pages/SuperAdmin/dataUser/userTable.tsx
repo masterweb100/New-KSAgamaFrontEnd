@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from 'react-toastify';
 import {
   TablePagination,
   Box,
@@ -137,8 +138,13 @@ const UserTable = (props: any) => {
         q: "",
       });
       setDataRole(response.data.data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
     }
   };
 

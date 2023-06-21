@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from 'react-toastify';
 import { TablePagination, Box, TableSortLabel, TableHead, Table, TableBody, TableContainer, IconButton, Stack, TextField, Icon, InputAdornment, CircularProgress } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -62,9 +63,14 @@ const DataHasilOpnameTable = (props: any) => {
             setDataReturns(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
-            console.log(error);
+            console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 

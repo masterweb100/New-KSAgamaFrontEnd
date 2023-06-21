@@ -17,7 +17,7 @@ export function HTTPGetTracking(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -35,7 +35,7 @@ export function HTTPPatchTracking(param: {
                 status: param.status
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

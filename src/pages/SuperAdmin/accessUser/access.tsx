@@ -17,6 +17,7 @@ import { HTTPGetRoles } from "../../../apis/SuperAdmin/role";
 import { useDispatch } from "react-redux";
 import { setRoleData } from "../../../stores/reduxes/role";
 import { CENTER } from "../../../utils/stylesheet";
+import { toast } from "react-toastify";
 
 const AccessUser = () => {
   const navigate = useNavigate();
@@ -35,9 +36,14 @@ const AccessUser = () => {
       })
       setDataRole(response.data.data)
       setLoader(false)
-    } catch (error) {
+    } catch (error: any) {
       setLoader(false)
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 

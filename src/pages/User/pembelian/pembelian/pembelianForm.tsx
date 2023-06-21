@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Icon, Toolbar, Select, MenuItem, SelectChangeEvent, InputAdornment, Tooltip, IconButton } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
@@ -43,8 +44,13 @@ const PembelianForm = () => {
         try {
             const resp = await HTTPGeneratePurchaseID()
             setPurchaseData({ ...PurchaseData, genId: resp.data.data.genId })
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -76,8 +82,13 @@ const PembelianForm = () => {
             let newArr = resp.data.data
             newArr.unshift({})
             setSuppliers(newArr)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -85,8 +96,13 @@ const PembelianForm = () => {
         try {
             const resp = await HTTPGetBrands({ limit: '50', page: '1', q: undefined, token: token })
             setBrands(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -94,8 +110,13 @@ const PembelianForm = () => {
         try {
             const resp = await HTTPGetUnits({ limit: '50', page: '1', q: '', token: token as string })
             setUnits(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -105,8 +126,13 @@ const PembelianForm = () => {
             await getSupplier()
             await getBrand()
             await getProducts()
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

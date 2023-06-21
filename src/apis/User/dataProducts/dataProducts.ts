@@ -17,7 +17,7 @@ export function HTTPGetProducts(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

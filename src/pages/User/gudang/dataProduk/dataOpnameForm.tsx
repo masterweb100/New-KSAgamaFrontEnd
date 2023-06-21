@@ -19,6 +19,7 @@ import { RootState } from "../../../../stores/rootReducer";
 import moment from "moment";
 import { HTTPUpdateStatusOpnames } from "../../../../apis/User/dataProducts/dataOpnames";
 import secureLocalStorage from "react-secure-storage";
+import { toast } from "react-toastify";
 
 const DataProdukForm = () => {
   const navigate = useNavigate();
@@ -55,9 +56,14 @@ const DataProdukForm = () => {
       await HTTPUpdateStatusOpnames(data)
       setLoader(false)
       GoBack()
-    } catch (error) {
+    } catch (error: any) {
       setLoader(false)
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 

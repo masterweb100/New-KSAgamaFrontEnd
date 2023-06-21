@@ -7,7 +7,7 @@ export function HTTPGenerateUnitsID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -29,7 +29,7 @@ export function HTTPGetUnits(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -67,7 +67,7 @@ export function HTTPAddUnits(param: {
         accountIdForSelling: param.accountIdForSelling,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -97,7 +97,7 @@ export function HTTPUpdateUnits(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -124,7 +124,7 @@ export function HTTPDeleteUnits(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

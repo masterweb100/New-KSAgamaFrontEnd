@@ -7,6 +7,7 @@ import SupplierTable from './supplierTable';
 import { isMobile } from 'react-device-detect';
 import secureLocalStorage from 'react-secure-storage';
 import { HTTPGetSuppliers } from '../../../../apis/User/contact/supplier';
+import { toast } from 'react-toastify';
 
 const Supplier = () => {
     const token = secureLocalStorage.getItem("TOKEN") as string
@@ -46,16 +47,21 @@ const Supplier = () => {
             setDataRole(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
-            console.log(error);
+            console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 
     React.useEffect(() => {
         GetSupplierTable();
     }, [init]);
-    
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Supplier'} idPanel={7}></NavigationBarUser>

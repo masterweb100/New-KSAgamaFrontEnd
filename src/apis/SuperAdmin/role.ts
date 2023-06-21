@@ -16,7 +16,7 @@ export function HTTPGetRoles(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -27,7 +27,7 @@ export function HTTPGetRoleID(param: { id: number }): Promise<any> {
     try {
       const response = await AxiosNormal().get(`roles/${param.id}`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -45,7 +45,7 @@ export function HTTPAddRole(param: {
         genId: param.genId
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -56,7 +56,7 @@ export function HTTPGenerateRoleID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`roles/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -73,7 +73,7 @@ export function HTTPUpdateRole(param: {
         roleName: param.roleName,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -100,7 +100,7 @@ export function HTTPDeleteRoles(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

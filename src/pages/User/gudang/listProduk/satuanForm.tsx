@@ -24,6 +24,7 @@ import secureLocalStorage from "react-secure-storage";
 import { HTTPGetTypes } from "../../../../apis/User/product/types";
 import { HTTPGetSuppliers } from "../../../../apis/User/contact/supplier";
 import { HTTPGetAccounts } from "../../../../apis/User/account/account";
+import { toast } from "react-toastify";
 
 const SatuanForm = () => {
   const navigate = useNavigate();
@@ -76,9 +77,14 @@ const SatuanForm = () => {
         })
         setLoader(false)
         navigate(-1)
-      } catch (error) {
+      } catch (error: any) {
         setLoader(false)
         console.log(error)
+        if (error.status === 500) {
+          toast.error('Server sedang mengalami gangguan!')
+        } else {
+          toast.error('Terjadi Kesalahan!')
+        }
       }
     }
   })
@@ -87,8 +93,13 @@ const SatuanForm = () => {
     try {
       const resp = await HTTPGenerateUnitsID()
       setGenId(resp.data.data.genId)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -96,8 +107,13 @@ const SatuanForm = () => {
     try {
       const resp = await HTTPGetBrands({ limit: '50', page: '1', q: undefined, token: token })
       setBrand(resp.data.data)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -105,8 +121,13 @@ const SatuanForm = () => {
     try {
       const resp = await HTTPGetTypes({ limit: '50', page: '1', q: undefined, token: token })
       setTypes(resp.data.data)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -114,8 +135,13 @@ const SatuanForm = () => {
     try {
       const resp = await HTTPGetSuppliers({ limit: '50', page: '1', q: undefined, token: token })
       setSupplier(resp.data.data)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -123,8 +149,13 @@ const SatuanForm = () => {
     try {
       const resp = await HTTPGetAccounts({ limit: '50', page: '1', q: undefined, token: token })
       setAccount(resp.data.data)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -135,8 +166,13 @@ const SatuanForm = () => {
       await getTypes()
       await getSupplier()
       await getAccount()
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 

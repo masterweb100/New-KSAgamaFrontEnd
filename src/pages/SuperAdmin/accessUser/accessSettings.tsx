@@ -11,6 +11,7 @@ import { RootState } from '../../../stores/rootReducer';
 import { HTTPRolePermissions } from '../../../apis/SuperAdmin/permissions';
 import secureLocalStorage from 'react-secure-storage';
 import { HTTPGetRoleID } from '../../../apis/SuperAdmin/role';
+import { toast } from 'react-toastify';
 
 const AccessSettings = () => {
     const navigate = useNavigate()
@@ -100,9 +101,14 @@ const AccessSettings = () => {
             })
             setSend(false)
             navigate('/user-access')
-        } catch (error) {
+        } catch (error: any) {
             setSend(false)
             console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -151,8 +157,13 @@ const AccessSettings = () => {
                 setKontak(objKontak)
                 setPengaturan(objPengaturan)
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

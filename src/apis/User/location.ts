@@ -5,7 +5,7 @@ export function HTTPLocProvinces(): Promise<any> {
     try {
       const response = await AxiosNormal().get("/provinces");
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -20,7 +20,7 @@ export function HTTPLocCities(param: { provinceId: string }): Promise<any> {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -35,7 +35,7 @@ export function HTTPLocDistricts(param: { cityId: string }): Promise<any> {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -52,7 +52,7 @@ export function HTTPLocSubDistricts(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

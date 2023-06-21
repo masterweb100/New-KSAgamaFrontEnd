@@ -20,7 +20,7 @@ export function HTTPLogin(param: { form: FormData }): Promise<any> {
 
       const response = await AxiosNormal().request(config);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

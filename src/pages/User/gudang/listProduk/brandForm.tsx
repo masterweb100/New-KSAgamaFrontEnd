@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, Icon, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
@@ -39,8 +40,13 @@ const BrandForm = () => {
                 })
                 setSend(false)
                 navigate('/gudang/list-produk')
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
                 setSend(false)
             }
         }
@@ -50,8 +56,13 @@ const BrandForm = () => {
         try {
             const respID = await HTTPGenerateBrandID()
             setGenId(respID.data.data.genId)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -70,8 +81,13 @@ const BrandForm = () => {
             const respUser = await HTTPGetCategories({ limit: '50', page: '', q: '', token: token })
             setGenId(respID.data.data.genId)
             setCategoryId(respUser.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

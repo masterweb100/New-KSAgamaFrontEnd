@@ -13,6 +13,7 @@ import { HTTPGetUsers, HTTPUpdateUser } from '../../../apis/SuperAdmin/user';
 import secureLocalStorage from 'react-secure-storage';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../stores/rootReducer';
+import { toast } from 'react-toastify';
 
 const StoreForm = () => {
     const StoreData = useSelector((state: RootState) => state.storeData.data)
@@ -48,8 +49,12 @@ const StoreForm = () => {
                     token: token
                 })
             }
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
+            if (error.status === 400) {
+                toast.error('Admin sudah terdaftar di toko lain')
+            } else {
+                toast.error('Terjadi Kesalahan')
+            }
         }
     }
 
@@ -70,8 +75,13 @@ const StoreForm = () => {
                 storeId: StoreData.id,
                 token: token
             })
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -91,8 +101,13 @@ const StoreForm = () => {
                 }
                 setSend(false)
                 navigate('/store-data')
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
                 setSend(false)
             }
         }
@@ -102,8 +117,13 @@ const StoreForm = () => {
         try {
             const respID = await HTTPGenerateStoreID()
             setGenId(respID.data.data.genId)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -124,8 +144,13 @@ const StoreForm = () => {
             const respUser = await HTTPGetUsers({ limit: '50', page: '', q: '' })
             setGenId(respID.data.data.genId)
             setUsersId(respUser.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

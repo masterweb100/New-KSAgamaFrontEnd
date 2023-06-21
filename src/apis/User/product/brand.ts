@@ -7,7 +7,7 @@ export function HTTPGenerateBrandID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -29,7 +29,7 @@ export function HTTPGetBrands(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -49,7 +49,7 @@ export function HTTPAddBrand(param: {
         productCategoryId: param.productCategoryId
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -69,7 +69,7 @@ export function HTTPUpdateBrand(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -96,7 +96,7 @@ export function HTTPDeleteBrand(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

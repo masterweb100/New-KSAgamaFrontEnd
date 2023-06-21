@@ -7,6 +7,7 @@ import TrackingTable from './trackingTable';
 import { isMobile } from 'react-device-detect';
 import { HTTPGetTracking } from '../../../../apis/User/purchase/tracking';
 import secureLocalStorage from 'react-secure-storage';
+import { toast } from 'react-toastify';
 
 const CustomTabs = styled(Tabs)({
     color: Colors.primary,
@@ -66,9 +67,14 @@ const Tracking = () => {
             setDataTracking(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
-            console.log(error);
+            console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 

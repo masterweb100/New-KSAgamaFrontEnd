@@ -7,7 +7,7 @@ export function HTTPGenerateAccountsID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -29,7 +29,7 @@ export function HTTPGetAccountCategory(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -40,7 +40,7 @@ export function HTTPGetAccountCategoryID(param: { id: number }): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/${param.id}`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -58,7 +58,7 @@ export function HTTPAddAccountCategory(param: {
           categoryName: param.categoryName,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -78,7 +78,7 @@ export function HTTPUpdateAccountCategory(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -105,7 +105,7 @@ export function HTTPDeleteAccountCategory(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

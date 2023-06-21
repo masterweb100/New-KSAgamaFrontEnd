@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Toolbar, Icon, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
@@ -37,8 +38,13 @@ const KategoriForm = () => {
                 setSend(false)
                 navigate('/gudang/list-produk')
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
             setNameErr(true)
             setNameErrText('Nama Role sudah tersedia')
             setSend(false)
@@ -64,8 +70,13 @@ const KategoriForm = () => {
         try {
             const resp = await HTTPGenerateCategoryID()
             setGenId(resp.data.data.genId)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

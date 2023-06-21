@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Stack, TextField, Select, MenuItem, SelectChangeEvent, Dialog, DialogContent, DialogTitle, Icon, CircularProgress } from '@mui/material';
 import { CENTER, StyleSheet } from '../utils/stylesheet';
 import { Colors } from '../utils/colors';
@@ -41,10 +42,15 @@ const PelunasanDialog = ({ isOpen, setOpen, item, type, refresh }: { isOpen: boo
                 await refresh()
                 setLoader(false)
                 setOpen(false)
-            } catch (error) {
+            } catch (error: any) {
                 setLoader(false)
                 setOpen(false)
                 console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
             }
         }
     })

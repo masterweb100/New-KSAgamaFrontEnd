@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Toolbar } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import StoreTable from './storeTable';
@@ -41,9 +42,14 @@ const DataStore = () => {
             setDataStore(response.data.data)
             setPagination(response.data.pagination)
             setLoader(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

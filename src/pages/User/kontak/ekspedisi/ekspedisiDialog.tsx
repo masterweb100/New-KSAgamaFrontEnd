@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import { toast } from 'react-toastify';
 import {
     Dialog,
     DialogActions,

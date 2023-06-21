@@ -25,7 +25,7 @@ export function HTTPGeneratePurchaseID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -47,7 +47,7 @@ export function HTTPGetPurchases(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -67,7 +67,7 @@ export function HTTPAddPurchase(param: AddPurchase): Promise<any> {
         purchasingProducts: param.purchasingProducts,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -90,7 +90,7 @@ export function HTTPPayPurchase(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -110,7 +110,7 @@ export function HTTPUpdatePurchase(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -137,7 +137,7 @@ export function HTTPDeletePurchase(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

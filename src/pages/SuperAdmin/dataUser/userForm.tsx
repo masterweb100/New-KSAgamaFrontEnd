@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, InputAdornment, Icon, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import NavigationBar from '../../../components/appBar';
 import { CENTER } from '../../../utils/stylesheet';
@@ -70,9 +71,14 @@ const UserForm = () => {
                     })
                     setSend(false)
                     navigate('/user-data')
-                } catch (error) {
+                } catch (error: any) {
                     setSend(false)
                     console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
                 }
             } else {
                 if (values.password !== values.confirmPass) {
@@ -97,9 +103,14 @@ const UserForm = () => {
                         })
                         setSend(false)
                         navigate('/user-data')
-                    } catch (error) {
+                    } catch (error: any) {
                         setSend(false)
                         console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
                     }
                 }
             }
@@ -110,8 +121,13 @@ const UserForm = () => {
         try {
             const respID = await HTTPGenerateUserID()
             setGenId(respID.data.data.genId)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -150,8 +166,13 @@ const UserForm = () => {
             setRolesId(respRole.data.data)
             const respStore = await HTTPGetStores({ limit: '50', page: '', q: '' })
             setStoresId(respStore.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

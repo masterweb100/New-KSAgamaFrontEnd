@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, Icon, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
@@ -65,8 +66,13 @@ const ReturnPenjualanForm = () => {
                 saleId: id
             })
             setProductData(response.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -79,8 +85,13 @@ const ReturnPenjualanForm = () => {
                 q: undefined,
             });
             setSalesData(response.data.data);
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 
@@ -118,9 +129,14 @@ const ReturnPenjualanForm = () => {
             })
             GoBack()
             setLoader(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
@@ -48,9 +49,14 @@ const MutasiForm = () => {
                 })
                 setLoader(false)
                 GoBack()
-            } catch (error) {
+            } catch (error: any) {
                 setLoader(false)
                 console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
             }
         }
     })
@@ -59,8 +65,13 @@ const MutasiForm = () => {
         try {
             const resp = await HTTPGenerateMutationID()
             setGenId(resp.data.data.genId)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -68,8 +79,13 @@ const MutasiForm = () => {
         try {
             const resp = await HTTPGetTypes({ limit: '50', page: '1', q: undefined, token: token })
             setTypesData(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -77,8 +93,13 @@ const MutasiForm = () => {
         try {
             const resp = await HTTPGetStores({ limit: '50', page: '1', q: '' })
             setStoresData(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -86,8 +107,13 @@ const MutasiForm = () => {
         try {
             const resp = await HTTPGetStoreID({ id: JSON.parse(user).storeId, token: token })
             setMyStoreData(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -97,8 +123,13 @@ const MutasiForm = () => {
             await getTypes()
             await getStores()
             await getMyStore()
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

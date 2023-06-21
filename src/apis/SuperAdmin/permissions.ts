@@ -5,7 +5,7 @@ export function HTTPPermissions(): Promise<any> {
     try {
       const response = await AxiosNormal().get("permissions");
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -23,7 +23,7 @@ export function HTTPRolePermissions(param: {
         permissions: param.permissions,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

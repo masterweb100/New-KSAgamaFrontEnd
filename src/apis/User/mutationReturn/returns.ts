@@ -18,7 +18,7 @@ export function HTTPGetReturns(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -36,7 +36,7 @@ export function HTTPPatchReturns(param: {
                 status: param.status
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

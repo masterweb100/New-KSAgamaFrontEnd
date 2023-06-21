@@ -18,6 +18,7 @@ import secureLocalStorage from "react-secure-storage";
 import { HTTPGetAccountCategory } from "../../../apis/User/account/accountCategory";
 import { useFormik } from "formik";
 import { HTTPAddAccounts } from "../../../apis/User/account/account";
+import { toast } from "react-toastify";
 
 const AkunForm = () => {
   const navigate = useNavigate();
@@ -37,9 +38,14 @@ const AkunForm = () => {
       });
       navigate("/akun");
       setSend(false);
-    } catch (error) {
+    } catch (error: any) {
       setSend(false);
-      console.log(error);
+      console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      };
     }
   };
 
@@ -76,8 +82,13 @@ const AkunForm = () => {
         token: token,
       });
       setDataCategory(response.data.data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error)
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      };
     }
   };
 

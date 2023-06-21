@@ -16,7 +16,7 @@ export function HTTPGetStores(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -27,7 +27,7 @@ export function HTTPGetStoreID(param: { id: number, token: string }): Promise<an
     try {
       const response = await AxiosNormal(param.token).get(`stores/${param.id}`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -38,7 +38,7 @@ export function HTTPGenerateStoreID(): Promise<any> {
     try {
       const response = await AxiosNormal().get(`stores/id`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -60,7 +60,7 @@ export function HTTPAddStore(param: {
         adminId: param.adminId
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -82,7 +82,7 @@ export function HTTPUpdateStore(param: {
         }
       );
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -109,7 +109,7 @@ export function HTTPDeleteStores(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

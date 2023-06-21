@@ -18,7 +18,7 @@ export function HTTPGetApprovalsPurchasing(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -36,7 +36,7 @@ export function HTTPPatchApprovalPurchasing(param: {
                 approvalStatus: param.approvalStatus
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

@@ -106,10 +106,15 @@ const ProdukList = (data: any) => {
             toast.error('Berhasil menambahkan pembelian baru!')
             setLoader(false)
             navigate(-1)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
             toast.error('Terjadi kesalahan')
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

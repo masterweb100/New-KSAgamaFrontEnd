@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from 'react-toastify';
 import {
   TablePagination,
   Box,
@@ -86,9 +87,14 @@ const SatuanTable = (props: any) => {
       setUnitsData(resp.data.data)
       setPagination(resp.data.pagination)
       setLoader(false)
-    } catch (error) {
+    } catch (error: any) {
       setLoader(false)
       console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
     }
   }
 
@@ -101,8 +107,13 @@ const SatuanTable = (props: any) => {
         token: token as string
       })
       setTypesData(resp.data.data)
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
     }
   }
 
@@ -197,9 +208,14 @@ const SatuanTable = (props: any) => {
         setSend(false)
         handleEdit()
         await GetUnits()
-      } catch (error) {
+      } catch (error: any) {
         setSend(false)
         console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
       }
     }
   })

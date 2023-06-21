@@ -18,7 +18,7 @@ export function HTTPGetAccounts(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -29,7 +29,7 @@ export function HTTPGetAccountsID(param: { id: number }): Promise<any> {
     try {
       const response = await AxiosNormal().get(`${uri}/${param.id}`);
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -49,7 +49,7 @@ export function HTTPAddAccounts(param: {
         accountCode: param.accountCode,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -68,7 +68,7 @@ export function HTTPUpdateAccounts(param: {
         accountCode: param.accountCode,
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });
@@ -95,7 +95,7 @@ export function HTTPDeleteAccounts(param: {
         },
       });
       return resolve(response);
-    } catch (error) {
+    } catch (error: any) {
       return reject(error);
     }
   });

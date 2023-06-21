@@ -7,6 +7,7 @@ import EkspedisiTable from './ekspedisiTable';
 import { isMobile } from 'react-device-detect';
 import secureLocalStorage from 'react-secure-storage';
 import { HTTPGetExpeditions } from '../../../../apis/User/contact/expedition';
+import { toast } from 'react-toastify';
 
 const Ekspedisi = () => {
     const token = secureLocalStorage.getItem("TOKEN") as string
@@ -46,9 +47,14 @@ const Ekspedisi = () => {
             setDataRole(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
-            console.log(error);
+            console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 

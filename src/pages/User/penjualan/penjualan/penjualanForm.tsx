@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, InputAdornment, Icon } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
@@ -63,8 +64,13 @@ const PenjualanForm = () => {
             let newArr = resp.data.data
             newArr.unshift({})
             setCustomers(newArr)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -74,8 +80,13 @@ const PenjualanForm = () => {
             let newArr = resp.data.data
             newArr.unshift({})
             setExpeditions(newArr)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -83,8 +94,13 @@ const PenjualanForm = () => {
         try {
             const resp = await HTTPGetUnits({ limit: '50', page: '1', q: '', token: token as string })
             setUnits(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -93,8 +109,13 @@ const PenjualanForm = () => {
             await getCustomer()
             await getExpedition()
             await getProducts()
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

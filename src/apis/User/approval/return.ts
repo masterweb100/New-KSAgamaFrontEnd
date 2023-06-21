@@ -18,7 +18,7 @@ export function HTTPGetApprovalsReturn(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -36,7 +36,7 @@ export function HTTPPatchApprovalReturn(param: {
                 approvalStatus: param.approvalStatus
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

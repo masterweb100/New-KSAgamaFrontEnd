@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
@@ -69,9 +70,14 @@ const PelangganForm = () => {
                 })
                 setSend(false)
                 navigate(-1)
-            } catch (error) {
+            } catch (error: any) {
                 setSend(false)
                 console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
             }
         }
     })
@@ -80,8 +86,13 @@ const PelangganForm = () => {
         try {
             const resp = await HTTPLocProvinces()
             setProvinces(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 
@@ -89,8 +100,13 @@ const PelangganForm = () => {
         try {
             const resp = await HTTPLocCities({ provinceId: value })
             setCities(resp.data.data)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
         }
     }
 

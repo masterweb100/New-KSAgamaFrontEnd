@@ -7,7 +7,7 @@ export function HTTPGenerateMutationID(): Promise<any> {
         try {
             const response = await AxiosNormal().get(`${uri}/id`);
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -29,7 +29,7 @@ export function HTTPGetMutations(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -53,7 +53,7 @@ export function HTTPAddMutation(param: {
                 genId: param.genId,
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -66,7 +66,7 @@ export function HTTPGetMutationID(param: { id: number }): Promise<any> {
                 params: { id: param.id },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -84,7 +84,7 @@ export function HTTPPatchMutations(param: {
                 approvalStatus: param.approvalStatus
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });
@@ -111,7 +111,7 @@ export function HTTPDeleteMutations(param: {
                 },
             });
             return resolve(response);
-        } catch (error) {
+        } catch (error: any) {
             return reject(error);
         }
     });

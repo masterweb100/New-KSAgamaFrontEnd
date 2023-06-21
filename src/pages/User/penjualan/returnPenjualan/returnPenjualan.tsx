@@ -6,6 +6,7 @@ import ReturnPenjualanTable from './returnPenjualanTable';
 import { isMobile } from 'react-device-detect';
 import { HTTPGetReturn } from '../../../../apis/User/sales/return';
 import secureLocalStorage from 'react-secure-storage';
+import { toast } from 'react-toastify';
 
 const ReturnPenjualan = () => {
     const token = secureLocalStorage.getItem("TOKEN") as string
@@ -45,9 +46,14 @@ const ReturnPenjualan = () => {
             setDataReturn(response.data.data);
             setPagination(response.data.pagination);
             setLoader(false)
-        } catch (error) {
+        } catch (error: any) {
             setLoader(false)
-            console.log(error);
+            console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
         }
     };
 
