@@ -10,7 +10,7 @@ import { HTTPGetExpeditions } from '../../../../apis/User/contact/expedition';
 import { toast } from 'react-toastify';
 
 const Ekspedisi = () => {
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
     const [init, setInit] = React.useState(false);
     const [DataRole, setDataRole] = React.useState([]);
     const [limit, setLimit] = React.useState(10);

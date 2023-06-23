@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 
 const KategoriForm = () => {
   const navigate = useNavigate();
-  const token = secureLocalStorage.getItem("TOKEN") as string;
+  const token = secureLocalStorage.getItem("USER_SESSION") as string;
   const [idCategory, setIdCategory] = React.useState("");
   const [categoryName, setCategoryName] = React.useState("");
   const [onSend, setSend] = React.useState(false);

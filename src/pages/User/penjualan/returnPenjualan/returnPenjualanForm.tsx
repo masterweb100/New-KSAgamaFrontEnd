@@ -13,7 +13,7 @@ import { HTTPAddReturn, HTTPGetReturnBySaleID } from '../../../../apis/User/sale
 const ReturnPenjualanForm = () => {
     const navigate = useNavigate()
     const { action }: any = useParams()
-    const token = secureLocalStorage.getItem('TOKEN') as string
+    const token = secureLocalStorage.getItem('USER_SESSION') as string
     const [init, setInit] = React.useState(false)
     const [loader, setLoader] = React.useState(false)
     const [SalesData, setSalesData] = React.useState([])
@@ -35,13 +35,14 @@ const ReturnPenjualanForm = () => {
         if (key === 'saleId') {
             setProductData([])
             setSelectedProduct({})
+            setSelectedId({})
             setReturnData({
                 ...ReturnData,
                 saleId: event.target.value,
                 saleProductId: ''
             })
             const result: any = SalesData.filter((value: any) => value.id === event.target.value)
-            console.log(result[0])
+            setSelectedId(result[0])
             await GetProducts(event.target.value)
         } else if (key === 'saleProductId') {
             setReturnData({
@@ -68,7 +69,7 @@ const ReturnPenjualanForm = () => {
             setProductData(response.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -87,7 +88,7 @@ if (error.status === 500) {
             setSalesData(response.data.data);
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -132,7 +133,7 @@ if (error.status === 500) {
         } catch (error: any) {
             setLoader(false)
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')

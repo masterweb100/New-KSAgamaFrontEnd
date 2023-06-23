@@ -13,7 +13,7 @@ import { HTTPLocCities, HTTPLocProvinces } from '../../../../apis/User/location'
 
 const PelangganForm = () => {
     const navigate = useNavigate()
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
     const [onSend, setSend] = React.useState(false)
     const [Provinces, setProvinces] = React.useState([]);
     const [ProvincesValue, setProvincesValue] = React.useState('');

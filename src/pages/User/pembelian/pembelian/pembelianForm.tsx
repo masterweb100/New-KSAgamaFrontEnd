@@ -18,7 +18,7 @@ import { HTTPGetBrands } from '../../../../apis/User/product/brand';
 
 const PembelianForm = () => {
     const navigate = useNavigate()
-    const token = secureLocalStorage.getItem('TOKEN') as string
+    const token = secureLocalStorage.getItem('USER_SESSION') as string
     const { action }: any = useParams()
     const [isSupplierOpen, setSupplierOpen] = React.useState(false);
     const [CategoryName, setCategoryName] = React.useState('')

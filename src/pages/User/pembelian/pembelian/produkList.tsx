@@ -10,7 +10,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'react-toastify';
 
 const ProdukList = (data: any) => {
-    const token = secureLocalStorage.getItem('TOKEN') as string
+    const token = secureLocalStorage.getItem('USER_SESSION') as string
     const [latestChange, setLatestChange] = React.useState<any>({})
     const navigate = useNavigate()
     const [loader, setLoader] = React.useState(false)

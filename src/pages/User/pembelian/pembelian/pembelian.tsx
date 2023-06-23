@@ -24,7 +24,7 @@ const CustomTab = styled(Tab)({
 
 const Pembelian = () => {
     const [value, setValue] = React.useState('semua');
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
     const [init, setInit] = React.useState(false);
     const [DataPurchase, setDataPurchase] = React.useState([]);
     const [limit, setLimit] = React.useState(10);

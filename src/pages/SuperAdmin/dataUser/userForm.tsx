@@ -56,7 +56,7 @@ const UserForm = () => {
             status: action === 'update' ? UserData.status === true ? '1' : '2' : '',
         },
         onSubmit: async (values) => {
-            const token = secureLocalStorage.getItem("TOKEN") as string
+            const token = secureLocalStorage.getItem("USER_SESSION") as string
             setConfirmPassErr(false)
             if (action === 'update') {
                 setSend(true)

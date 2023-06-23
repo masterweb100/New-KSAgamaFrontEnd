@@ -58,7 +58,7 @@ const AkunTable = (props: any) => {
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [DataCategory, setDataCategory] = React.useState([])
   const [init, setInit] = React.useState(false)
-  const token = secureLocalStorage.getItem('TOKEN')
+  const token = secureLocalStorage.getItem('USER_SESSION')
   const [tooltipOpen, setTooltipOpen] = React.useState(false)
   const [editModal, setEditModal] = React.useState(false)
   const [itemSelected, setItemSelected] = React.useState<any>({})

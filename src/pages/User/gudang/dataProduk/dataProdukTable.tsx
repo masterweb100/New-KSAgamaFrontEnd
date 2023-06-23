@@ -48,7 +48,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const DataProdukTable = (props: any) => {
-  const token = secureLocalStorage.getItem('TOKEN') as string
+  const token = secureLocalStorage.getItem('USER_SESSION') as string
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [init, setInit] = React.useState(false);

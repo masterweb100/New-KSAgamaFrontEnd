@@ -9,7 +9,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'react-toastify';
 
 const ReturnPenjualan = () => {
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
     const [init, setInit] = React.useState(false);
     const [DataReturn, setDataReturn] = React.useState([]);
     const [limit, setLimit] = React.useState(10);

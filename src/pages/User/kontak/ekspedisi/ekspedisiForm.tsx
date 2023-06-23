@@ -15,7 +15,7 @@ const EkspedisiForm = () => {
     const [init, setInit] = React.useState(false)
     const [onSend, setSend] = React.useState(false)
     const [genId, setGenId] = React.useState('')
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
 
     const GoBack = () => {
         navigate(-1)

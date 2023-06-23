@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 
 const BrandForm = () => {
     const navigate = useNavigate()
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
     const { action }: any = useParams()
     const [init, setInit] = React.useState(false)
     const [genId, setGenId] = React.useState('')

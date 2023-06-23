@@ -88,7 +88,7 @@ const AccessSettings = () => {
     const Submit = async () => {
         setSend(true)
         try {
-            const token = secureLocalStorage.getItem("TOKEN") as string
+            const token = secureLocalStorage.getItem("USER_SESSION") as string
             const newObject = Object.assign(gudang, penjualan, pembelian, laporan, approval, kontak, pengaturan, akun)
             const objectKeys = Object.keys(newObject)
             const filtered = objectKeys.filter((key: any) => {

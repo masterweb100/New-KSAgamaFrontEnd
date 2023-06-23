@@ -18,7 +18,7 @@ import { HTTPGetUnits } from '../../../../apis/User/product/units';
 const PenjualanForm = () => {
     const { action }: any = useParams()
     const navigate = useNavigate()
-    const token = secureLocalStorage.getItem('TOKEN') as string
+    const token = secureLocalStorage.getItem('USER_SESSION') as string
     const [SalesData, setSalesData] = React.useState({
         customerId: '',
         invoice: `INV/${Math.floor(100000 + Math.random() * 900000)}`,

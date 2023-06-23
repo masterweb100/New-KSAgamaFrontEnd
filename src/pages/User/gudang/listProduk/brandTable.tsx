@@ -55,7 +55,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const BrandTable = () => {
   const navigate = useNavigate();
-  const token = secureLocalStorage.getItem("TOKEN") as string
+  const token = secureLocalStorage.getItem("USER_SESSION") as string
   const [selected, setSelected] = useState<any[]>([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [BrandData, setBrandData] = React.useState([]);

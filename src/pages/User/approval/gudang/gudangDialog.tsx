@@ -23,7 +23,7 @@ import secureLocalStorage from 'react-secure-storage';
 const GudangDialog = ({ isOpen, setOpen, item, getData }: { isOpen: boolean, setOpen: any, item: any, getData: any }) => {
     const [status, setStatus] = React.useState('AGREE');
     const [loader, setLoader] = React.useState(false)
-    const token = secureLocalStorage.getItem('TOKEN')
+    const token = secureLocalStorage.getItem('USER_SESSION')
 
     const handleChangeStatus = (event: SelectChangeEvent) => {
         setStatus(event.target.value as string);

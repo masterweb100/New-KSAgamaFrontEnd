@@ -69,8 +69,8 @@ const Login = () => {
         const response = await HTTPLogin({ form: newForm })
         if (response.status === 200) {
           setProgress(false)
-          secureLocalStorage.setItem("TOKEN", response.data.data.token as string)
-          secureLocalStorage.setItem("USERDATA", JSON.stringify(response.data.data.user) as string)
+          secureLocalStorage.setItem("USER_SESSION", response.data.data.token as string)
+          secureLocalStorage.setItem("USER_DATA", JSON.stringify(response.data.data.user) as string)
           if (response.data.data.user.roleId === 1) {
             navigate('/dashboard')
           } else {
@@ -123,12 +123,8 @@ const Login = () => {
     }
   }
 
-  const TestToken = () => {
-
-  }
-
   const Auth = () => {
-    const auth = secureLocalStorage.getItem("USERDATA") as string
+    const auth = secureLocalStorage.getItem("USER_DATA") as string
     const authData = JSON.parse(auth)
     if (auth !== null) {
       if (authData.roleId === 2) {

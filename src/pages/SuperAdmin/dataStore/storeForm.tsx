@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 
 const StoreForm = () => {
     const StoreData = useSelector((state: RootState) => state.storeData.data)
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
     const { action }: any = useParams()
     const navigate = useNavigate()
     const [init, setInit] = React.useState(false)

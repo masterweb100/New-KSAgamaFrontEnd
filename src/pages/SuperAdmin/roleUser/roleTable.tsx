@@ -54,7 +54,7 @@ const RoleTable = (props: any) => {
   const handleDelete = async (param: string) => {
     if (selected.length > 0) {
       if (param === 'yes') {
-        const token = secureLocalStorage.getItem("TOKEN") as string
+        const token = secureLocalStorage.getItem("USER_SESSION") as string
         const respDelete = await HTTPDeleteRoles({
           ids: selected.map(String),
           token: token

@@ -55,7 +55,7 @@ const SupplierTable = (props: any) => {
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [isDetailOpen, setDetailOpen] = React.useState(false);
     const [isDeleteModal, setDeleteModal] = React.useState(false);
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
 
     const handleDelete = async (param: string) => {
         if (selected.length > 0) {

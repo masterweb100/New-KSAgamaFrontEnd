@@ -15,8 +15,8 @@ import { HTTPGetStoreID, HTTPGetStores } from '../../../../apis/SuperAdmin/store
 
 const MutasiForm = () => {
     const navigate = useNavigate()
-    const token = secureLocalStorage.getItem('TOKEN') as string
-    const user = secureLocalStorage.getItem('USERDATA') as string
+    const token = secureLocalStorage.getItem('USER_SESSION') as string
+    const user = secureLocalStorage.getItem('USER_DATA') as string
     const [genId, setGenId] = React.useState('')
     const [init, setInit] = React.useState(false)
     const [TypesData, setTypesData] = React.useState([])

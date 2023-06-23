@@ -10,7 +10,7 @@ import { HTTPGetSuppliers } from '../../../../apis/User/contact/supplier';
 import { toast } from 'react-toastify';
 
 const Supplier = () => {
-    const token = secureLocalStorage.getItem("TOKEN") as string
+    const token = secureLocalStorage.getItem("USER_SESSION") as string
     const [init, setInit] = React.useState(false);
     const [DataRole, setDataRole] = React.useState([]);
     const [limit, setLimit] = React.useState(10);

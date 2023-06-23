@@ -58,7 +58,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const SatuanTable = (props: any) => {
   const navigate = useNavigate();
-  const token = secureLocalStorage.getItem('TOKEN')
+  const token = secureLocalStorage.getItem('USER_SESSION')
   const [selected, setSelected] = useState<any[]>([]);
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);

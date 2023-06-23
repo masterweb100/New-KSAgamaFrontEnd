@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import { HTTPPayPurchase } from '../apis/User/purchase/purchase';
 
 const PelunasanDialog = ({ isOpen, setOpen, item, type, refresh }: { isOpen: boolean, setOpen: any, item: any, type: string, refresh: any }) => {
-    const token = secureLocalStorage.getItem('TOKEN') as string
+    const token = secureLocalStorage.getItem('USER_SESSION') as string
     const [loader, setLoader] = React.useState(false)
 
     const handleClose = () => {

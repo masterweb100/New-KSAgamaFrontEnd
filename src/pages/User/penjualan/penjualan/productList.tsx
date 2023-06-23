@@ -12,7 +12,7 @@ import { HTTPGetUnits } from '../../../../apis/User/product/units';
 
 const ProdukList = (data: any) => {
     const navigate = useNavigate()
-    const token = secureLocalStorage.getItem('TOKEN')
+    const token = secureLocalStorage.getItem('USER_SESSION')
     const [latestProduct, setLatestChange] = React.useState<any>({})
     const [notes, setNotes] = React.useState('')
     const [loader, setLoader] = React.useState(false)

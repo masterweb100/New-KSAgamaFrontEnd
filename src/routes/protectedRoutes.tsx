@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 import secureLocalStorage from "react-secure-storage"
 
 const Auth = () => {
-    const auth = secureLocalStorage.getItem("TOKEN")
+    const auth = secureLocalStorage.getItem("USER_SESSION")
     return auth
 }
 

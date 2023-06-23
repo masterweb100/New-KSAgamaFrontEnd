@@ -26,7 +26,7 @@ const DataProdukForm = () => {
   const OpnameRedux = useSelector((state: RootState) => state.OpnamesData.data)
   const [GoodProducts, setGoodProducts] = React.useState('')
   const [BadProducts, setBadProducts] = React.useState(0)
-  const token = secureLocalStorage.getItem('TOKEN')
+  const token = secureLocalStorage.getItem('USER_SESSION')
   const [loader, setLoader] = React.useState(false)
 
   const GoBack = () => {

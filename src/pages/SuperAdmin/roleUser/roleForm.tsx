@@ -29,7 +29,7 @@ const RoleForm = () => {
     }
 
     const AddRole = async () => {
-        const token = secureLocalStorage.getItem("TOKEN") as string
+        const token = secureLocalStorage.getItem("USER_SESSION") as string
         setNameErr(false)
         setNameErrText('')
         setSend(true)

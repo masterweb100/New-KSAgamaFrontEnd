@@ -15,7 +15,7 @@ const KategoriAkun = () => {
   const [pagination, setPagination] = React.useState({});
   const [search, setSearch] = React.useState("");
   const [loader, setLoader] = React.useState(true);
-  const token = secureLocalStorage.getItem("TOKEN") as string;
+  const token = secureLocalStorage.getItem("USER_SESSION") as string;
 
   const onChangeLimit = (param: any) => {
     setLimit(param);
