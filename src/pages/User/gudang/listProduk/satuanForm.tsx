@@ -10,7 +10,7 @@ import {
   Icon,
   Tooltip,
   IconButton,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import NavigationBarUser from "../../../../components/appBarUser";
 import { CENTER } from "../../../../utils/stylesheet";
@@ -18,7 +18,10 @@ import { Colors } from "../../../../utils/colors";
 import { useNavigate, useParams } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import { useFormik } from "formik";
-import { HTTPAddUnits, HTTPGenerateUnitsID } from "../../../../apis/User/product/units";
+import {
+  HTTPAddUnits,
+  HTTPGenerateUnitsID,
+} from "../../../../apis/User/product/units";
 import { HTTPGetBrands } from "../../../../apis/User/product/brand";
 import secureLocalStorage from "react-secure-storage";
 import { HTTPGetTypes } from "../../../../apis/User/product/types";
@@ -28,15 +31,15 @@ import { toast } from "react-toastify";
 
 const SatuanForm = () => {
   const navigate = useNavigate();
-  const token = secureLocalStorage.getItem('TOKEN') as string
-  const { action }: any = useParams()
-  const [init, setInit] = React.useState(false)
-  const [genId, setGenId] = React.useState('')
-  const [Brand, setBrand] = React.useState([])
-  const [Types, setTypes] = React.useState([])
-  const [Supplier, setSupplier] = React.useState([])
-  const [Account, setAccount] = React.useState([])
-  const [loader, setLoader] = React.useState(false)
+  const token = secureLocalStorage.getItem("TOKEN") as string;
+  const { action }: any = useParams();
+  const [init, setInit] = React.useState(false);
+  const [genId, setGenId] = React.useState("");
+  const [Brand, setBrand] = React.useState([]);
+  const [Types, setTypes] = React.useState([]);
+  const [Supplier, setSupplier] = React.useState([]);
+  const [Account, setAccount] = React.useState([]);
+  const [loader, setLoader] = React.useState(false);
 
   const GoBack = () => {
     navigate(-1);
@@ -45,20 +48,20 @@ const SatuanForm = () => {
   const Formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      brand: '',
-      jenis: '',
-      supplier: '',
-      hargaBeli: '',
-      hargaJual: '',
-      hargaBeliLusin: '',
-      hargaJualLusin: '',
-      hargaBeliBox: '',
-      hargaJualBox: '',
-      akunBeli: '',
-      akunJual: '',
+      brand: "",
+      jenis: "",
+      supplier: "",
+      hargaBeli: "",
+      hargaJual: "",
+      hargaBeliLusin: "",
+      hargaJualLusin: "",
+      hargaBeliBox: "",
+      hargaJualBox: "",
+      akunBeli: "",
+      akunJual: "",
     },
     onSubmit: async (values) => {
-      setLoader(true)
+      setLoader(true);
       try {
         const resp = await HTTPAddUnits({
           token: token,
@@ -74,109 +77,131 @@ const SatuanForm = () => {
           sellPriceInBox: parseInt(values.hargaJualBox),
           accountIdForBuying: parseInt(values.akunBeli),
           accountIdForSelling: parseInt(values.akunJual),
-        })
-        setLoader(false)
-        navigate(-1)
+        });
+        setLoader(false);
+        navigate(-1);
       } catch (error: any) {
-        setLoader(false)
-        console.log(error)
+        setLoader(false);
+        console.log(error);
         if (error.status === 500) {
-          toast.error('Server sedang mengalami gangguan!')
+          toast.error("Server sedang mengalami gangguan!");
         } else {
-          toast.error('Terjadi Kesalahan!')
+          toast.error("Terjadi Kesalahan!");
         }
       }
-    }
-  })
+    },
+  });
 
   const generateId = async () => {
     try {
-      const resp = await HTTPGenerateUnitsID()
-      setGenId(resp.data.data.genId)
+      const resp = await HTTPGenerateUnitsID();
+      setGenId(resp.data.data.genId);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       if (error.status === 500) {
-        toast.error('Server sedang mengalami gangguan!')
+        toast.error("Server sedang mengalami gangguan!");
       } else {
-        toast.error('Terjadi Kesalahan!')
+        toast.error("Terjadi Kesalahan!");
       }
     }
-  }
+  };
 
   const getBrand = async () => {
     try {
-      const resp = await HTTPGetBrands({ limit: '50', page: '1', q: undefined, token: token })
-      setBrand(resp.data.data)
+      const resp = await HTTPGetBrands({
+        limit: "50",
+        page: "1",
+        q: undefined,
+        token: token,
+      });
+      setBrand(resp.data.data);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       if (error.status === 500) {
-        toast.error('Server sedang mengalami gangguan!')
+        toast.error("Server sedang mengalami gangguan!");
       } else {
-        toast.error('Terjadi Kesalahan!')
+        toast.error("Terjadi Kesalahan!");
       }
     }
-  }
+  };
 
   const getTypes = async () => {
     try {
-      const resp = await HTTPGetTypes({ limit: '50', page: '1', q: undefined, token: token })
-      setTypes(resp.data.data)
+      const resp = await HTTPGetTypes({
+        limit: "50",
+        page: "1",
+        q: undefined,
+        token: token,
+      });
+      setTypes(resp.data.data);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       if (error.status === 500) {
-        toast.error('Server sedang mengalami gangguan!')
+        toast.error("Server sedang mengalami gangguan!");
       } else {
-        toast.error('Terjadi Kesalahan!')
+        toast.error("Terjadi Kesalahan!");
       }
     }
-  }
+  };
 
   const getSupplier = async () => {
     try {
-      const resp = await HTTPGetSuppliers({ limit: '50', page: '1', q: undefined, token: token })
-      setSupplier(resp.data.data)
+      const resp = await HTTPGetSuppliers({
+        limit: "50",
+        page: "1",
+        q: undefined,
+        token: token,
+      });
+      setSupplier(resp.data.data);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       if (error.status === 500) {
-        toast.error('Server sedang mengalami gangguan!')
+        toast.error("Server sedang mengalami gangguan!");
       } else {
-        toast.error('Terjadi Kesalahan!')
+        toast.error("Terjadi Kesalahan!");
       }
     }
-  }
+  };
 
   const getAccount = async () => {
     try {
-      const resp = await HTTPGetAccounts({ limit: '50', page: '1', q: undefined, token: token })
-      setAccount(resp.data.data)
+      const resp = await HTTPGetAccounts({
+        limit: "50",
+        page: "1",
+        q: undefined,
+        token: token,
+      });
+      setAccount(resp.data.data);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       if (error.status === 500) {
-        toast.error('Server sedang mengalami gangguan!')
+        toast.error("Server sedang mengalami gangguan!");
       } else {
-        toast.error('Terjadi Kesalahan!')
+        toast.error("Terjadi Kesalahan!");
       }
     }
-  }
+  };
 
   const Initial = async () => {
     try {
-      await generateId()
-      await getBrand()
-      await getTypes()
-      await getSupplier()
-      await getAccount()
+      await generateId();
+      await getBrand();
+      await getTypes();
+      await getSupplier();
+      await getAccount();
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       if (error.status === 500) {
-        toast.error('Server sedang mengalami gangguan!')
+        toast.error("Server sedang mengalami gangguan!");
       } else {
-        toast.error('Terjadi Kesalahan!')
+        toast.error("Terjadi Kesalahan!");
       }
     }
-  }
+  };
 
-  React.useEffect(() => { Initial() }, [init])
+  React.useEffect(() => {
+    Initial();
+  }, [init]);
 
   const renderBrand = (values: any) => {
     if (values.length === 0) {
@@ -187,7 +212,7 @@ const SatuanForm = () => {
       );
       return <span style={{ color: "#000" }}>{result[0].brandName}</span>;
     }
-  }
+  };
 
   const renderTypes = (values: any) => {
     if (values.length === 0) {
@@ -198,7 +223,7 @@ const SatuanForm = () => {
       );
       return <span style={{ color: "#000" }}>{result[0].typeName}</span>;
     }
-  }
+  };
 
   const renderSupplier = (values: any) => {
     if (values.length === 0) {
@@ -209,7 +234,7 @@ const SatuanForm = () => {
       );
       return <span style={{ color: "#000" }}>{result[0].nameSupplier}</span>;
     }
-  }
+  };
 
   const renderAccountBuy = (values: any) => {
     if (values.length === 0) {
@@ -218,9 +243,13 @@ const SatuanForm = () => {
       const result: any = Account.filter(
         (value: any) => value.id === Formik.values.akunBeli
       );
-      return <span style={{ color: "#000" }}>{result[0].accountName + ' - ' + result[0].accountCode}</span>;
+      return (
+        <span style={{ color: "#000" }}>
+          {result[0].accountName + " - " + result[0].accountCode}
+        </span>
+      );
     }
-  }
+  };
 
   const renderAccountSell = (values: any) => {
     if (values.length === 0) {
@@ -229,9 +258,13 @@ const SatuanForm = () => {
       const result: any = Account.filter(
         (value: any) => value.id === Formik.values.akunJual
       );
-      return <span style={{ color: "#000" }}>{result[0].accountName + ' - ' + result[0].accountCode}</span>;
+      return (
+        <span style={{ color: "#000" }}>
+          {result[0].accountName + " - " + result[0].accountCode}
+        </span>
+      );
     }
-  }
+  };
 
   return (
     <form onSubmit={Formik.handleSubmit}>
@@ -269,14 +302,21 @@ const SatuanForm = () => {
                 justifyContent={"space-between"}
               >
                 <h2 style={{ color: "#000" }}>Form Data Satuan</h2>
-                {
-                  action === 'update' ?
-                    <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
-                      <Icon style={{ color: '#fff', fontSize: 20 }}>border_color</Icon>
-                    </div>
-                    :
-                    null
-                }
+                {action === "update" ? (
+                  <div
+                    style={{
+                      backgroundColor: Colors.warning,
+                      height: 40,
+                      width: 40,
+                      ...CENTER,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Icon style={{ color: "#fff", fontSize: 20 }}>
+                      border_color
+                    </Icon>
+                  </div>
+                ) : null}
               </Stack>
               <Stack
                 direction={"row"}
@@ -291,18 +331,23 @@ const SatuanForm = () => {
                     disabled
                     value={genId}
                     size="small"
-                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? "40vw" : "25vw" }}
+                    sx={{
+                      bgcolor: "#f4f4f4",
+                      width: isMobile ? "40vw" : "25vw",
+                    }}
                     InputProps={{
-                      endAdornment: (
-                        action === 'update' ?
-                          null
-                          :
+                      endAdornment:
+                        action === "update" ? null : (
                           <Tooltip title="Regenerate ID">
                             <IconButton onClick={generateId}>
-                              <Icon sx={{ fontSize: 25, color: Colors.primary }}>refresh</Icon>
+                              <Icon
+                                sx={{ fontSize: 25, color: Colors.primary }}
+                              >
+                                refresh
+                              </Icon>
                             </IconButton>
                           </Tooltip>
-                      )
+                        ),
                     }}
                   />
                 </Stack>
@@ -391,7 +436,7 @@ const SatuanForm = () => {
                   <TextField
                     type="text"
                     size="small"
-                    placeholder={'Harga Beli'}
+                    placeholder={"Harga Beli"}
                     name="hargaBeli"
                     value={Formik.values.hargaBeli}
                     onChange={Formik.handleChange}
@@ -495,11 +540,8 @@ const SatuanForm = () => {
                     renderValue={renderAccountBuy}
                   >
                     {Account.map((item: any, index: number) => (
-                      <MenuItem
-                        key={index}
-                        value={item.id}
-                      >
-                        {item.accountName + ' - ' + item.accountCode}
+                      <MenuItem key={index} value={item.id}>
+                        {item.accountName + " - " + item.accountCode}
                       </MenuItem>
                     ))}
                   </Select>
@@ -520,11 +562,8 @@ const SatuanForm = () => {
                     renderValue={renderAccountSell}
                   >
                     {Account.map((item: any, index: number) => (
-                      <MenuItem
-                        key={index}
-                        value={item.id}
-                      >
-                        {item.accountName + ' - ' + item.accountCode}
+                      <MenuItem key={index} value={item.id}>
+                        {item.accountName + " - " + item.accountCode}
                       </MenuItem>
                     ))}
                   </Select>
@@ -552,7 +591,7 @@ const SatuanForm = () => {
                   </span>
                 </div>
                 <button
-                  type={'submit'}
+                  type={"submit"}
                   style={{
                     ...CENTER,
                     borderRadius: 10,
@@ -561,12 +600,11 @@ const SatuanForm = () => {
                     cursor: "pointer",
                   }}
                 >
-                  {
-                    loader === true ?
-                      <CircularProgress size={20} color={'inherit'} />
-                      :
-                      <span style={{ fontSize: 13, color: '#fff' }}>SIMPAN</span>
-                  }
+                  {loader === true ? (
+                    <CircularProgress size={20} color={"inherit"} />
+                  ) : (
+                    <span style={{ fontSize: 13, color: "#fff" }}>SIMPAN</span>
+                  )}
                 </button>
               </Stack>
             </Stack>
