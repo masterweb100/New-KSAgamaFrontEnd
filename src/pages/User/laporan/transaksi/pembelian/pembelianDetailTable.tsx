@@ -3,7 +3,8 @@ import {
     TableSortLabel, TableHead,
     Table, TableBody, TableContainer,
     Stack, Icon, TextField,
-    InputAdornment
+    InputAdornment,
+    CircularProgress
 } from '@mui/material';
 import React from 'react'
 import NavigationBarUser from '../../../../../components/appBarUser';
@@ -13,90 +14,122 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { penjualanData } from '../../dummy';
 import PembelianDetailChildTable from './pembelianDetailChildTable';
 import { isMobile } from 'react-device-detect';
 import { CENTER } from '../../../../../utils/stylesheet';
+import secureLocalStorage from 'react-secure-storage';
+import moment from 'moment';
+import { HTTPReportsPurchasingDetail, HTTPReportsPurchasingDetailByID } from '../../../../../apis/User/reports/purchase';
+import { toast } from 'react-toastify';
 
 const columns = [
     { id: "id", label: "ID Pembelian" },
     { id: "tanggal", label: "Tanggal" },
     { id: "nama", label: "Nama Supplier" },
+    { id: "dueDate", label: "Jatuh Tempo" },
+    { id: "bill", label: "Tagihan" },
+    { id: "status", label: "Status" },
     { id: "total", label: "Total" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        textAlign: "center",
-        // borderBottomWidth: 1,
+        textAlign: "left",
+        fontWeight: '700'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-    return order === "desc"
-        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-    const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
-    stabilizedRowArray.sort((a: any, b: any) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedRowArray.map((el: any) => el[0]);
-};
-
 const PembelianDetailTable = () => {
-    const [dateFrom, setDateFrom] = React.useState<any>(null);
-    const [dateTo, setDateTo] = React.useState<any>(null);
-    const [page, setPage] = React.useState(0);
+    const token = secureLocalStorage.getItem('USER_SESSION') as string;
+    const [init, setInit] = React.useState(false)
+    const [dateFrom, setDateFrom] = React.useState<any>(moment().startOf('month'));
+    const [dateTo, setDateTo] = React.useState<any>(moment().endOf('month'));
+    const [page, setPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [expanded, setExpanded] = React.useState<any>([null, false]);
+    const [loader, setLoader] = React.useState(true)
+    const [childLoader, setChildLoader] = React.useState(true)
+    const [pagination, setPagination] = React.useState<any>({})
+    const [PurchasesData, setPurchasesData] = React.useState([])
+    const [SelectedData, setSelectedData] = React.useState([])
+    const [Monetary, setMonetary] = React.useState({
+        bill: 0,
+        billed: 0,
+        overallBill: 0,
+        overallBilled: 0,
+        overallTotalBill: 0,
+        totalBill: 0,
+    })
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
+        setInit(!init)
     };
 
     const handleChangeRowsPerPage = (event: any) => {
         setItemsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setPage(1);
+        setInit(!init)
     };
 
-    const [orderdirection, setOrderDirection] = React.useState("asc");
-    const [valuetoorderby, setValueToOrderBy] = React.useState("first_name");
-    const createSortHandler = (property: any) => (event: any) => {
-        handleRequestSort(event, property);
-    };
-
-    const handleRequestSort = (event: any, property: any) => {
-        const isAscending = valuetoorderby === property && orderdirection === "asc";
-        setValueToOrderBy(property);
-        setOrderDirection(isAscending ? "desc" : "asc");
-    };
-
-    const [expanded, setExpanded] = React.useState<any>([null, false]);
-
-    const handleChangePanel = (index: number) => {
+    const handleChangePanel = React.useCallback((index: number, id: string) => {
         if (expanded[0] === index) {
-            setExpanded([index, false]);
+            setExpanded([null, false]);
+            setSelectedData([])
         } else {
             setExpanded([index, true]);
+            GetPurchaseProducts(id)
         }
-    };
+    }, [expanded[0]]);
+
+    const GetPurchaseReports = async () => {
+        setLoader(true)
+        try {
+            const resp = await HTTPReportsPurchasingDetail({
+                from: moment(dateFrom).format('YYYY/MM/DD'),
+                to: moment(dateTo).format('YYYY/MM/DD'),
+                limit: itemsPerPage.toString(),
+                page: page.toString(),
+                q: undefined,
+                token: token
+            })
+            setPurchasesData(resp.data.data.item)
+            setMonetary(resp.data.data.monetary)
+            setPagination(resp.data.pagination)
+            setLoader(false)
+        } catch (error: any) {
+            setLoader(false)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
+        }
+    }
+
+    React.useEffect(() => { GetPurchaseReports() }, [init])
+
+    const GetPurchaseProducts = async (purchasingId: string) => {
+        setChildLoader(true)
+        try {
+            const resp = await HTTPReportsPurchasingDetailByID({
+                id: purchasingId,
+                token: token
+            })
+            setSelectedData(resp.data.data.purchasingProducts)
+            setChildLoader(false)
+        } catch (error: any) {
+            setChildLoader(false)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
+        }
+    }
 
     return (
         <div style={{ display: 'flex' }}>
@@ -123,13 +156,13 @@ const PembelianDetailTable = () => {
                         <Stack direction={'row'} alignItems={'center'} gap={1} justifyContent={isMobile ? 'space-between' : 'flex-end'} width={'100%'}>
                             <DatePicker
                                 value={dateFrom}
-                                onChange={(date) => setDateFrom(date)}
+                                onChange={(date) => { setDateFrom(date); setDateTo(null) }}
                                 sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                             <Icon sx={{ color: Colors.secondary, fontSize: 25 }}>east</Icon>
                             <DatePicker
                                 value={dateTo}
-                                onChange={(date) => setDateTo(date)}
+                                onChange={(date) => { setDateTo(date); setInit(!init) }}
                                 sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                         </Stack>
@@ -178,85 +211,88 @@ const PembelianDetailTable = () => {
                         }}
                     >
                         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                            <TableContainer>
-                                <Table stickyHeader aria-label="sticky table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <StyledTableCell></StyledTableCell>
-                                            {columns.map((column: any) => (
-                                                <StyledTableCell key={column.id}>
-                                                    <TableSortLabel
-                                                        active={valuetoorderby === column.id}
-                                                        direction={valuetoorderby === column.id ? "asc" : "desc"}
-                                                        onClick={createSortHandler(column.id)}
-                                                        sx={{
-                                                            fontWeight: "bold",
-                                                            whiteSpace: "nowrap",
-                                                            "& .MuiTableSortLabel-icon": {
-                                                                opacity: 1,
-                                                                fontSize: 10,
-                                                            },
-                                                        }}
-                                                        IconComponent={FilterList}
-                                                    >
-                                                        {column.label}
-                                                    </TableSortLabel>
-                                                </StyledTableCell>
-                                            ))}
-                                        </TableRow>
-                                    </TableHead>
-                                    {penjualanData !== undefined
-                                        ? sortedRowInformation(
-                                            penjualanData,
-                                            getComparator(orderdirection, valuetoorderby))
-                                            .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
-                                            .map((item: any, index: number) => {
-                                                return (
-                                                    <TableBody key={index}>
-                                                        <TableRow
-                                                            role="checkbox"
-                                                            tabIndex={-1}
-                                                            sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer', backgroundColor: expanded[0] === index && expanded[1] === true ? Colors.inherit : '#fff' }}
-                                                            onClick={() => handleChangePanel(index)}
-                                                        >
-                                                            <StyledTableCell align="center">
-                                                                <div style={{ width: 30, height: 30, border: '2px solid #ababab', borderRadius: 10, ...CENTER }}>
+                            {
+                                loader ?
+                                    <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                                        <CircularProgress size={40} color={'error'} />
+                                    </div>
+                                    :
+                                    <>
+                                        {
+                                            PurchasesData.length === 0 ?
+                                                <div style={{ ...CENTER, padding: '20px 0' }}>
+                                                    <span>Tidak ada data</span>
+                                                </div>
+                                                :
+                                                <TableContainer>
+                                                    <Table stickyHeader aria-label="sticky table">
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <StyledTableCell>
+                                                                    <div style={{ width: 50 }}></div>
+                                                                </StyledTableCell>
+                                                                {columns.map((column: any) => (
+                                                                    <StyledTableCell key={column.id}>
+                                                                        <div style={{ width: 120 }}>
+                                                                            {column.label}
+                                                                        </div>
+                                                                    </StyledTableCell>
+                                                                ))}
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        {PurchasesData.map((item: any, index: number) => {
+                                                            return (
+                                                                <TableBody key={index}>
+                                                                    <TableRow
+                                                                        role="checkbox"
+                                                                        tabIndex={-1}
+                                                                        sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer', backgroundColor: expanded[0] === index && expanded[1] === true ? Colors.inherit : '#fff' }}
+                                                                        onClick={() => handleChangePanel(index, item.id)}
+                                                                    >
+                                                                        <StyledTableCell>
+                                                                            <div style={{ width: 30, height: 30, border: '2px solid #ababab', borderRadius: 10, ...CENTER }}>
+                                                                                {
+                                                                                    expanded[0] === index && expanded[1] === true ?
+                                                                                        <Icon sx={{ fontSize: 25, color: '#909090' }}>remove</Icon>
+                                                                                        :
+                                                                                        <Icon sx={{ fontSize: 25, color: '#909090' }}>add</Icon>
+                                                                                }
+                                                                            </div>
+                                                                        </StyledTableCell>
+                                                                        <StyledTableCell>{moment(item.transactionDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                        <StyledTableCell>{item.genId}</StyledTableCell>
+                                                                        <StyledTableCell>{item.supplierName}</StyledTableCell>
+                                                                        <StyledTableCell>{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                        <StyledTableCell>{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                        <StyledTableCell sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>{item.isPaidOff ? 'Lunas' : 'Belum Lunas'}</StyledTableCell>
+                                                                        <StyledTableCell>{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    </TableRow>
                                                                     {
                                                                         expanded[0] === index && expanded[1] === true ?
-                                                                            <Icon sx={{ fontSize: 25, color: '#909090' }}>remove</Icon>
+                                                                            <TableRow>
+                                                                                <StyledTableCell
+                                                                                    align="center"
+                                                                                    colSpan={8}
+                                                                                    sx={{
+                                                                                        backgroundColor: '#f8f8f8',
+                                                                                        padding: '3%',
+                                                                                    }}
+                                                                                >
+                                                                                    <PembelianDetailChildTable data={SelectedData} loader={childLoader} />
+                                                                                </StyledTableCell>
+                                                                            </TableRow>
                                                                             :
-                                                                            <Icon sx={{ fontSize: 25, color: '#909090' }}>add</Icon>
+                                                                            null
                                                                     }
-                                                                </div>
-                                                            </StyledTableCell>
-                                                            <StyledTableCell align="center">{item.tanggal}</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.id}</StyledTableCell>
-                                                            <StyledTableCell align="center">PT. Sinar Maju Jaya</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.total}</StyledTableCell>
-                                                        </TableRow>
-                                                        {
-                                                            expanded[0] === index && expanded[1] === true ?
-                                                                <TableRow>
-                                                                    <StyledTableCell
-                                                                        align="center"
-                                                                        colSpan={5}
-                                                                        sx={{
-                                                                            backgroundColor: '#f8f8f8',
-                                                                            padding: '3%',
-                                                                        }}
-                                                                    >
-                                                                        <PembelianDetailChildTable />
-                                                                    </StyledTableCell>
-                                                                </TableRow>
-                                                                :
-                                                                null
+                                                                </TableBody>
+                                                            )
+                                                        })
                                                         }
-                                                    </TableBody>
-                                                )
-                                            })
-                                        : null}
-                                </Table>
-                            </TableContainer>
+                                                    </Table>
+                                                </TableContainer>
+                                        }
+                                    </>
+                            }
                         </Box>
                         <div style={{ backgroundColor: '#f8f8f8', padding: 20 }}>
                             <Stack direction={'row'} justifyContent={'space-between'}>
@@ -270,9 +306,9 @@ const PembelianDetailTable = () => {
                                             <span style={{ textAlign: 'left' }}><b>Sisa Tagihan</b></span>
                                         </Stack>
                                         <Stack direction={'column'} alignSelf={'flex-start'} gap={1}>
-                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>2.600.000</h3></u>
-                                            <span style={{ textAlign: 'left' }}><b>2.400.000</b></span>
-                                            <span style={{ textAlign: 'left' }}><b>100.000</b></span>
+                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>{(Monetary.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</h3></u>
+                                            <span style={{ textAlign: 'left' }}><b>{(Monetary.billed).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
+                                            <span style={{ textAlign: 'left' }}><b>{(Monetary.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
                                         </Stack>
                                     </Stack>
                                 </Stack>
@@ -289,21 +325,21 @@ const PembelianDetailTable = () => {
                                             <span style={{ textAlign: 'left' }}><b>Sisa Tagihan</b></span>
                                         </Stack>
                                         <Stack direction={'column'} alignSelf={'flex-start'} gap={1}>
-                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>2.600.000</h3></u>
-                                            <span style={{ textAlign: 'left' }}><b>2.400.000</b></span>
-                                            <span style={{ textAlign: 'left' }}><b>100.000</b></span>
+                                            <u><h3 style={{ margin: 0, textAlign: 'left' }}>{(Monetary.overallTotalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</h3></u>
+                                            <span style={{ textAlign: 'left' }}><b>{(Monetary.overallBilled).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
+                                            <span style={{ textAlign: 'left' }}><b>{(Monetary.overallBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
                                         </Stack>
                                     </Stack>
                                 </Stack>
                             </Stack>
                         </div>
-                        {penjualanData !== undefined && (
+                        {PurchasesData !== undefined && (
                             <TablePagination
-                                rowsPerPageOptions={[5, 10, 25, 100]}
+                                rowsPerPageOptions={[5, 10, 25]}
                                 component="div"
-                                count={penjualanData.length}
+                                count={pagination.totalItem === undefined ? 0 : pagination.totalItem}
                                 rowsPerPage={itemsPerPage}
-                                page={page}
+                                page={page - 1}
                                 onPageChange={handleChangePage}
                                 onRowsPerPageChange={handleChangeRowsPerPage}
                             />

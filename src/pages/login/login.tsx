@@ -19,6 +19,7 @@ import { HTTPGetRoleID } from "../../apis/SuperAdmin/role";
 import { useDispatch } from "react-redux";
 import { setUserPermissions } from "../../stores/reduxes/userPermissions";
 import { toast } from "react-toastify";
+import { HTTPGetStoreID } from "../../apis/SuperAdmin/store";
 
 const topBg = require("../../assets/images/top-login.png");
 const redCircle = require("../../assets/images/circle-red.png");
@@ -74,6 +75,8 @@ const Login = () => {
           if (response.data.data.user.roleId === 1) {
             navigate('/dashboard')
           } else {
+            const storeResp = await HTTPGetStoreID({ id: response.data.data.user.storeId, token: response.data.data.token })
+            secureLocalStorage.setItem("USER_STORE", JSON.stringify(storeResp.data.data))
             const roleResp = await HTTPGetRoleID({
               id: (response.data.data.user.roleId).toString()
             })

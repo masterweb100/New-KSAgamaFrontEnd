@@ -102,6 +102,7 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
   const [isDrawer, setDrawer] = React.useState(false);
   const [profile, setProfile] = React.useState<any>(null);
   const [isLogout, setLogout] = React.useState(false);
+  const StoreData = secureLocalStorage.getItem('USER_STORE') as string
 
   const [expanded, setExpanded] = React.useState<string | false>(
     `panel${idPanel}`
@@ -222,11 +223,9 @@ const NavigationBarUser = ({ title, isChild, name, idPanel }: IDrawer) => {
               )}
             </Stack>
             <Stack direction={"row"} alignItems={"center"} gap={3}>
-              {/* <Badge badgeContent={100} color="secondary">
-                <Notifications
-                  sx={{ color: Colors.secondary, fontSize: isMobile ? 25 : 30 }}
-                />
-              </Badge> */}
+              <div style={{ backgroundColor: Colors.primary, borderRadius: 10, padding: 5 }}>
+                <span style={{ color: '#fff', fontSize: 18, fontWeight: '700' }}>{JSON.parse(StoreData).storeName}</span>
+              </div>
               <>
                 <IconButton onClick={profileClick}>
                   <Avatar

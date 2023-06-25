@@ -77,11 +77,11 @@ const DataProdukTable = (props: any) => {
     } catch (error: any) {
       setLoader(false)
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            };
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      };
     }
   };
 
