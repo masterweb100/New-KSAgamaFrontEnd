@@ -35,6 +35,24 @@ export function HTTPGetTypes(param: {
   });
 }
 
+export function HTTPGetTypesByParent(param: {
+  token: string;
+  id: string;
+}): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await AxiosNormal(param.token).get(`${uri}/parent`, {
+        params: {
+          productBrandId: param.id,
+        },
+      });
+      return resolve(response);
+    } catch (error: any) {
+      return reject(error);
+    }
+  });
+}
+
 export function HTTPAddType(param: {
   typeName: string;
   genId: string;

@@ -47,7 +47,7 @@ const TrackingDialog = ({ isOpen, setOpen, item, getData }: { isOpen: boolean, s
             toast.error('Terjadi Kesalahan!')
             setLoader(false)
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -93,13 +93,13 @@ if (error.status === 500) {
                                 onChange={handleChangeStatus}
                                 renderValue={(selected: any) => {
                                     if (selected.length === 0) {
-                                        return <span style={{ color: '#a7a5a6' }}>Received / Return / Done</span>;
+                                        return <span style={{ color: '#a7a5a6' }}>Return / Done</span>;
                                     }
                                     return selected
                                 }}
                             >
                                 {
-                                    ['Received', 'Return', 'Done'].map((item, index) => (
+                                    ['Return', 'Done'].map((item, index) => (
                                         <MenuItem key={index} value={item}>{item}</MenuItem>
                                     ))
                                 }

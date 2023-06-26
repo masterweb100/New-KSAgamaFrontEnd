@@ -35,6 +35,24 @@ export function HTTPGetUnits(param: {
   });
 }
 
+export function HTTPGetUnitsByParent(param: {
+  token: string;
+  id: string;
+}): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await AxiosNormal(param.token).get(`${uri}/parent`, {
+        params: {
+          productTypeId: param.id,
+        },
+      });
+      return resolve(response);
+    } catch (error: any) {
+      return reject(error);
+    }
+  });
+}
+
 export function HTTPAddUnits(param: {
   token: string;
   genId: string;

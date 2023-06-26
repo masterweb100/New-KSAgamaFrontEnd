@@ -251,7 +251,7 @@ const ReturnPenjualanForm = () => {
                             <Stack direction={'column'} gap={1}>
                                 <span>Jumlah Barang Return</span>
                                 <TextField
-                                    type="text"
+                                    type="number"
                                     size="small"
                                     placeholder='Jumlah Barang return'
                                     value={ReturnData.qtyReturn}

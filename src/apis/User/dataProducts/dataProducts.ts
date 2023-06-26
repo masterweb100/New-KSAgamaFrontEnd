@@ -22,3 +22,21 @@ export function HTTPGetProducts(param: {
         }
     });
 }
+
+export function HTTPGetProductsQty(param: {
+    token: string;
+    page: string;
+}): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await AxiosNormal(param.token).get(`${uri}/qty`, {
+                params: {
+                    page: param.page
+                },
+            });
+            return resolve(response);
+        } catch (error: any) {
+            return reject(error);
+        }
+    });
+}

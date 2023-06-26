@@ -20,7 +20,7 @@ import { styled } from "@mui/material/styles";
 import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { isMobile } from "react-device-detect";
-import { HTTPGetProducts } from "../../../../apis/User/dataProducts/dataProducts";
+import { HTTPGetProducts, HTTPGetProductsQty } from "../../../../apis/User/dataProducts/dataProducts";
 import secureLocalStorage from "react-secure-storage";
 import moment from "moment";
 import { CENTER } from "../../../../utils/stylesheet";
@@ -56,6 +56,10 @@ const DataProdukTable = (props: any) => {
   const [pagination, setPagination] = React.useState<any>({})
   const [search, setSearch] = React.useState('')
   const [loader, setLoader] = React.useState(true)
+  const [currentQty, setCurrentQty] = React.useState<any>({
+    qty: 0,
+    totalQty: 0
+  })
 
   const onSearch = (param: string) => {
     setSearch(param)
@@ -73,6 +77,7 @@ const DataProdukTable = (props: any) => {
       });
       setDataProducts(response.data.data);
       setPagination(response.data.pagination);
+      await GetProductQty(response.data.pagination.currentPage)
       setLoader(false)
     } catch (error: any) {
       setLoader(false)
@@ -95,6 +100,22 @@ const DataProdukTable = (props: any) => {
     setPage(1);
     setInit(!init)
   };
+
+  const GetProductQty = async (page: any) => {
+    try {
+      const resp = await HTTPGetProductsQty({
+        page: page,
+        token: token
+      })
+      setCurrentQty(resp.data.data)
+    } catch (error: any) {
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      };
+    }
+  }
 
   React.useEffect(() => {
     GetProductsTable();
@@ -240,7 +261,7 @@ const DataProdukTable = (props: any) => {
               <b>Sub Total Barang Masuk</b>
             </span>
             <span>
-              <b>8.960</b>
+              <b>{currentQty.qty}</b>
             </span>
           </Stack>
           <div
@@ -257,7 +278,7 @@ const DataProdukTable = (props: any) => {
               <b>Total Barang Masuk</b>
             </span>
             <span>
-              <b>18.960</b>
+              <b>{currentQty.totalQty}</b>
             </span>
           </Stack>
         </Stack>

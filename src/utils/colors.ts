@@ -5,4 +5,5 @@ export const Colors = {
   error: "#fd3231",
   warning: "#ff9900",
   inherit: "#ffe4e3",
+  info: "#0068ff"
 };

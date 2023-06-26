@@ -52,11 +52,11 @@ const MutasiForm = () => {
             } catch (error: any) {
                 setLoader(false)
                 console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                if (error.status === 500) {
+                    toast.error('Server sedang mengalami gangguan!')
+                } else {
+                    toast.error('Terjadi Kesalahan!')
+                }
             }
         }
     })
@@ -67,7 +67,7 @@ if (error.status === 500) {
             setGenId(resp.data.data.genId)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -81,7 +81,7 @@ if (error.status === 500) {
             setTypesData(resp.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -95,7 +95,7 @@ if (error.status === 500) {
             setStoresData(resp.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -109,7 +109,7 @@ if (error.status === 500) {
             setMyStoreData(resp.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -125,7 +125,7 @@ if (error.status === 500) {
             await getMyStore()
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -247,7 +247,7 @@ if (error.status === 500) {
                                     >
                                         {
                                             StoresData.map((item: any, index: number) => (
-                                                <MenuItem key={index} value={item.id}>{item.storeName}</MenuItem>
+                                                <MenuItem disabled={MyStoreData.id === item.id} key={index} value={item.id}>{item.storeName}</MenuItem>
                                             ))
                                         }
                                     </Select>

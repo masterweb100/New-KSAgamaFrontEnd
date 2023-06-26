@@ -13,7 +13,7 @@ import { HTTPGeneratePurchaseID } from '../../../../apis/User/purchase/purchase'
 import { HTTPGetSuppliers } from '../../../../apis/User/contact/supplier';
 import secureLocalStorage from 'react-secure-storage';
 import { HTTPGetExpeditions } from '../../../../apis/User/contact/expedition';
-import { HTTPGetUnits } from '../../../../apis/User/product/units';
+import { HTTPGetUnits, HTTPGetUnitsByParent } from '../../../../apis/User/product/units';
 import { HTTPGetBrands } from '../../../../apis/User/product/brand';
 
 const PembelianForm = () => {
@@ -46,7 +46,7 @@ const PembelianForm = () => {
             setPurchaseData({ ...PurchaseData, genId: resp.data.data.genId })
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -74,6 +74,7 @@ if (error.status === 500) {
         setPurchaseData({ ...PurchaseData, productBrandId: event.target.value })
         const result: any = Brands.filter((value: any) => value.id === event.target.value)
         setCategoryName(result[0].productCategoryName)
+        getProducts(result[0].productCategoryId)
     }
 
     const getSupplier = async () => {
@@ -84,7 +85,7 @@ if (error.status === 500) {
             setSuppliers(newArr)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -98,7 +99,7 @@ if (error.status === 500) {
             setBrands(resp.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -106,13 +107,13 @@ if (error.status === 500) {
         }
     }
 
-    const getProducts = async () => {
+    const getProducts = async (id: any) => {
         try {
-            const resp = await HTTPGetUnits({ limit: '50', page: '1', q: '', token: token as string })
+            const resp = await HTTPGetUnitsByParent({ id: id, token: token as string })
             setUnits(resp.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -122,13 +123,11 @@ if (error.status === 500) {
 
     const Initial = async () => {
         try {
-            // await GenId()
             await getSupplier()
             await getBrand()
-            await getProducts()
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')

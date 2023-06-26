@@ -94,11 +94,11 @@ const AkunTable = (props: any) => {
       setDataCategory(response.data.data);
     } catch (error: any) {
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            };
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      };
     }
   };
 
@@ -143,15 +143,15 @@ if (error.status === 500) {
       } catch (error: any) {
         setSend(false)
         console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+        if (error.status === 500) {
+          toast.error('Server sedang mengalami gangguan!')
+        } else {
+          toast.error('Terjadi Kesalahan!')
+        }
       }
     }
   })
-  
+
   return (
     <div>
       <Stack
@@ -294,16 +294,16 @@ if (error.status === 500) {
                                 key={index}
                                 sx={{ "&:hover": { bgcolor: Colors.inherit } }}
                               >
-                                <StyledTableCell style={{ cursor: "pointer" }} onClick={DetailPage} align="center">
+                                <StyledTableCell align="center">
                                   {item.accountCode}
                                 </StyledTableCell>
-                                <StyledTableCell style={{ cursor: "pointer" }} onClick={DetailPage} align="center">
+                                <StyledTableCell align="center" sx={{ color: Colors.info }}>
                                   {item.accountName}
                                 </StyledTableCell>
-                                <StyledTableCell style={{ cursor: "pointer" }} onClick={DetailPage} align="center">
+                                <StyledTableCell align="center">
                                   {item.accountCategoryName}
                                 </StyledTableCell>
-                                <StyledTableCell style={{ cursor: "pointer" }} onClick={DetailPage} align="center">
+                                <StyledTableCell align="center" sx={{ color: item.balance < 0 ? Colors.error : Colors.success }}>
                                   {(item.balance).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
                                 </StyledTableCell>
                                 <StyledTableCell align="center">

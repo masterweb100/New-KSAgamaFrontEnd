@@ -240,11 +240,15 @@ const ReturnPenjualanTable = (props: any) => {
                                                                 <StyledTableCell
                                                                     align="center"
                                                                     sx={{
-                                                                        color: item.saleReturnStatus === 'REFUND' ?
-                                                                            Colors.success : item.saleReturnStatus === 'DISCOUNT' ?
-                                                                                Colors.error : Colors.warning
+                                                                        color: item.isPending ? '#999999' : item.saleReturnStatus === 'RETURN' ?
+                                                                            Colors.success : item.saleReturnStatus === 'REJECTED' ?
+                                                                                Colors.error : Colors.info
                                                                     }}
-                                                                >{item.saleReturnStatus}</StyledTableCell>
+                                                                >{
+                                                                        item.isPending ? "TERTUNDA" :
+                                                                            item.saleReturnStatus === "REJECTED" ? 'DITOLAK' :
+                                                                                item.saleReturnStatus
+                                                                    }</StyledTableCell>
                                                             </TableRow>
                                                         )
                                                     })

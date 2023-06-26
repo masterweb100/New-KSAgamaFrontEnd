@@ -40,7 +40,7 @@ const columns = [
     { id: "pembayaran", label: "Pembayaran" },
     { id: "total", label: "Total" },
     { id: "status", label: "Status" },
-    { id: "updatedBy", label: "Updated By" },
+    // { id: "updatedBy", label: "Updated By" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -269,7 +269,16 @@ const PembelianTable = (props: any) => {
                                                                 </StyledTableCell>
                                                                 <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
                                                                 <StyledTableCell align="center">
-                                                                    <div onClick={() => item.purchasingStatus === 'UNPAID' ? FormLunas(item) : null} style={{ ...CENTER, backgroundColor: item.purchasingStatus !== 'UNPAID' ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                    <div
+                                                                        onClick={() => item.purchasingStatus === 'UNPAID' ? FormLunas(item) : null}
+                                                                        style={{
+                                                                            ...CENTER,
+                                                                            backgroundColor: item.purchasingStatus !== 'UNPAID' ? '#ababab' : Colors.success,
+                                                                            borderRadius: 5,
+                                                                            cursor: 'pointer',
+                                                                            padding: isMobile ? '10px 6px' : 10
+                                                                        }}
+                                                                    >
                                                                         <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
                                                                     </div>
                                                                 </StyledTableCell>
@@ -277,8 +286,13 @@ const PembelianTable = (props: any) => {
                                                                 {/* <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
                                                                     {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
                                                                 </StyledTableCell> */}
-                                                                <StyledTableCell align="center">{item.purchasingStatus}</StyledTableCell>
-                                                                <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
+                                                                <StyledTableCell
+                                                                    align="center"
+                                                                    sx={{ color: item.purchasingStatus === 'UNPAID' ? Colors.error : Colors.success }}
+                                                                >
+                                                                    {item.purchasingStatus === 'UNPAID' ? "BELUM LUNAS" : 'LUNAS'}
+                                                                </StyledTableCell>
+                                                                {/* <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell> */}
                                                             </TableRow>
                                                         )
                                                     })

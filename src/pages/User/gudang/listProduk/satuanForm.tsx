@@ -24,14 +24,14 @@ import {
 } from "../../../../apis/User/product/units";
 import { HTTPGetBrands } from "../../../../apis/User/product/brand";
 import secureLocalStorage from "react-secure-storage";
-import { HTTPGetTypes } from "../../../../apis/User/product/types";
+import { HTTPGetTypes, HTTPGetTypesByParent } from "../../../../apis/User/product/types";
 import { HTTPGetSuppliers } from "../../../../apis/User/contact/supplier";
 import { HTTPGetAccounts } from "../../../../apis/User/account/account";
 import { toast } from "react-toastify";
 
 const SatuanForm = () => {
   const navigate = useNavigate();
-  const token = secureLocalStorage.getItem("TOKEN") as string;
+  const token = secureLocalStorage.getItem("USER_SESSION") as string;
   const { action }: any = useParams();
   const [init, setInit] = React.useState(false);
   const [genId, setGenId] = React.useState("");
@@ -40,6 +40,7 @@ const SatuanForm = () => {
   const [Supplier, setSupplier] = React.useState([]);
   const [Account, setAccount] = React.useState([]);
   const [loader, setLoader] = React.useState(false);
+  const [SelectedBrand, setSelectedBrand] = React.useState('')
 
   const GoBack = () => {
     navigate(-1);
@@ -67,7 +68,7 @@ const SatuanForm = () => {
           token: token,
           genId: genId,
           supplierId: values.supplier,
-          productBrandId: parseInt(values.brand),
+          productBrandId: parseInt(SelectedBrand),
           productTypeId: parseInt(values.jenis),
           buyPriceInPcs: parseInt(values.hargaBeli),
           sellPriceInPcs: parseInt(values.hargaJual),
@@ -125,12 +126,10 @@ const SatuanForm = () => {
     }
   };
 
-  const getTypes = async () => {
+  const getTypes = async (id: any) => {
     try {
-      const resp = await HTTPGetTypes({
-        limit: "50",
-        page: "1",
-        q: undefined,
+      const resp = await HTTPGetTypesByParent({
+        id: id,
         token: token,
       });
       setTypes(resp.data.data);
@@ -186,7 +185,7 @@ const SatuanForm = () => {
     try {
       await generateId();
       await getBrand();
-      await getTypes();
+      // await getTypes();
       await getSupplier();
       await getAccount();
     } catch (error: any) {
@@ -208,7 +207,7 @@ const SatuanForm = () => {
       return <span style={{ color: "#a7a5a6" }}>Pilih Brand</span>;
     } else {
       const result: any = Brand.filter(
-        (value: any) => value.id === Formik.values.brand
+        (value: any) => value.id === SelectedBrand
       );
       return <span style={{ color: "#000" }}>{result[0].brandName}</span>;
     }
@@ -362,8 +361,8 @@ const SatuanForm = () => {
                       color: "#000",
                     }}
                     name="brand"
-                    value={Formik.values.brand}
-                    onChange={Formik.handleChange}
+                    value={SelectedBrand}
+                    onChange={(e) => { setSelectedBrand(e.target.value); getTypes(e.target.value) }}
                     renderValue={renderBrand}
                   >
                     {Brand.map((item: any, index: number) => (
@@ -385,6 +384,7 @@ const SatuanForm = () => {
                   <Select
                     size="small"
                     displayEmpty
+                    disabled={SelectedBrand.length === 0}
                     sx={{
                       bgcolor: "white",
                       width: isMobile ? "40vw" : "25vw",
@@ -434,7 +434,7 @@ const SatuanForm = () => {
                 <Stack direction={"column"} gap={1}>
                   <span>Harga Beli/PCs</span>
                   <TextField
-                    type="text"
+                    type="number"
                     size="small"
                     placeholder={"Harga Beli"}
                     name="hargaBeli"
@@ -446,7 +446,7 @@ const SatuanForm = () => {
                 <Stack direction={"column"} gap={1}>
                   <span>Harga Jual/PCs</span>
                   <TextField
-                    type="text"
+                    type="number"
                     size="small"
                     placeholder="Harga Jual"
                     name="hargaJual"
@@ -465,7 +465,7 @@ const SatuanForm = () => {
                 <Stack direction={"column"} gap={1}>
                   <span>Harga Beli/Lusin</span>
                   <TextField
-                    type="text"
+                    type="number"
                     size="small"
                     name="hargaBeliLusin"
                     placeholder="Harga Beli"
@@ -477,7 +477,7 @@ const SatuanForm = () => {
                 <Stack direction={"column"} gap={1}>
                   <span>Harga Jual/Lusin</span>
                   <TextField
-                    type="text"
+                    type="number"
                     size="small"
                     name="hargaJualLusin"
                     placeholder="Harga Jual"
@@ -496,7 +496,7 @@ const SatuanForm = () => {
                 <Stack direction={"column"} gap={1}>
                   <span>Harga Beli/Box</span>
                   <TextField
-                    type="text"
+                    type="number"
                     size="small"
                     name="hargaBeliBox"
                     value={Formik.values.hargaBeliBox}
@@ -508,7 +508,7 @@ const SatuanForm = () => {
                 <Stack direction={"column"} gap={1}>
                   <span>Harga Jual/Box</span>
                   <TextField
-                    type="text"
+                    type="number"
                     size="small"
                     name="hargaJualBox"
                     value={Formik.values.hargaJualBox}
@@ -551,6 +551,7 @@ const SatuanForm = () => {
                   <Select
                     size="small"
                     displayEmpty
+                    disabled={Formik.values.akunBeli.length === 0}
                     sx={{
                       bgcolor: "white",
                       width: isMobile ? "40vw" : "25vw",
@@ -562,7 +563,7 @@ const SatuanForm = () => {
                     renderValue={renderAccountSell}
                   >
                     {Account.map((item: any, index: number) => (
-                      <MenuItem key={index} value={item.id}>
+                      <MenuItem disabled={Formik.values.akunBeli === item.id} key={index} value={item.id}>
                         {item.accountName + " - " + item.accountCode}
                       </MenuItem>
                     ))}

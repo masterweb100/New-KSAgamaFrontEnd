@@ -110,7 +110,7 @@ const ProdukList = (data: any) => {
             setLoader(false)
             toast.error('Terjadi kesalahan')
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
