@@ -149,6 +149,7 @@ const KategoriForm = () => {
                   value={categoryName}
                   onChange={handleName}
                   placeholder="Nama Kategori"
+                  required
                   size="small"
                   sx={{ bgcolor: "#fff", width: isMobile ? "40vw" : "25vw" }}
                 />

@@ -1,7 +1,7 @@
 import {
     Box, Toolbar, TablePagination,
-    TableSortLabel, TableHead,
-    Table, TableBody, TableContainer,
+    TableHead, Table, TableBody, 
+    TableContainer,
     Stack, Icon, TextField,
     InputAdornment,
     CircularProgress
@@ -11,10 +11,8 @@ import NavigationBarUser from '../../../../../components/appBarUser';
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { penjualanData } from '../../dummy';
 import PenjualanDetailChildTable from './penjualanDetailChildTable';
 import { isMobile } from 'react-device-detect';
 import { CENTER } from '../../../../../utils/stylesheet';
@@ -56,6 +54,7 @@ const PenjualanDetailTable = () => {
     const [pagination, setPagination] = React.useState<any>({})
     const [SalesData, setSalesData] = React.useState([])
     const [SelectedData, setSelectedData] = React.useState([])
+    const [search, setSearch] = React.useState("")
     const [Monetary, setMonetary] = React.useState({
         bill: 0,
         billed: 0,
@@ -64,6 +63,11 @@ const PenjualanDetailTable = () => {
         overallTotalBill: 0,
         totalBill: 0,
     })
+
+    const handleSearch = (event: any) => {
+        setSearch(event.target.value)
+        setInit(!init)
+    }
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -190,7 +194,9 @@ const PenjualanDetailTable = () => {
                         <TextField
                             type="search"
                             size="small"
-                            placeholder="Pencarian by ID"
+                            placeholder="Cari..."
+                            value={search}
+                            onChange={handleSearch}
                             sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                             InputProps={{
                                 startAdornment: (

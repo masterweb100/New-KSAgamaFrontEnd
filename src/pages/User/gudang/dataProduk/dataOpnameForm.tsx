@@ -4,9 +4,6 @@ import {
   Stack,
   TextField,
   Toolbar,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
   CircularProgress,
 } from "@mui/material";
 import NavigationBarUser from "../../../../components/appBarUser";
@@ -170,6 +167,7 @@ const DataProdukForm = () => {
                   size="small"
                   value={GoodProducts}
                   onChange={handleProducts}
+                  required
                   placeholder="Barang"
                   sx={{ bgcolor: "white", width: isMobile ? "40vw" : "25vw" }}
                 />

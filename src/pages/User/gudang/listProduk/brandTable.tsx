@@ -72,6 +72,11 @@ const BrandTable = () => {
   const [loader, setLoader] = React.useState(false)
   const [isDeleteModal, setDeleteModal] = React.useState(false);
 
+  const handleSearch = (event: any) => {
+    setSearch(event.target.value)
+    setInit(!init)
+  }
+
   const GetBrand = async () => {
     setLoader(true)
     try {
@@ -87,11 +92,11 @@ const BrandTable = () => {
     } catch (error: any) {
       setLoader(false)
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -106,11 +111,11 @@ if (error.status === 500) {
       setKategoriData(resp.data.data)
     } catch (error: any) {
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -199,11 +204,11 @@ if (error.status === 500) {
     } catch (error: any) {
       setSend(false)
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -292,7 +297,9 @@ if (error.status === 500) {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by ID"
+          placeholder="Cari..."
+          value={search}
+          onChange={handleSearch}
           sx={{
             bgcolor: "white",
             borderRadius: 1,

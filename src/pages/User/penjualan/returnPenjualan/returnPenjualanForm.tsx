@@ -142,170 +142,176 @@ const ReturnPenjualanForm = () => {
     }
 
     return (
-        <div style={{ display: 'flex' }}>
-            <NavigationBarUser title={'Form Return Penjualan'} isChild={true} name={'Return Penjualan'} idPanel={3}></NavigationBarUser>
-            <Box
-                component="main"
-                sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
-            >
-                <Toolbar />
-                <div style={{ flex: 1, ...CENTER }}>
-                    <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                            <h2 style={{ color: '#000' }}>Form Tambah Data Return</h2>
-                            {
-                                action === 'update' ?
-                                    <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
-                                        <Icon style={{ color: '#fff', fontSize: 20 }}>border_color</Icon>
-                                    </div>
-                                    :
-                                    null
-                            }
-                        </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
-                            <Stack direction={'column'} gap={1}>
-                                <span>ID Invoice</span>
-                                <Select
-                                    size="small"
-                                    displayEmpty
-                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                    value={ReturnData.saleId}
-                                    onChange={(e) => handleInput(e, 'saleId')}
-                                    renderValue={renderInvoice}
-                                >
-                                    {
-                                        SalesData.map((item: any, index: number) => (
-                                            <MenuItem key={index} value={item.id}>{item.invoice}</MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Nama Pelanggan</span>
-                                <TextField
-                                    type="text"
-                                    size="small"
-                                    disabled
-                                    placeholder="Nama Pelanggan"
-                                    value={SelectedId.customerName === null ? '' : SelectedId.customerName}
-                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
-                                />
-                            </Stack>
-                        </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Nama Product</span>
-                                <Select
-                                    size="small"
-                                    displayEmpty
-                                    disabled={ReturnData.saleId.length === 0}
-                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                    value={ReturnData.saleProductId}
-                                    onChange={(e) => handleInput(e, 'saleProductId')}
-                                    renderValue={renderProduct}
-                                >
-                                    {
-                                        ProductData.map((item: any, index: number) => (
-                                            <MenuItem key={index} value={item.id}>{item.productTypeName}</MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Jenis Barang</span>
-                                <TextField
-                                    type="text"
-                                    size="small"
-                                    disabled
-                                    placeholder='Jenis Barang'
-                                    value={SelectedProduct.productTypeName === null ? '' : SelectedProduct.productTypeName}
-                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
-                                />
-                            </Stack>
-                        </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Jumlah Barang</span>
-                                <TextField
-                                    type="text"
-                                    size="small"
-                                    disabled
-                                    placeholder='Jumlah Barang'
-                                    value={SelectedProduct.qty === null ? '' : SelectedProduct.qty}
-                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
-                                />
-                            </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Jenis Penjualan</span>
-                                <TextField
-                                    type="text"
-                                    disabled
-                                    placeholder='Jenis Penjualan'
-                                    value={SelectedId.salesType === null ? '' : SelectedId.salesType}
-                                    size="small"
-                                    sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
-                                />
-                            </Stack>
-                        </Stack>
-                        <Stack direction={'row'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Jumlah Barang Return</span>
-                                <TextField
-                                    type="number"
-                                    size="small"
-                                    placeholder='Jumlah Barang return'
-                                    value={ReturnData.qtyReturn}
-                                    error={parseInt(ReturnData.qtyReturn) > SelectedProduct.qty}
-                                    onChange={(e) => handleInput(e, 'qtyReturn')}
-                                    sx={{ bgcolor: "#ffff", width: isMobile ? '40vw' : '25vw' }}
-                                />
+        <form onSubmit={handleSubmit}>
+            <div style={{ display: 'flex' }}>
+                <NavigationBarUser title={'Form Return Penjualan'} isChild={true} name={'Return Penjualan'} idPanel={3}></NavigationBarUser>
+                <Box
+                    component="main"
+                    sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
+                >
+                    <Toolbar />
+                    <div style={{ flex: 1, ...CENTER }}>
+                        <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
+                            <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                                <h2 style={{ color: '#000' }}>Form Tambah Data Return</h2>
                                 {
-                                    parseInt(ReturnData.qtyReturn) > SelectedProduct.qty ?
-                                        <span style={{ color: Colors.error, fontSize: 13 }}>Jumlah Return melebihi Jumlah Barang</span>
+                                    action === 'update' ?
+                                        <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
+                                            <Icon style={{ color: '#fff', fontSize: 20 }}>border_color</Icon>
+                                        </div>
                                         :
                                         null
                                 }
                             </Stack>
-                            <Stack direction={'column'} gap={1}>
-                                <span>Status</span>
-                                <Select
-                                    size="small"
-                                    displayEmpty
-                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                    value={ReturnData.saleReturnStatus}
-                                    onChange={(e) => handleInput(e, 'saleReturnStatus')}
-                                    renderValue={(selected: any) => {
-                                        if (selected.length === 0) {
-                                            return <span style={{ color: '#a7a5a6' }}>Status</span>;
+                            <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>ID Invoice</span>
+                                    <Select
+                                        size="small"
+                                        displayEmpty
+                                        required
+                                        sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                        value={ReturnData.saleId}
+                                        onChange={(e) => handleInput(e, 'saleId')}
+                                        renderValue={renderInvoice}
+                                    >
+                                        {
+                                            SalesData.map((item: any, index: number) => (
+                                                <MenuItem key={index} value={item.id}>{item.invoice}</MenuItem>
+                                            ))
                                         }
-                                        return selected
-                                    }}
-                                >
+                                    </Select>
+                                </Stack>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Nama Pelanggan</span>
+                                    <TextField
+                                        type="text"
+                                        size="small"
+                                        disabled
+                                        placeholder="Nama Pelanggan"
+                                        value={SelectedId.customerName === null ? '' : SelectedId.customerName}
+                                        sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
+                                    />
+                                </Stack>
+                            </Stack>
+                            <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Nama Product</span>
+                                    <Select
+                                        size="small"
+                                        displayEmpty
+                                        required
+                                        disabled={ReturnData.saleId.length === 0}
+                                        sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                        value={ReturnData.saleProductId}
+                                        onChange={(e) => handleInput(e, 'saleProductId')}
+                                        renderValue={renderProduct}
+                                    >
+                                        {
+                                            ProductData.map((item: any, index: number) => (
+                                                <MenuItem key={index} value={item.id}>{item.productTypeName}</MenuItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </Stack>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Jenis Barang</span>
+                                    <TextField
+                                        type="text"
+                                        size="small"
+                                        disabled
+                                        placeholder='Jenis Barang'
+                                        value={SelectedProduct.productTypeName === null ? '' : SelectedProduct.productTypeName}
+                                        sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
+                                    />
+                                </Stack>
+                            </Stack>
+                            <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Jumlah Barang</span>
+                                    <TextField
+                                        type="text"
+                                        size="small"
+                                        disabled
+                                        placeholder='Jumlah Barang'
+                                        value={SelectedProduct.qty === null ? '' : SelectedProduct.qty}
+                                        sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
+                                    />
+                                </Stack>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Jenis Penjualan</span>
+                                    <TextField
+                                        type="text"
+                                        disabled
+                                        placeholder='Jenis Penjualan'
+                                        value={SelectedId.salesType === null ? '' : SelectedId.salesType}
+                                        size="small"
+                                        sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
+                                    />
+                                </Stack>
+                            </Stack>
+                            <Stack direction={'row'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Jumlah Barang Return</span>
+                                    <TextField
+                                        type="number"
+                                        size="small"
+                                        required
+                                        placeholder='Jumlah Barang return'
+                                        value={ReturnData.qtyReturn}
+                                        error={parseInt(ReturnData.qtyReturn) > SelectedProduct.qty}
+                                        onChange={(e) => handleInput(e, 'qtyReturn')}
+                                        sx={{ bgcolor: "#ffff", width: isMobile ? '40vw' : '25vw' }}
+                                    />
                                     {
-                                        ['Return', 'Refund', 'Discount'].map((item, index) => (
-                                            <MenuItem key={index} value={item}>{item}</MenuItem>
-                                        ))
+                                        parseInt(ReturnData.qtyReturn) > SelectedProduct.qty ?
+                                            <span style={{ color: Colors.error, fontSize: 13 }}>Jumlah Return melebihi Jumlah Barang</span>
+                                            :
+                                            null
                                     }
-                                </Select>
+                                </Stack>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Status</span>
+                                    <Select
+                                        size="small"
+                                        displayEmpty
+                                        required
+                                        sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                        value={ReturnData.saleReturnStatus}
+                                        onChange={(e) => handleInput(e, 'saleReturnStatus')}
+                                        renderValue={(selected: any) => {
+                                            if (selected.length === 0) {
+                                                return <span style={{ color: '#a7a5a6' }}>Status</span>;
+                                            }
+                                            return selected
+                                        }}
+                                    >
+                                        {
+                                            ['Return', 'Refund', 'Discount'].map((item, index) => (
+                                                <MenuItem key={index} value={item}>{item}</MenuItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </Stack>
+                            </Stack>
+                            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>
+                                <div onClick={GoBack} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.primary}`, padding: '10px 30px', cursor: 'pointer' }}>
+                                    <span style={{ fontSize: 13, color: Colors.primary }}>BATAL</span>
+                                </div>
+                                <button type="submit" style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.primary, padding: '10px 30px', cursor: 'pointer', color: '#fff' }}>
+                                    {
+                                        loader ?
+                                            <CircularProgress size={20} color={'inherit'}></CircularProgress>
+                                            :
+                                            <span style={{ fontSize: 13, color: '#fff' }}>SIMPAN</span>
+                                    }
+                                </button>
                             </Stack>
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>
-                            <div onClick={GoBack} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.primary}`, padding: '10px 30px', cursor: 'pointer' }}>
-                                <span style={{ fontSize: 13, color: Colors.primary }}>BATAL</span>
-                            </div>
-                            <div onClick={handleSubmit} style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.primary, padding: '10px 30px', cursor: 'pointer', color: '#fff' }}>
-                                {
-                                    loader ?
-                                        <CircularProgress size={20} color={'inherit'}></CircularProgress>
-                                        :
-                                        <span style={{ fontSize: 13, color: '#fff' }}>SIMPAN</span>
-                                }
-                            </div>
-                        </Stack>
-                    </Stack>
-                </div>
-            </Box >
-        </div >
+                    </div>
+                </Box >
+            </div >
+        </form>
     )
 }
 

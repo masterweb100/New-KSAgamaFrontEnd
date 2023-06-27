@@ -66,7 +66,7 @@ const SatuanTable = (props: any) => {
   const [limit, setLimit] = React.useState(10);
   const [UnitsData, setUnitsData] = React.useState([])
   const [TypesData, setTypesData] = React.useState([])
-  const [search, setSearchData] = React.useState('')
+  const [search, setSearch] = React.useState('')
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
   const [onSend, setSend] = React.useState(false)
   const [editModal, setEditModal] = React.useState(false)
@@ -74,6 +74,11 @@ const SatuanTable = (props: any) => {
   const [pagination, setPagination] = React.useState<any>({});
   const [loader, setLoader] = React.useState(false)
   const [isDeleteModal, setDeleteModal] = React.useState(false);
+
+  const handleSearch = (event: any) => {
+    setSearch(event.target.value)
+    setInit(!init)
+  }
 
   const GetUnits = async () => {
     setLoader(true)
@@ -90,30 +95,30 @@ const SatuanTable = (props: any) => {
     } catch (error: any) {
       setLoader(false)
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
   const GetTypes = async () => {
     try {
       const resp = await HTTPGetTypes({
-        limit: limit.toString(),
-        page: page.toString(),
-        q: search,
+        limit: '10',
+        page: '1',
+        q: undefined,
         token: token as string
       })
       setTypesData(resp.data.data)
     } catch (error: any) {
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -211,11 +216,11 @@ if (error.status === 500) {
       } catch (error: any) {
         setSend(false)
         console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+        if (error.status === 500) {
+          toast.error('Server sedang mengalami gangguan!')
+        } else {
+          toast.error('Terjadi Kesalahan!')
+        }
       }
     }
   })
@@ -305,7 +310,9 @@ if (error.status === 500) {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by Nama"
+          placeholder="Cari..."
+          value={search}
+          onChange={handleSearch}
           sx={{
             bgcolor: "white",
             borderRadius: 1,

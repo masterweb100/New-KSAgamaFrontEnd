@@ -56,6 +56,12 @@ const TrackingTable = (props: any) => {
     const [isApprove, setApprove] = React.useState(false)
     const [isApprovedModal, setApprovedModal] = React.useState(false)
     const [ItemSelected, setItemSelected] = React.useState<any>({})
+    const [search, setSearch] = React.useState("")
+
+    const handleSearch = (event: any) => {
+        setSearch(event.target.value)
+        props.search(event.target.value)
+    }
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage + 1);
@@ -72,7 +78,7 @@ const TrackingTable = (props: any) => {
         setItemSelected(item)
         if (item.status === "WAITING_TO_BE_RECEIVED") {
             setApprovedModal(true)
-        } 
+        }
         // else {
         //     setApprove(true)
         // }
@@ -119,7 +125,9 @@ const TrackingTable = (props: any) => {
                 <TextField
                     type="search"
                     size="small"
-                    placeholder="Pencarian by ID"
+                    placeholder="Cari..."
+                    value={search}
+                    onChange={handleSearch}
                     sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (

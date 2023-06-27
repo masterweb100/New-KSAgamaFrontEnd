@@ -43,6 +43,7 @@ const KategoriTable = (props: any) => {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
+  const [search, setSearch] = React.useState("")
 
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage + 1);
@@ -54,6 +55,11 @@ const KategoriTable = (props: any) => {
     props.itemsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
+
+  const handleSearch = (event: any) => {
+    setSearch(event.target.value)
+    props.search(event.target.value)
+  }
 
   const FormPage = () => navigate("/akun/form-kategori");
 
@@ -113,7 +119,9 @@ const KategoriTable = (props: any) => {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by ID"
+          placeholder="Cari..."
+          value={search}
+          onChange={handleSearch}
           sx={{
             bgcolor: "white",
             borderRadius: 1,

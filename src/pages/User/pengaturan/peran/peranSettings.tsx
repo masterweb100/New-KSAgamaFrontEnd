@@ -94,7 +94,7 @@ const PeranSettings = () => {
                     <TextField
                         type="search"
                         size="small"
-                        placeholder="Pencarian by Name"
+                        placeholder="Cari..."
                         sx={{ bgcolor: "white", borderRadius: 1, width: 300 }}
                         InputProps={{
                             startAdornment: (

@@ -36,7 +36,7 @@ const SetPeran = () => {
                     <TextField
                         type="search"
                         size="small"
-                        placeholder="Pencarian by Name"
+                        placeholder="Cari..."
                         sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                         InputProps={{
                             startAdornment: (

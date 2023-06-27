@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, Icon, Tooltip, IconButton, CircularProgress } from '@mui/material';
+import { Box, Stack, TextField, Toolbar, Select, MenuItem, Icon, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
@@ -42,11 +42,11 @@ const BrandForm = () => {
                 navigate('/gudang/list-produk')
             } catch (error: any) {
                 console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                if (error.status === 500) {
+                    toast.error('Server sedang mengalami gangguan!')
+                } else {
+                    toast.error('Terjadi Kesalahan!')
+                }
                 setSend(false)
             }
         }
@@ -58,7 +58,7 @@ if (error.status === 500) {
             setGenId(respID.data.data.genId)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -83,7 +83,7 @@ if (error.status === 500) {
             setCategoryId(respUser.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -145,6 +145,7 @@ if (error.status === 500) {
                                         size="small"
                                         id="brandName"
                                         name="brandName"
+                                        required
                                         value={Formik.values.brandName}
                                         onChange={Formik.handleChange}
                                         placeholder={'Nama Brand'}
@@ -160,6 +161,7 @@ if (error.status === 500) {
                                         displayEmpty
                                         id="categoryId"
                                         name="categoryId"
+                                        required
                                         value={Formik.values.categoryId}
                                         onChange={Formik.handleChange}
                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}

@@ -44,11 +44,11 @@ const EkspedisiForm = () => {
             } catch (error: any) {
                 setSend(false)
                 console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                if (error.status === 500) {
+                    toast.error('Server sedang mengalami gangguan!')
+                } else {
+                    toast.error('Terjadi Kesalahan!')
+                }
             }
         }
     })
@@ -59,7 +59,7 @@ if (error.status === 500) {
             setGenId(resp.data.data.genId)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -122,6 +122,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder='Nama Ekspedisi'
                                         name="nameExpedition"
                                         value={Formik.values.nameExpedition}
@@ -134,6 +135,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder='No Telp'
                                         name="phone"
                                         value={Formik.values.phone}
@@ -148,6 +150,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder={'Alamat Ekspedisi'}
                                         name="address"
                                         value={Formik.values.address}
@@ -158,8 +161,9 @@ if (error.status === 500) {
                                 <Stack direction={'column'} gap={1}>
                                     <span>Harga Ongkir</span>
                                     <TextField
-                                        type="text"
+                                        type="number"
                                         size="small"
+                                        required
                                         placeholder='19.000'
                                         name="shippingCostPerKg"
                                         value={Formik.values.shippingCostPerKg}

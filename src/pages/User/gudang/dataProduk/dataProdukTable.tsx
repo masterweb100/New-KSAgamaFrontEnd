@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { toast } from 'react-toastify';
 import {
   TablePagination,
   Box,
-  TableSortLabel,
   TableHead,
   Table,
   TableBody,
@@ -17,7 +16,6 @@ import {
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../utils/colors";
 import { isMobile } from "react-device-detect";
 import { HTTPGetProducts, HTTPGetProductsQty } from "../../../../apis/User/dataProducts/dataProducts";
@@ -61,8 +59,8 @@ const DataProdukTable = (props: any) => {
     totalQty: 0
   })
 
-  const onSearch = (param: string) => {
-    setSearch(param)
+  const onSearch = (param: any) => {
+    setSearch(param.target.value)
     setInit(!init)
   }
 
@@ -145,7 +143,9 @@ const DataProdukTable = (props: any) => {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by Nama"
+          placeholder="Cari..."
+          value={search}
+          onChange={onSearch}
           sx={{
             bgcolor: "white",
             borderRadius: 1,

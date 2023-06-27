@@ -54,23 +54,28 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const JenisTable = () => {
-    const navigate = useNavigate();
-    const token = secureLocalStorage.getItem("USER_SESSION") as string
-    const [selected, setSelected] = useState<any[]>([])
-    const [itemsPerPage, setItemsPerPage] = React.useState(10);
-    const [TypesData, setTypesData] = React.useState([]);
-    const [BrandData, setBrandData] = React.useState([]);
-    const [init, setInit] = React.useState(false)
-    const [limit, setLimit] = React.useState(10);
-    const [page, setPage] = React.useState(1);
-    const [pagination, setPagination] = React.useState<any>({});
-    const [search, setSearch] = React.useState('');
-    const [tooltipOpen, setTooltipOpen] = React.useState(false);
-    const [onSend, setSend] = React.useState(false)
-    const [editModal, setEditModal] = React.useState(false)
-    const [itemSelected, setItemSelected] = React.useState<any>({})
-    const [loader, setLoader] = React.useState(false)
-    const [isDeleteModal, setDeleteModal] = React.useState(false);
+  const navigate = useNavigate();
+  const token = secureLocalStorage.getItem("USER_SESSION") as string
+  const [selected, setSelected] = useState<any[]>([])
+  const [itemsPerPage, setItemsPerPage] = React.useState(10);
+  const [TypesData, setTypesData] = React.useState([]);
+  const [BrandData, setBrandData] = React.useState([]);
+  const [init, setInit] = React.useState(false)
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+  const [pagination, setPagination] = React.useState<any>({});
+  const [search, setSearch] = React.useState('');
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
+  const [onSend, setSend] = React.useState(false)
+  const [editModal, setEditModal] = React.useState(false)
+  const [itemSelected, setItemSelected] = React.useState<any>({})
+  const [loader, setLoader] = React.useState(false)
+  const [isDeleteModal, setDeleteModal] = React.useState(false);
+
+  const handleSearch = (event: any) => {
+    setSearch(event.target.value)
+    setInit(!init)
+  }
 
   const GetTypes = async () => {
     setLoader(true);
@@ -98,9 +103,9 @@ const JenisTable = () => {
   const GetBrand = async () => {
     try {
       const resp = await HTTPGetBrands({
-        limit: limit.toString(),
-        page: page.toString(),
-        q: search,
+        limit: '10',
+        page: '1',
+        q: undefined,
         token: token,
       });
       setBrandData(resp.data.data);
@@ -299,7 +304,9 @@ const JenisTable = () => {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by ID"
+          placeholder="Cari..."
+          value={search}
+          onChange={handleSearch}
           sx={{
             bgcolor: "white",
             borderRadius: 1,

@@ -185,7 +185,7 @@ const RoleTable = (props: any) => {
           <TextField
             type="search"
             size="small"
-            placeholder="Pencarian by Nama Role"
+            placeholder="Cari..."
             onChange={handleSearch}
             sx={{
               bgcolor: "white",

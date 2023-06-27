@@ -61,7 +61,7 @@ const ReturnTable = (props: any) => {
     const [search, setSearch] = React.useState('')
     const [loader, setLoader] = React.useState(true)
 
-    const onSearch = (param: string) => {
+    const onSearch = (param: any) => {
         setSearch(param)
         setInit(!init)
     }
@@ -81,7 +81,7 @@ const ReturnTable = (props: any) => {
         } catch (error: any) {
             setLoader(false)
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -162,7 +162,9 @@ if (error.status === 500) {
                 <TextField
                     type="search"
                     size="small"
-                    placeholder="Pencarian by ID"
+                    placeholder="Cari..."
+                    value={search}
+                    onChange={onSearch}
                     sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (

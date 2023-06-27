@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { Box, Stack, TextField, Toolbar, Select, MenuItem, SelectChangeEvent, Icon, Tooltip, IconButton, CircularProgress } from '@mui/material';
+import { Box, Stack, TextField, Toolbar, Select, MenuItem, Icon, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
@@ -42,11 +42,11 @@ const JenisForm = () => {
                 navigate('/gudang/list-produk')
             } catch (error: any) {
                 console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                if (error.status === 500) {
+                    toast.error('Server sedang mengalami gangguan!')
+                } else {
+                    toast.error('Terjadi Kesalahan!')
+                }
                 setSend(false)
             }
         }
@@ -58,7 +58,7 @@ if (error.status === 500) {
             setGenId(respID.data.data.genId)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -83,7 +83,7 @@ if (error.status === 500) {
             setBrandId(respUser.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -146,6 +146,7 @@ if (error.status === 500) {
                                         placeholder='Jenis Produk'
                                         id="typeName"
                                         name="typeName"
+                                        required
                                         value={Formik.values.typeName}
                                         onChange={Formik.handleChange}
                                         sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
@@ -157,6 +158,7 @@ if (error.status === 500) {
                                 <Select
                                     size="small"
                                     displayEmpty
+                                    required
                                     sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                     id="brandId"
                                     name="brandId"

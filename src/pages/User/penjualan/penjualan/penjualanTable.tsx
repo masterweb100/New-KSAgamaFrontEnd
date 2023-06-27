@@ -60,7 +60,16 @@ const PenjualanTable = (props: any) => {
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [isLunasOpen, setLunasOpen] = React.useState(false)
     const [isDeleteModal, setDeleteModal] = React.useState(false);
-    const [ItemSelected, setItemSelected] = React.useState({})
+    const [ItemSelected, setItemSelected] = React.useState<any>({
+        bill: 0,
+        totalBill: 0
+    })
+    const [search, setSearch] = React.useState("")
+
+    const handleSearch = (event: any) => {
+        setSearch(event.target.value)
+        props.search(event.target.value)
+    }
 
     const handleDelete = async (param: string) => {
         if (selected.length > 0) {
@@ -161,7 +170,9 @@ const PenjualanTable = (props: any) => {
                 <TextField
                     type="search"
                     size="small"
-                    placeholder="Pencarian by ID"
+                    placeholder="Cari..."
+                    value={search}
+                    onChange={handleSearch}
                     sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
                         startAdornment: (

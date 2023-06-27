@@ -67,11 +67,11 @@ const SupplierForm = () => {
             } catch (error: any) {
                 setSend(false)
                 console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                if (error.status === 500) {
+                    toast.error('Server sedang mengalami gangguan!')
+                } else {
+                    toast.error('Terjadi Kesalahan!')
+                }
             }
         }
     })
@@ -86,7 +86,7 @@ if (error.status === 500) {
             setProvinces(resp.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -100,7 +100,7 @@ if (error.status === 500) {
             setCities(resp.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -163,6 +163,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder={"Nama Supplier"}
                                         name="nameSupplier"
                                         value={Formik.values.nameSupplier}
@@ -177,6 +178,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder='Nama Perusahaan'
                                         name="nameCompany"
                                         value={Formik.values.nameCompany}
@@ -189,6 +191,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder='Alamat'
                                         name="address"
                                         value={Formik.values.address}
@@ -202,6 +205,7 @@ if (error.status === 500) {
                                 <TextField
                                     type="text"
                                     size="small"
+                                    required
                                     name="country"
                                     placeholder='Negara'
                                     value={Formik.values.country}
@@ -214,6 +218,7 @@ if (error.status === 500) {
                                     <span>Provinsi</span>
                                     <Select
                                         size="small"
+                                        required
                                         displayEmpty
                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                         name="provinceId"
@@ -233,6 +238,7 @@ if (error.status === 500) {
                                     <span style={{ color: ProvincesValue.length === 0 ? '#ababab' : '#000' }}>Kota</span>
                                     <Select
                                         size="small"
+                                        required
                                         displayEmpty
                                         disabled={ProvincesValue.length === 0}
                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
@@ -256,6 +262,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder={'Alamat Email'}
                                         name="email"
                                         value={Formik.values.email}
@@ -268,6 +275,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         size="small"
+                                        required
                                         placeholder='Nomor Telepon'
                                         name="phone"
                                         value={Formik.values.phone}
@@ -307,6 +315,7 @@ if (error.status === 500) {
                                         size="small"
                                         name="identityNo"
                                         placeholder='Nomor Identitas'
+                                        required={Formik.values.identityType.length !== 0}
                                         disabled={Formik.values.identityType.length === 0}
                                         value={Formik.values.identityNo}
                                         onChange={Formik.handleChange}

@@ -355,6 +355,7 @@ const SatuanForm = () => {
                   <Select
                     size="small"
                     displayEmpty
+                    required
                     sx={{
                       bgcolor: "white",
                       width: isMobile ? "40vw" : "25vw",
@@ -384,6 +385,7 @@ const SatuanForm = () => {
                   <Select
                     size="small"
                     displayEmpty
+                    required
                     disabled={SelectedBrand.length === 0}
                     sx={{
                       bgcolor: "white",
@@ -407,6 +409,7 @@ const SatuanForm = () => {
                   <Select
                     size="small"
                     displayEmpty
+                    required
                     sx={{
                       bgcolor: "white",
                       width: isMobile ? "40vw" : "25vw",
@@ -436,6 +439,7 @@ const SatuanForm = () => {
                   <TextField
                     type="number"
                     size="small"
+                    required
                     placeholder={"Harga Beli"}
                     name="hargaBeli"
                     value={Formik.values.hargaBeli}
@@ -448,6 +452,7 @@ const SatuanForm = () => {
                   <TextField
                     type="number"
                     size="small"
+                    required
                     placeholder="Harga Jual"
                     name="hargaJual"
                     value={Formik.values.hargaJual}
@@ -467,6 +472,7 @@ const SatuanForm = () => {
                   <TextField
                     type="number"
                     size="small"
+                    required
                     name="hargaBeliLusin"
                     placeholder="Harga Beli"
                     value={Formik.values.hargaBeliLusin}
@@ -479,6 +485,7 @@ const SatuanForm = () => {
                   <TextField
                     type="number"
                     size="small"
+                    required
                     name="hargaJualLusin"
                     placeholder="Harga Jual"
                     value={Formik.values.hargaJualLusin}
@@ -498,6 +505,7 @@ const SatuanForm = () => {
                   <TextField
                     type="number"
                     size="small"
+                    required
                     name="hargaBeliBox"
                     value={Formik.values.hargaBeliBox}
                     onChange={Formik.handleChange}
@@ -510,6 +518,7 @@ const SatuanForm = () => {
                   <TextField
                     type="number"
                     size="small"
+                    required
                     name="hargaJualBox"
                     value={Formik.values.hargaJualBox}
                     onChange={Formik.handleChange}
@@ -528,6 +537,7 @@ const SatuanForm = () => {
                   <span>Pilih Akun Pembelian</span>
                   <Select
                     size="small"
+                    required
                     displayEmpty
                     sx={{
                       bgcolor: "white",
@@ -550,6 +560,7 @@ const SatuanForm = () => {
                   <span>Pilih Akun Penjualan</span>
                   <Select
                     size="small"
+                    required
                     displayEmpty
                     disabled={Formik.values.akunBeli.length === 0}
                     sx={{

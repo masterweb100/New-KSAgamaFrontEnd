@@ -167,7 +167,7 @@ const PelangganTable = (props: any) => {
                 <TextField
                     type="search"
                     size="small"
-                    placeholder="Pencarian by ID"
+                    placeholder="Cari..."
                     onChange={handleSearch}
                     sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                     InputProps={{
@@ -233,8 +233,9 @@ const PelangganTable = (props: any) => {
                                                                 tabIndex={-1}
                                                                 key={index}
                                                                 sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                                onClick={(e) => handleClick(e, item.id)}
                                                             >
-                                                                <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
+                                                                <StyledTableCell align="center" padding="checkbox">
                                                                     <Checkbox
                                                                         color="primary"
                                                                         checked={isItemSelected}
@@ -243,13 +244,13 @@ const PelangganTable = (props: any) => {
                                                                         }}
                                                                     />
                                                                 </StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">{item.nameCustomer}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">{item.nameCompany}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">{item.address}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">{item.email}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">0{item.phone}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">-</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">-</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.nameCustomer}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.nameCompany}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.address}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.email}</StyledTableCell>
+                                                                <StyledTableCell align="center">0{item.phone}</StyledTableCell>
+                                                                <StyledTableCell align="center">-</StyledTableCell>
+                                                                <StyledTableCell align="center">-</StyledTableCell>
                                                             </TableRow>
                                                         )
                                                     })

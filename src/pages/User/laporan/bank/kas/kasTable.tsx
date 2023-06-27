@@ -136,7 +136,7 @@ const KasTable = (props: any) => {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by Nama"
+          placeholder="Cari..."
           sx={{
             bgcolor: "white",
             borderRadius: 1,

@@ -30,8 +30,8 @@ const AppGudang = () => {
         setInit(!init);
     };
 
-    const onSearch = (param: string) => {
-        setSearch(param);
+    const onSearch = (param: any) => {
+        setSearch(param.target.value);
         setInit(!init);
     };
 
@@ -88,7 +88,9 @@ const AppGudang = () => {
                         <TextField
                             type="search"
                             size="small"
-                            placeholder="Pencarian by ID"
+                            value={search}
+                            onChange={onSearch}
+                            placeholder="Cari..."
                             sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                             InputProps={{
                                 startAdornment: (

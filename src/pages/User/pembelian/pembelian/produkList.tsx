@@ -144,138 +144,143 @@ const ProdukList = (data: any) => {
     }
 
     return (
-        <div>
-            {
-                productList.map((item, index) => (
-                    <React.Fragment key={index}>
-                        <h3 style={{ color: '#000' }}>Produk {index + 1}</h3>
-                        <Stack direction={'column'} gap={3}>
-                            <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
-                                <Stack direction={'column'} gap={1}>
-                                    <span>Produk</span>
-                                    <Select
-                                        size="medium"
-                                        displayEmpty
-                                        MenuProps={{ style: { height: 300 } }}
-                                        sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                        value={item.productUnitId}
-                                        onChange={(e) => handleInput(e, index, 'productUnitId')}
-                                        renderValue={(value: any) => renderProduct(value, index)}
-                                    >
-                                        {
-                                            data.products.map((item: any, index: number) => (
-                                                <MenuItem key={index} value={item.id}>{item.productTypeName}</MenuItem>
-                                            ))
-                                        }
-                                    </Select>
-                                </Stack>
-                                <Stack direction={'column'} gap={1}>
-                                    <span>Satuan</span>
-                                    <Select
-                                        size="medium"
-                                        displayEmpty
-                                        sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
-                                        value={item.productUnitType}
-                                        disabled={productList[index].productUnitId.length === 0}
-                                        onChange={(e) => handleInput(e, index, 'productUnitType')}
-                                        renderValue={(selected: any) => {
-                                            if (selected.length === 0) {
-                                                return <span style={{ color: '#a7a5a6' }}>PCS / Lusin / Box</span>;
+        <form onSubmit={handleSubmit}>
+            <div>
+                {
+                    productList.map((item, index) => (
+                        <React.Fragment key={index}>
+                            <h3 style={{ color: '#000' }}>Produk {index + 1}</h3>
+                            <Stack direction={'column'} gap={3}>
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Produk</span>
+                                        <Select
+                                            size="medium"
+                                            displayEmpty
+                                            required
+                                            MenuProps={{ style: { height: 300 } }}
+                                            sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                            value={item.productUnitId}
+                                            onChange={(e) => handleInput(e, index, 'productUnitId')}
+                                            renderValue={(value: any) => renderProduct(value, index)}
+                                        >
+                                            {
+                                                data.products.map((item: any, index: number) => (
+                                                    <MenuItem key={index} value={item.id}>{item.productTypeName}</MenuItem>
+                                                ))
                                             }
-                                            return selected === 'DOZEN' ? 'LUSIN' : selected
-                                        }}
-                                    >
-                                        {
-                                            ['PCS', 'DOZEN', 'BOX'].map((item, index) => (
-                                                <MenuItem key={index} value={item}>{item === 'DOZEN' ? 'LUSIN' : item}</MenuItem>
-                                            ))
-                                        }
-                                    </Select>
-                                </Stack>
-                            </Stack>
-                            <Stack direction={'row'} alignItems={'flex-end'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
-                                <Stack direction={'column'} gap={1}>
-                                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                                        <span>Qty / Jumlah</span>
-                                        <div style={{ ...CENTER, borderRadius: 5, backgroundColor: Colors.success, padding: '5px 10px' }}>
-                                            <p style={{ margin: 0, color: '#fff' }}>45</p>
-                                        </div>
+                                        </Select>
                                     </Stack>
-                                    <TextField
-                                        type="text"
-                                        size="medium"
-                                        placeholder='Jumlah Produk'
-                                        value={item.qty}
-                                        onChange={(e) => handleInput(e, index, 'qty')}
-                                        sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
-                                    />
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Satuan</span>
+                                        <Select
+                                            size="medium"
+                                            displayEmpty
+                                            required
+                                            sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                            value={item.productUnitType}
+                                            disabled={productList[index].productUnitId.length === 0}
+                                            onChange={(e) => handleInput(e, index, 'productUnitType')}
+                                            renderValue={(selected: any) => {
+                                                if (selected.length === 0) {
+                                                    return <span style={{ color: '#a7a5a6' }}>PCS / Lusin / Box</span>;
+                                                }
+                                                return selected === 'DOZEN' ? 'LUSIN' : selected
+                                            }}
+                                        >
+                                            {
+                                                ['PCS', 'DOZEN', 'BOX'].map((item, index) => (
+                                                    <MenuItem key={index} value={item}>{item === 'DOZEN' ? 'LUSIN' : item}</MenuItem>
+                                                ))
+                                            }
+                                        </Select>
+                                    </Stack>
                                 </Stack>
-                                <Stack direction={'column'} gap={1}>
-                                    <span>Harga</span>
-                                    <TextField
-                                        type="text"
-                                        size="medium"
-                                        disabled
-                                        placeholder='0'
-                                        value={handlePrice(index)}
-                                        sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
-                                    />
+                                <Stack direction={'row'} alignItems={'flex-end'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                    <Stack direction={'column'} gap={1}>
+                                        <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                                            <span>Qty / Jumlah</span>
+                                            {/* <div style={{ ...CENTER, borderRadius: 5, backgroundColor: Colors.success, padding: '5px 10px' }}>
+                                                <p style={{ margin: 0, color: '#fff' }}>45</p>
+                                            </div> */}
+                                        </Stack>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            required
+                                            placeholder='Jumlah Produk'
+                                            value={item.qty}
+                                            onChange={(e) => handleInput(e, index, 'qty')}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Harga</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            disabled
+                                            placeholder='0'
+                                            value={handlePrice(index)}
+                                            sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
+                                        />
+                                    </Stack>
                                 </Stack>
+                                {
+                                    productList.length === 1 ?
+                                        null
+                                        :
+                                        <div onClick={() => DeleteProduct(item)} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.error}`, padding: '10px 30px', cursor: 'pointer', alignSelf: 'flex-start', userSelect: 'none' }}>
+                                            <span style={{ fontSize: 13, color: Colors.primary }}>Hapus Barang</span>
+                                        </div>
+                                }
                             </Stack>
-                            {
-                                productList.length === 1 ?
-                                    null
-                                    :
-                                    <div onClick={() => DeleteProduct(item)} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.error}`, padding: '10px 30px', cursor: 'pointer', alignSelf: 'flex-start', userSelect: 'none' }}>
-                                        <span style={{ fontSize: 13, color: Colors.primary }}>Hapus Barang</span>
-                                    </div>
-                            }
+                        </React.Fragment>
+                    ))
+                }
+                {
+                    productList.length === 5 ?
+                        null
+                        :
+                        <Stack marginTop={3} direction={'row'} alignItems={'center'} justifyContent={isMobile ? 'space-around' : 'flex-start'} gap={2}>
+                            <div onClick={() => AddProduct(moment().format('x'))} style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.success, padding: '10px 30px', cursor: 'pointer', userSelect: 'none' }}>
+                                <span style={{ fontSize: 13, color: '#fff' }}>Tambah Barang</span>
+                            </div>
                         </Stack>
-                    </React.Fragment>
-                ))
-            }
-            {
-                productList.length === 5 ?
-                    null
-                    :
-                    <Stack marginTop={3} direction={'row'} alignItems={'center'} justifyContent={isMobile ? 'space-around' : 'flex-start'} gap={2}>
-                        <div onClick={() => AddProduct(moment().format('x'))} style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.success, padding: '10px 30px', cursor: 'pointer', userSelect: 'none' }}>
-                            <span style={{ fontSize: 13, color: '#fff' }}>Tambah Barang</span>
-                        </div>
+                }
+                <Stack direction={'column'} gap={1} width={'100%'} marginTop={5}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Total Produk</b></span>
+                        <span>{productList.length}</span>
                     </Stack>
-            }
-            <Stack direction={'column'} gap={1} width={'100%'} marginTop={5}>
-                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <span><b>Total Produk</b></span>
-                    <span>{productList.length}</span>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Total Qty</b></span>
+                        <span>{TotalQty()}</span>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Jatuh Tempo</b></span>
+                        <span>{data.data.dueDate === null ? '-' : moment(data.data.dueDate).format('DD / MM / YYYY')}</span>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Total Harga</b></span>
+                        <span>{TotalPrice()}</span>
+                    </Stack>
                 </Stack>
-                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <span><b>Total Qty</b></span>
-                    <span>{TotalQty()}</span>
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>
+                    <div onClick={() => navigate(-1)} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.primary}`, padding: '10px 30px', cursor: 'pointer' }}>
+                        <span style={{ fontSize: 13, color: Colors.primary }}>BATAL</span>
+                    </div>
+                    <button type="submit" style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.primary, padding: '10px 30px', cursor: 'pointer', color: '#fff' }}>
+                        {
+                            loader ?
+                                <CircularProgress size={20} color={'inherit'}></CircularProgress>
+                                :
+                                <span style={{ fontSize: 13, color: '#fff' }}>SIMPAN</span>
+                        }
+                    </button>
                 </Stack>
-                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <span><b>Jatuh Tempo</b></span>
-                    <span>{data.data.dueDate === null ? '-' : moment(data.data.dueDate).format('DD / MM / YYYY')}</span>
-                </Stack>
-                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <span><b>Total Harga</b></span>
-                    <span>{TotalPrice()}</span>
-                </Stack>
-            </Stack>
-            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2} marginTop={5}>
-                <div onClick={() => navigate(-1)} style={{ ...CENTER, borderRadius: 10, border: `1px solid ${Colors.primary}`, padding: '10px 30px', cursor: 'pointer' }}>
-                    <span style={{ fontSize: 13, color: Colors.primary }}>BATAL</span>
-                </div>
-                <div onClick={handleSubmit} style={{ ...CENTER, borderRadius: 10, backgroundColor: Colors.primary, padding: '10px 30px', cursor: 'pointer', color: '#fff' }}>
-                    {
-                        loader ?
-                            <CircularProgress size={20} color={'inherit'}></CircularProgress>
-                            :
-                            <span style={{ fontSize: 13, color: '#fff' }}>SIMPAN</span>
-                    }
-                </div>
-            </Stack>
-        </div>
+            </div>
+        </form>
     )
 }
 

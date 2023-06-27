@@ -73,7 +73,7 @@ const RoleForm = () => {
             }
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -151,6 +151,7 @@ if (error.status === 500) {
                                         type="text"
                                         size="small"
                                         placeholder="Nama"
+                                        required
                                         value={name}
                                         onKeyDown={handleSubmit}
                                         onChange={handleName}

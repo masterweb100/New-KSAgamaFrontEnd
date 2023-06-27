@@ -156,7 +156,7 @@ const UmurHutangDetailTable = (props: any) => {
                     <TextField
                         type="search"
                         size="small"
-                        placeholder="Pencarian by ID"
+                        placeholder="Cari..."
                         sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                         InputProps={{
                             startAdornment: (

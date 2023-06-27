@@ -63,6 +63,7 @@ const AkunTable = (props: any) => {
   const [editModal, setEditModal] = React.useState(false)
   const [itemSelected, setItemSelected] = React.useState<any>({})
   const [onSend, setSend] = React.useState(false)
+  const [search, setSearch] = React.useState("")
 
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage + 1);
@@ -120,6 +121,11 @@ const AkunTable = (props: any) => {
 
   const handleEdit = () => {
     setEditModal(!editModal)
+  }
+
+  const handleSearch = (event: any) => {
+    setSearch(event.target.value)
+    props.search(event.target.value)
   }
 
   const Formik = useFormik({
@@ -234,7 +240,9 @@ const AkunTable = (props: any) => {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by ID"
+          placeholder="Cari..."
+          value={search}
+          onChange={handleSearch}
           sx={{
             bgcolor: "white",
             borderRadius: 1,

@@ -11,10 +11,8 @@ import NavigationBarUser from '../../../../../components/appBarUser';
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { penjualanData } from '../../dummy';
 import PembelianSupplierChildTable from './pembelianSupplierChildTable';
 import { isMobile } from 'react-device-detect';
 import { CENTER } from '../../../../../utils/stylesheet';
@@ -53,6 +51,12 @@ const PembelianSupplierTable = () => {
     const [loader, setLoader] = React.useState(true)
     const [childLoader, setChildLoader] = React.useState(true)
     const [SelectedData, setSelectedData] = React.useState([])
+    const [search, setSearch] = React.useState("")
+
+    const handleSearch = (event: any) => {
+        setSearch(event.target.value)
+        setInit(!init)
+    }
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -83,7 +87,7 @@ const PembelianSupplierTable = () => {
                 to: moment(dateTo).format('YYYY/MM/DD'),
                 limit: itemsPerPage.toString(),
                 page: page.toString(),
-                q: undefined,
+                q: search.length === 0 ? undefined : search,
                 token: token
             })
             setSupplierData(resp.data.data)
@@ -178,7 +182,9 @@ const PembelianSupplierTable = () => {
                         <TextField
                             type="search"
                             size="small"
-                            placeholder="Pencarian by ID"
+                            placeholder="Cari..."
+                            value={search}
+                            onChange={handleSearch}
                             sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                             InputProps={{
                                 startAdornment: (

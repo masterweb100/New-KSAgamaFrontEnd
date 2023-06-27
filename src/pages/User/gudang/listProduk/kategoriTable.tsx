@@ -66,6 +66,11 @@ const KategoriTable = () => {
   const [loader, setLoader] = React.useState(false)
   const [isDeleteModal, setDeleteModal] = React.useState(false);
 
+  const handleSearch = (event: any) => {
+    setSearch(event.target.value)
+    setInit(!init)
+  }
+
   const GetCategory = async () => {
     setLoader(true)
     try {
@@ -81,11 +86,11 @@ const KategoriTable = () => {
     } catch (error: any) {
       setLoader(false)
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
@@ -161,28 +166,28 @@ if (error.status === 500) {
     } catch (error: any) {
       setSend(false)
       console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+      if (error.status === 500) {
+        toast.error('Server sedang mengalami gangguan!')
+      } else {
+        toast.error('Terjadi Kesalahan!')
+      }
     }
   }
 
   const handleDelete = async (param: string) => {
     if (selected.length > 0) {
-        if (param === 'yes') {
-            await HTTPDeleteCategory({
-                ids: selected,
-                token: token
-            })
-            setDeleteModal(!isDeleteModal);
-            GetCategory()
-        } else {
-            setDeleteModal(!isDeleteModal);
-        }
+      if (param === 'yes') {
+        await HTTPDeleteCategory({
+          ids: selected,
+          token: token
+        })
+        setDeleteModal(!isDeleteModal);
+        GetCategory()
+      } else {
+        setDeleteModal(!isDeleteModal);
+      }
     }
-};
+  };
 
   return (
     <div>
@@ -252,7 +257,9 @@ if (error.status === 500) {
         <TextField
           type="search"
           size="small"
-          placeholder="Pencarian by ID"
+          placeholder="Cari..."
+          value={search}
+          onChange={handleSearch}
           sx={{
             bgcolor: "white",
             borderRadius: 1,

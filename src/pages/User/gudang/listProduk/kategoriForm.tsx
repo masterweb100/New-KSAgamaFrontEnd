@@ -40,7 +40,7 @@ const KategoriForm = () => {
             }
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -55,7 +55,7 @@ if (error.status === 500) {
     const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value)
     }
-    
+
     const handleSubmit = (event: any) => {
         if (event.key === 'Enter') {
             AddCategory()
@@ -72,7 +72,7 @@ if (error.status === 500) {
             setGenId(resp.data.data.genId)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -103,7 +103,7 @@ if (error.status === 500) {
                                     null
                             }
                         </Stack>
-                        <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                        <Stack direction={'row'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>ID Kategori</span>
                                 <TextField
@@ -132,6 +132,7 @@ if (error.status === 500) {
                                     type="text"
                                     size="small"
                                     value={name}
+                                    required
                                     onKeyDown={handleSubmit}
                                     onChange={handleName}
                                     placeholder={'Nama Kategori'}

@@ -6,7 +6,6 @@ import {
   Toolbar,
   Select,
   MenuItem,
-  SelectChangeEvent,
   CircularProgress,
 } from "@mui/material";
 import NavigationBarUser from "../../../components/appBarUser";
@@ -146,6 +145,7 @@ const AkunForm = () => {
                     size="small"
                     placeholder="Nama Akun"
                     name="name"
+                    required
                     value={Formik.values.name}
                     onChange={Formik.handleChange}
                     sx={{ bgcolor: "#fff", width: isMobile ? "40vw" : "25vw" }}
@@ -155,6 +155,7 @@ const AkunForm = () => {
                   <span>Kategori</span>
                   <Select
                     displayEmpty
+                    required
                     sx={{
                       bgcolor: "white",
                       width: isMobile ? "40vw" : "25vw",
@@ -179,6 +180,7 @@ const AkunForm = () => {
                 <TextField
                   type="text"
                   name="code"
+                  required
                   placeholder="Kode Akun"
                   value={Formik.values.code}
                   onChange={Formik.handleChange}

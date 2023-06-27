@@ -1,7 +1,7 @@
 import {
     Box, Toolbar, TablePagination,
-    TableSortLabel, TableHead,
-    Table, TableBody, TableContainer,
+    TableHead, Table, TableBody, 
+    TableContainer,
     Stack, Icon, TextField,
     InputAdornment,
     CircularProgress
@@ -11,7 +11,6 @@ import NavigationBarUser from '../../../../../components/appBarUser';
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PembelianDetailChildTable from './pembelianDetailChildTable';
@@ -27,7 +26,8 @@ const columns = [
     { id: "tanggal", label: "Tanggal" },
     { id: "nama", label: "Nama Supplier" },
     { id: "dueDate", label: "Jatuh Tempo" },
-    { id: "bill", label: "Tagihan" },
+    
+    { id: "bill", labelasdkjahsdjkas: "Tagihan" },
     { id: "status", label: "Status" },
     { id: "total", label: "Total" },
 ];
@@ -55,6 +55,13 @@ const PembelianDetailTable = () => {
     const [pagination, setPagination] = React.useState<any>({})
     const [PurchasesData, setPurchasesData] = React.useState([])
     const [SelectedData, setSelectedData] = React.useState([])
+    const [search, setSearch] = React.useState("")
+
+    const handleSearch = (event: any) => {
+        setSearch(event.target.value)
+        setInit(!init)
+    }
+
     const [Monetary, setMonetary] = React.useState({
         bill: 0,
         billed: 0,
@@ -93,7 +100,7 @@ const PembelianDetailTable = () => {
                 to: moment(dateTo).format('YYYY/MM/DD'),
                 limit: itemsPerPage.toString(),
                 page: page.toString(),
-                q: undefined,
+                q: search.length === 0 ? undefined : search,
                 token: token
             })
             setPurchasesData(resp.data.data.item)
@@ -189,7 +196,9 @@ const PembelianDetailTable = () => {
                         <TextField
                             type="search"
                             size="small"
-                            placeholder="Pencarian by ID"
+                            placeholder="Cari..."
+                            value={search}
+                            onChange={handleSearch}
                             sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                             InputProps={{
                                 startAdornment: (

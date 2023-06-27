@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import {
     TablePagination,
     Box,
-    TableSortLabel,
     TableHead,
     Table,
     TableBody,
@@ -18,11 +17,9 @@ import {
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../../../utils/colors";
 import NavigationBarUser from '../../../../../components/appBarUser';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { piutangData } from "../../dummy";
 import { isMobile } from 'react-device-detect';
 import secureLocalStorage from "react-secure-storage";
 import moment from "moment";
@@ -50,7 +47,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const PembelianProdukTable = () => {
     const token = secureLocalStorage.getItem('USER_SESSION') as string
-    const [page, setPage] = React.useState(0);
+    const [page, setPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
     const [dateFrom, setDateFrom] = React.useState<any>(moment().startOf('month'));
     const [dateTo, setDateTo] = React.useState<any>(moment().endOf('month'));
@@ -58,6 +55,12 @@ const PembelianProdukTable = () => {
     const [init, setInit] = React.useState(false)
     const [ProductsData, setProductsData] = React.useState([])
     const [loader, setLoader] = React.useState(true)
+    const [search, setSearch] = React.useState("")
+
+    const handleSearch = (event: any) => {
+        setSearch(event.target.value)
+        setInit(!init)
+    }
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
@@ -78,10 +81,11 @@ const PembelianProdukTable = () => {
                 to: moment(dateTo).format('YYYY/MM/DD'),
                 limit: itemsPerPage.toString(),
                 page: page.toString(),
-                q: undefined,
+                q: search.length === 0 ? undefined : search,
                 token: token
             })
             setProductsData(resp.data.data)
+            setPagination(resp.data.pagination)
             setLoader(false)
         } catch (error: any) {
             setLoader(false)
@@ -152,7 +156,9 @@ const PembelianProdukTable = () => {
                     <TextField
                         type="search"
                         size="small"
-                        placeholder="Pencarian by ID"
+                        placeholder="Cari..."
+                        value={search}
+                        onChange={handleSearch}
                         sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                         InputProps={{
                             startAdornment: (
@@ -224,11 +230,11 @@ const PembelianProdukTable = () => {
                     </Box>
                     {ProductsData !== undefined && (
                         <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, 100]}
+                            rowsPerPageOptions={[5, 10, 25]}
                             component="div"
-                            count={ProductsData.length}
+                            count={pagination.totalItem === undefined ? 0 : pagination.totalItem}
                             rowsPerPage={itemsPerPage}
-                            page={page}
+                            page={page - 1}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />

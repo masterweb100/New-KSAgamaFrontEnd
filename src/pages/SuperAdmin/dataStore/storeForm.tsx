@@ -77,7 +77,7 @@ const StoreForm = () => {
             })
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -103,11 +103,11 @@ if (error.status === 500) {
                 navigate('/store-data')
             } catch (error: any) {
                 console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                if (error.status === 500) {
+                    toast.error('Server sedang mengalami gangguan!')
+                } else {
+                    toast.error('Terjadi Kesalahan!')
+                }
                 setSend(false)
             }
         }
@@ -119,7 +119,7 @@ if (error.status === 500) {
             setGenId(respID.data.data.genId)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -146,7 +146,7 @@ if (error.status === 500) {
             setUsersId(respUser.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -215,6 +215,7 @@ if (error.status === 500) {
                                         name="storeName"
                                         value={Formik.values.storeName}
                                         onChange={Formik.handleChange}
+                                        required
                                         placeholder="Nama"
                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                     />
@@ -230,6 +231,7 @@ if (error.status === 500) {
                                         name="address"
                                         value={Formik.values.address}
                                         onChange={Formik.handleChange}
+                                        required
                                         placeholder="Alamat"
                                         sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw' }}
                                         multiline
@@ -247,6 +249,7 @@ if (error.status === 500) {
                                                 name="adminId"
                                                 value={Formik.values.adminId}
                                                 onChange={Formik.handleChange}
+                                                required
                                                 MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                             >
@@ -264,6 +267,7 @@ if (error.status === 500) {
                                                 name="adminId"
                                                 value={Formik.values.adminId}
                                                 onChange={Formik.handleChange}
+                                                required
                                                 MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                 renderValue={(selected: any) => getUserName(selected)}

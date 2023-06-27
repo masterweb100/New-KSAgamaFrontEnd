@@ -32,10 +32,10 @@ const PelunasanDialog = ({ isOpen, setOpen, item, type, refresh }: { isOpen: boo
                     totalPayment: parseInt(values.totalPayment) > item.bill ? item.bill : parseInt(values.totalPayment)
                 }
                 if (type === 'sales') {
-                    await HTTPPaySales({...data, saleId: item.id})
+                    await HTTPPaySales({ ...data, saleId: item.id })
                 }
                 else if (type === 'purchase') {
-                    await HTTPPayPurchase({...data, purchasingId: item.id})
+                    await HTTPPayPurchase({ ...data, purchasingId: item.id })
                 } else {
                     console.log('hehe')
                 }
@@ -46,11 +46,11 @@ const PelunasanDialog = ({ isOpen, setOpen, item, type, refresh }: { isOpen: boo
                 setLoader(false)
                 setOpen(false)
                 console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                if (error.status === 500) {
+                    toast.error('Server sedang mengalami gangguan!')
+                } else {
+                    toast.error('Terjadi Kesalahan!')
+                }
             }
         }
     })
@@ -79,11 +79,11 @@ if (error.status === 500) {
                     <Stack direction={'column'} style={{ border: '1px solid #000', marginTop: 10 }} gap={0}>
                         <Stack direction={'row'} style={{ ...styles.cell }}>
                             <span>Sisa Pembayaran</span>
-                            <span>{item.bill}</span>
+                            <span>{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
                         </Stack>
                         <Stack direction={'row'} style={{ ...styles.cell }}>
                             <span>Total</span>
-                            <span>{item.totalBill}</span>
+                            <span>{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
                         </Stack>
                         <Stack direction={'row'} style={{ ...styles.cell }}>
                             <span>Pembayaran</span>
@@ -92,6 +92,7 @@ if (error.status === 500) {
                                 size="small"
                                 placeholder='0'
                                 name="totalPayment"
+                                required
                                 value={parseInt(Formik.values.totalPayment) > item.bill ? item.bill.toString() : Formik.values.totalPayment}
                                 onChange={Formik.handleChange}
                                 sx={{ bgcolor: "#fff", width: isMobile ? '25vw' : '15vw' }}
@@ -104,6 +105,7 @@ if (error.status === 500) {
                                 displayEmpty
                                 sx={{ bgcolor: "white", width: isMobile ? '25vw' : '15vw', color: '#000' }}
                                 name="method"
+                                required
                                 value={Formik.values.method}
                                 onChange={Formik.handleChange}
                                 renderValue={(selected: any) => {

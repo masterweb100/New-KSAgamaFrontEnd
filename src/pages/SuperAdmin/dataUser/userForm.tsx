@@ -74,11 +74,11 @@ const UserForm = () => {
                 } catch (error: any) {
                     setSend(false)
                     console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                    if (error.status === 500) {
+                        toast.error('Server sedang mengalami gangguan!')
+                    } else {
+                        toast.error('Terjadi Kesalahan!')
+                    }
                 }
             } else {
                 if (values.password !== values.confirmPass) {
@@ -106,11 +106,11 @@ if (error.status === 500) {
                     } catch (error: any) {
                         setSend(false)
                         console.log(error)
-if (error.status === 500) {
-                toast.error('Server sedang mengalami gangguan!')
-            } else {
-                toast.error('Terjadi Kesalahan!')
-            }
+                        if (error.status === 500) {
+                            toast.error('Server sedang mengalami gangguan!')
+                        } else {
+                            toast.error('Terjadi Kesalahan!')
+                        }
                     }
                 }
             }
@@ -123,7 +123,7 @@ if (error.status === 500) {
             setGenId(respID.data.data.genId)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -168,7 +168,7 @@ if (error.status === 500) {
             setStoresId(respStore.data.data)
         } catch (error: any) {
             console.log(error)
-if (error.status === 500) {
+            if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
                 toast.error('Terjadi Kesalahan!')
@@ -236,6 +236,7 @@ if (error.status === 500) {
                                     <TextField
                                         type="text"
                                         id="name"
+                                        required
                                         name="name"
                                         value={formik.values.name}
                                         onChange={formik.handleChange}
@@ -256,6 +257,7 @@ if (error.status === 500) {
                                                 type="text"
                                                 id="username"
                                                 name="username"
+                                                required
                                                 value={formik.values.username}
                                                 onChange={formik.handleChange}
                                                 size="small"
@@ -269,6 +271,7 @@ if (error.status === 500) {
                                                 type="text"
                                                 id="email"
                                                 name="email"
+                                                required
                                                 value={formik.values.email}
                                                 onChange={formik.handleChange}
                                                 size="small"
@@ -289,6 +292,7 @@ if (error.status === 500) {
                                                 type={newPassShow ? "text" : "password"}
                                                 id="password"
                                                 name="password"
+                                                required
                                                 value={formik.values.password}
                                                 onChange={formik.handleChange}
                                                 size="small"
@@ -313,6 +317,7 @@ if (error.status === 500) {
                                                     size="small"
                                                     id="confirmPass"
                                                     name="confirmPass"
+                                                    required
                                                     value={formik.values.confirmPass}
                                                     onChange={formik.handleChange}
                                                     placeholder="Konfirmasi"
@@ -346,6 +351,7 @@ if (error.status === 500) {
                                                 size="small"
                                                 id="status"
                                                 name="status"
+                                                required
                                                 value={formik.values.status}
                                                 displayEmpty
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
@@ -363,6 +369,7 @@ if (error.status === 500) {
                                                 id="status"
                                                 name="status"
                                                 value={formik.values.status}
+                                                required
                                                 displayEmpty
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                 onChange={formik.handleChange}
@@ -386,6 +393,7 @@ if (error.status === 500) {
                                                 name="role"
                                                 value={formik.values.role}
                                                 displayEmpty
+                                                required
                                                 MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
                                                 onChange={formik.handleChange}
@@ -402,6 +410,7 @@ if (error.status === 500) {
                                                 id="role"
                                                 name="role"
                                                 value={formik.values.role}
+                                                required
                                                 displayEmpty
                                                 MenuProps={{ style: { height: 300 } }}
                                                 sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
