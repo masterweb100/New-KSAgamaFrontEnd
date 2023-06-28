@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { HTTPAddSales } from '../../../../apis/User/sales/sales';
 import { HTTPGetUnits } from '../../../../apis/User/product/units';
 
-const ProdukList = (data: any) => {
+export const ProdukList = (data: any) => {
     const navigate = useNavigate()
     const token = secureLocalStorage.getItem('USER_SESSION')
     const [latestProduct, setLatestChange] = React.useState<any>({})
@@ -458,4 +458,209 @@ const ProdukList = (data: any) => {
     )
 }
 
-export default ProdukList;
+export const PrintProductList = (data: any) => {
+    return (
+        <div>
+            {
+                data.data.saleProducts === undefined || data.data.saleProducts === null ?
+                    null
+                    :
+                    data.data.saleProducts.map((item: any, index: number) => (
+                        <React.Fragment key={item.id}>
+                            <h3 style={{ color: '#000' }}>Produk {index + 1}</h3>
+                            <Stack direction={'column'} gap={3}>
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={isMobile ? 2 : 3}>
+                                    {/* <Stack direction={'column'} gap={1}>
+                                    <span>Produk</span>
+                                    <TextField
+                                        type="text"
+                                        size="medium"
+                                        placeholder='Jumlah Produk'
+                                        value={item.productTypeName}
+                                        required
+                                        InputProps={{
+                                            readOnly: true
+                                        }}
+                                        sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                    />
+                                </Stack> */}
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Satuan</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='Jumlah Produk'
+                                            value={item.productUnitType}
+                                            required
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                </Stack>
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={isMobile ? 2 : 3}>
+                                    <Stack direction={'column'} gap={1}>
+                                        <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                                            <span>Qty / Jumlah</span>
+                                        </Stack>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='Jumlah Produk'
+                                            value={item.qty}
+                                            required
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>PPN</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='Jumlah Produk'
+                                            value={item.isPPN ? 'Ya' : 'Tidak'}
+                                            required
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                </Stack>
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={isMobile ? 2 : 3} flexWrap={'wrap'}>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Diskon 1</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='0'
+                                            value={item.discount1}
+                                            required
+                                            InputProps={{
+                                                readOnly: true,
+                                                endAdornment: (
+                                                    <InputAdornment position='end'>
+                                                        <span>%</span>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Diskon 2</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='0'
+                                            required
+                                            value={item.discount2}
+                                            InputProps={{
+                                                readOnly: true,
+                                                endAdornment: (
+                                                    <InputAdornment position='end'>
+                                                        <span>%</span>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Diskon 3</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='0'
+                                            required
+                                            value={item.discount3}
+                                            InputProps={{
+                                                readOnly: true,
+                                                endAdornment: (
+                                                    <InputAdornment position='end'>
+                                                        <span>%</span>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Diskon 4</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='0'
+                                            required
+                                            value={item.discount4}
+                                            InputProps={{
+                                                readOnly: true,
+                                                endAdornment: (
+                                                    <InputAdornment position='end'>
+                                                        <span>%</span>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                </Stack>
+                                <Stack direction={'column'} gap={1}>
+                                    <span>Harga</span>
+                                    <TextField
+                                        type="text"
+                                        size="medium"
+                                        disabled
+                                        placeholder='0'
+                                        value={(item.totalPrice === undefined ? 0 : item.totalPrice).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+                                        sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        InputProps={{ readOnly: true, style: { fontSize: 20, color: '#000' } }}
+                                    />
+                                </Stack>
+                            </Stack>
+                        </React.Fragment>
+                    ))
+            }
+            <Stack direction={isMobile ? 'column' : 'row'} alignItems={'flex-end'} justifyContent={isMobile ? 'center' : 'flex-start'} gap={isMobile ? 4 : 3} marginTop={5}>
+                <Stack direction={'column'} gap={1}>
+                    <span>{'Note (Opsional)'}</span>
+                    <TextField
+                        type="text"
+                        size="medium"
+                        placeholder={'Tambahkan Catatan'}
+                        sx={{ bgcolor: "#fff", width: isMobile ? '80vw' : data.onPrint ? '45vw' : '25vw' }}
+                        multiline
+                        rows={5}
+                        value={data.data.notes}
+                    />
+                </Stack>
+                <Stack direction={'column'} gap={1} width={'100%'}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Total Produk</b></span>
+                        <span>{data.data.totalProduct}</span>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Total Qty</b></span>
+                        <span>{data.data.totalQty}</span>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Jatuh Tempo</b></span>
+                        <span>{data.data.dueDate === null ? '-' : moment(data.data.dueDate).format('DD / MM / YYYY')}</span>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>PPN</b></span>
+                        <span>11%</span>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span><b>Total Harga</b></span>
+                        <span>{(data.data.totalBill === undefined ? 0 : data.data.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
+                    </Stack>
+                </Stack>
+            </Stack>
+        </div>
+    )
+}

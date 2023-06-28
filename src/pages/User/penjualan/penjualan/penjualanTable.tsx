@@ -28,8 +28,11 @@ import DeleteModal from "../../../../components/deleteModal";
 import moment from "moment";
 import { HTTPDeleteSales } from "../../../../apis/User/sales/sales";
 import secureLocalStorage from "react-secure-storage";
+import { useDispatch } from "react-redux";
+import { setSalesData } from "../../../../stores/reduxes/sales";
 
 const columns = [
+    { id: "aksi", label: "Aksi" },
     { id: "tanggal", label: "Tanggal" },
     { id: "id", label: "ID INVOICE" },
     { id: "nama", label: "Nama Pelanggan" },
@@ -39,7 +42,7 @@ const columns = [
     { id: "pembayaran", label: "Pembayaran" },
     { id: "sisa", label: "Sisa Tagihan" },
     { id: "total", label: "Total" },
-    { id: "updatedBy", label: "Updated By" },
+    // { id: "updatedBy", label: "Updated By" },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -54,6 +57,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const PenjualanTable = (props: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const token = secureLocalStorage.getItem('USER_SESSION')
     const [selected, setSelected] = useState<any[]>([])
     const [page, setPage] = React.useState(1);
@@ -129,6 +133,10 @@ const PenjualanTable = (props: any) => {
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
     const FormAdd = () => navigate('/penjualan/penjualan/form-penjualan/add')
+    const handlePrint = React.useCallback((data: any) => {
+        dispatch(setSalesData({ data: data }))
+        navigate('/penjualan/penjualan/form-penjualan/print')
+    }, [])
 
     const FormLunas = (item: any) => {
         setLunasOpen(true)
@@ -228,7 +236,6 @@ const PenjualanTable = (props: any) => {
                                                     ))}
                                                 </TableRow>
                                             </TableHead>
-
                                             <TableBody>
                                                 {props.data.map((item: any, index: number) => {
                                                     const isItemSelected = isSelected(item.id);
@@ -250,10 +257,18 @@ const PenjualanTable = (props: any) => {
                                                                     }}
                                                                 />
                                                             </StyledTableCell>
+                                                            <StyledTableCell align="center">
+                                                                <div onClick={() => handlePrint(item)} style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                    <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                                                                        <Icon sx={{ color: '#fff' }} fontSize="small">file_download</Icon>
+                                                                        <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Export</span>
+                                                                    </Stack>
+                                                                </div>
+                                                            </StyledTableCell>
                                                             <StyledTableCell align="center">{moment(item.shippingDate).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.invoice}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.customerName}</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.salesType}</StyledTableCell>
+                                                            <StyledTableCell align="center">{item.salesType === 'LARGE' ? 'BESAR' : item.salesType}</StyledTableCell>
                                                             <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
                                                             <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
                                                                 {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
@@ -265,7 +280,7 @@ const PenjualanTable = (props: any) => {
                                                             </StyledTableCell>
                                                             <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
                                                             <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell>
+                                                            {/* <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell> */}
                                                         </TableRow>
                                                     )
                                                 })

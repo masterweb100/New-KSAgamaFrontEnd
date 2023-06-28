@@ -9,7 +9,7 @@ import { HTTPAddPurchase } from '../../../../apis/User/purchase/purchase';
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'react-toastify';
 
-const ProdukList = (data: any) => {
+export const ProdukList = (data: any) => {
     const token = secureLocalStorage.getItem('USER_SESSION') as string
     const [latestChange, setLatestChange] = React.useState<any>({})
     const navigate = useNavigate()
@@ -284,4 +284,101 @@ const ProdukList = (data: any) => {
     )
 }
 
-export default ProdukList;
+export const PrintProdukList = (data: any) => {
+    return (
+        <div>
+            {
+                data.data.purchasingProducts === undefined || data.data.purchasingProducts === null ?
+                    null
+                    :
+                    data.data.purchasingProducts.map((item: any, index: number) => (
+                        <React.Fragment key={index}>
+                            <h3 style={{ color: '#000' }}>Produk {index + 1}</h3>
+                            <Stack direction={'column'} gap={3}>
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                    {/* <Stack direction={'column'} gap={1}>
+                                        <span>Produk</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='Produk'
+                                            value={item.productUnitType}
+                                            required
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack> */}
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Satuan</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='Satuan Produk'
+                                            value={item.productUnitType}
+                                            required
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                </Stack>
+                                <Stack direction={'row'} alignItems={'flex-end'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
+                                    <Stack direction={'column'} gap={1}>
+                                        <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                                            <span>Qty / Jumlah</span>
+                                        </Stack>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='QTY'
+                                            value={item.qty}
+                                            required
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                    <Stack direction={'column'} gap={1}>
+                                        <span>Harga</span>
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            placeholder='Jumlah Produk'
+                                            value={(item.totalPrice === undefined ? 0 : item.totalPrice).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+                                            required
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
+                                            sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : data.onPrint ? '45vw' : '25vw' }}
+                                        />
+                                    </Stack>
+                                </Stack>
+                            </Stack>
+                        </React.Fragment>
+                    ))
+            }
+            <Stack direction={'column'} gap={1} width={'100%'} marginTop={5}>
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                    <span><b>Total Produk</b></span>
+                    <span>{data.data.totalProduct}</span>
+                </Stack>
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                    <span><b>Total Qty</b></span>
+                    <span>{data.data.totalQty}</span>
+                </Stack>
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                    <span><b>Jatuh Tempo</b></span>
+                    <span>{data.data.dueDate === undefined ? '-' : moment(data.data.dueDate).format('DD / MM / YYYY')}</span>
+                </Stack>
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                    <span><b>Total Harga</b></span>
+                    <span>{(data.data.totalBill === undefined ? 0 : data.data.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
+                </Stack>
+            </Stack>
+        </div>
+    )
+}

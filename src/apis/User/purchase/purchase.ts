@@ -53,6 +53,20 @@ export function HTTPGetPurchases(param: {
   });
 }
 
+export function HTTPGetPurchasesByID(param: {
+  token: string;
+  id: string;
+}): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await AxiosNormal(param.token).get(`${uri}/${param.id}`);
+      return resolve(response);
+    } catch (error: any) {
+      return reject(error);
+    }
+  });
+}
+
 export function HTTPAddPurchase(param: AddPurchase): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {

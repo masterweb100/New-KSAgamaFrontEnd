@@ -28,8 +28,11 @@ import { HTTPDeletePurchase } from "../../../../apis/User/purchase/purchase";
 import secureLocalStorage from "react-secure-storage";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { setPurchasesData } from "../../../../stores/reduxes/purchase";
+import { useDispatch } from "react-redux";
 
 const columns = [
+    { id: "aksi", label: "Aksi" },
     { id: "tanggal", label: "Tanggal" },
     { id: "id", label: "ID SKU" },
     { id: "brand", label: "Nama Brand" },
@@ -55,6 +58,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const PembelianTable = (props: any) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const token = secureLocalStorage.getItem('USER_SESSION')
     const [selected, setSelected] = useState<any[]>([])
     const [page, setPage] = React.useState(1);
@@ -141,11 +145,6 @@ const PembelianTable = (props: any) => {
 
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
     const FormAdd = () => navigate('/pembelian/pembelian/form-pembelian/add')
-    const FormUpdate = () => {
-        if (selected.length > 0) {
-            navigate('/pembelian/pembelian/form-pembelian/update')
-        }
-    }
 
     const FormLunas = (item: any) => {
         setLunasOpen(true)
@@ -153,6 +152,10 @@ const PembelianTable = (props: any) => {
     }
 
     const DetailPage = () => navigate('/pembelian/pembelian/detail')
+    const handlePrint = React.useCallback((data: any) => {
+        dispatch(setPurchasesData({ data: data }))
+        navigate('/pembelian/pembelian/form-pembelian/print')
+    }, [])
 
     return (
         <div>
@@ -269,6 +272,14 @@ const PembelianTable = (props: any) => {
                                                                     />
                                                                 </StyledTableCell>
                                                                 <StyledTableCell align="center">
+                                                                    <div onClick={() => handlePrint(item)} style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                        <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                                                                            <Icon sx={{ color: '#fff' }} fontSize="small">file_download</Icon>
+                                                                            <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Export</span>
+                                                                        </Stack>
+                                                                    </div>
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">
                                                                     <span>{moment(item.transactionDate).format('YYYY/MM/DD')}</span>
                                                                 </StyledTableCell>
                                                                 <StyledTableCell align="center">{item.genId}</StyledTableCell>
@@ -348,6 +359,7 @@ const PembelianTable = (props: any) => {
             <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
         </div >
     );
+
 }
 
 export default PembelianTable;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { Box, Stack, TextField, Icon, Toolbar, Select, MenuItem, SelectChangeEvent, InputAdornment, Tooltip, IconButton } from '@mui/material';
+import { Box, Stack, TextField, Icon, Toolbar, Select, MenuItem, SelectChangeEvent, InputAdornment, Tooltip, IconButton, CircularProgress } from '@mui/material';
 import NavigationBarUser from '../../../../components/appBarUser';
 import { CENTER } from '../../../../utils/stylesheet';
 import { Colors } from '../../../../utils/colors';
@@ -8,16 +8,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SupplierDialog from './supplierDialog';
 import { isMobile } from 'react-device-detect';
-import ProdukList from './produkList';
-import { HTTPGeneratePurchaseID } from '../../../../apis/User/purchase/purchase';
+import { ProdukList, PrintProdukList } from './produkList';
+import { HTTPGeneratePurchaseID, HTTPGetPurchasesByID } from '../../../../apis/User/purchase/purchase';
 import { HTTPGetSuppliers } from '../../../../apis/User/contact/supplier';
 import secureLocalStorage from 'react-secure-storage';
 import { HTTPGetExpeditions } from '../../../../apis/User/contact/expedition';
 import { HTTPGetUnits, HTTPGetUnitsByParent } from '../../../../apis/User/product/units';
 import { HTTPGetBrands } from '../../../../apis/User/product/brand';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../stores/rootReducer';
+import moment from 'moment';
+import ReactToPrint from 'react-to-print';
 
 const PembelianForm = () => {
     const navigate = useNavigate()
+    const PurchaseRedux = useSelector((state: RootState) => state.purchasesData.data)
     const token = secureLocalStorage.getItem('USER_SESSION') as string
     const { action }: any = useParams()
     const [isSupplierOpen, setSupplierOpen] = React.useState(false);
@@ -34,6 +39,7 @@ const PembelianForm = () => {
     const [Suppliers, setSuppliers] = React.useState([])
     const [Brands, setBrands] = React.useState([])
     const [Units, setUnits] = React.useState([])
+    const [loader, setLoader] = React.useState(false)
 
     const GoBack = () => {
         navigate(-1)
@@ -122,11 +128,33 @@ const PembelianForm = () => {
     }
 
     const Initial = async () => {
+        setLoader(true)
         try {
             await getSupplier()
             await getBrand()
+            if (action === 'print') {
+                await InitPrint()
+            }
+            setLoader(false)
         } catch (error: any) {
+            setLoader(false)
             console.log(error)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            }
+        }
+    }
+
+    const InitPrint = async () => {
+        try {
+            const resp = await HTTPGetPurchasesByID({
+                token: token,
+                id: PurchaseRedux.id
+            })
+            setPurchaseData(resp.data.data)
+        } catch (error: any) {
             if (error.status === 500) {
                 toast.error('Server sedang mengalami gangguan!')
             } else {
@@ -155,6 +183,52 @@ const PembelianForm = () => {
         }
     }
 
+    const componentRef: any = React.useRef(null);
+    const onBeforeGetContentResolve: any = React.useRef(null);
+    const [loading, setLoading] = React.useState(false);
+    const [onPrint, setPrint] = React.useState(false)
+
+    const reactToPrintContent = React.useCallback(() => {
+        return componentRef.current;
+    }, [componentRef.current]);
+
+    const handleAfterPrint = React.useCallback(() => {
+        setPrint(false)
+    }, []);
+
+    const handleBeforePrint = React.useCallback(() => {
+        setPrint(true)
+    }, []);
+
+    const handleOnBeforeGetContent = React.useCallback(() => {
+        setPrint(true)
+        setLoading(true);
+        return new Promise<void>((resolve) => {
+            onBeforeGetContentResolve.current = resolve;
+            setTimeout(() => {
+                setLoading(false);
+                resolve();
+            }, 2000);
+        });
+    }, [setLoading]);
+
+    React.useEffect(() => {
+        if (typeof onBeforeGetContentResolve.current === "function") {
+            onBeforeGetContentResolve.current();
+        }
+    }, [onBeforeGetContentResolve.current]);
+
+    const PrintButton = React.useCallback(() => {
+        return (
+            <div style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10, color: '#fff' }}>
+                <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                    <Icon sx={{ color: '#fff' }} fontSize="small">file_download</Icon>
+                    <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Export</span>
+                </Stack>
+            </div>
+        )
+    }, [])
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Form SKU Pembelian'} isChild={true} name={'Pembelian'} idPanel={4}></NavigationBarUser>
@@ -163,15 +237,32 @@ const PembelianForm = () => {
                 sx={{ bgcolor: '#f4f5ff', p: isMobile ? 2 : 5, width: '100vw', minHeight: '100vh' }}
             >
                 <Toolbar />
-                <div style={{ flex: 1, ...CENTER }}>
+                <div ref={componentRef} style={{ flex: 1, ...CENTER }}>
                     <Stack direction={'column'} gap={3} sx={{ backgroundColor: '#fff', borderRadius: 2, border: '1px solid #cccccc', padding: '4% 3%' }}>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                            <h2 style={{ color: '#000' }}>Form Tambah Tagihan</h2>
+                            <Stack direction={'row'} alignItems={'center'} spacing={2}>
+                                <h2 style={{ color: '#000' }}>Form Tambah Pembelian</h2>
+                                {
+                                    loader ?
+                                        <Stack direction={'row'} alignItems={'center'} spacing={1}>
+                                            <CircularProgress size={20}></CircularProgress>
+                                            <h5 style={{ color: '#000' }}>Loading</h5>
+                                        </Stack>
+                                        :
+                                        null
+                                }
+                            </Stack>
                             {
-                                action === 'update' ?
-                                    <div style={{ backgroundColor: Colors.warning, height: 40, width: 40, ...CENTER, borderRadius: 10 }}>
-                                        <Icon style={{ color: '#fff', fontSize: 20 }}>border_color</Icon>
-                                    </div>
+                                action === 'print' && !onPrint ?
+                                    <ReactToPrint
+                                        content={reactToPrintContent}
+                                        documentTitle={PurchaseRedux.genId + '_' + moment().format('YYYY-MM-DD')}
+                                        onAfterPrint={handleAfterPrint}
+                                        onBeforeGetContent={handleOnBeforeGetContent}
+                                        onBeforePrint={handleBeforePrint}
+                                        removeAfterPrint
+                                        trigger={PrintButton}
+                                    />
                                     :
                                     null
                             }
@@ -182,7 +273,10 @@ const PembelianForm = () => {
                                 <Select
                                     size="medium"
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000', }}
+                                    inputProps={{
+                                        readOnly: action === 'print',
+                                    }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw', color: '#000', }}
                                     value={PurchaseData.supplierId}
                                     onChange={(e) => handleInput(e, 'supplierId')}
                                     MenuProps={{ style: { height: 300 } }}
@@ -211,8 +305,9 @@ const PembelianForm = () => {
                                     size="medium"
                                     disabled
                                     value={PurchaseData.genId}
-                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
+                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw' }}
                                     InputProps={{
+                                        readOnly: action === 'print',
                                         endAdornment: (
                                             action === 'update' ?
                                                 null
@@ -232,10 +327,13 @@ const PembelianForm = () => {
                                 <span>*Nama Brand</span>
                                 <Select
                                     size="medium"
+                                    inputProps={{
+                                        readOnly: action === 'print',
+                                    }}
                                     value={PurchaseData.productBrandId}
                                     onChange={handleBrand}
                                     displayEmpty
-                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : '25vw', color: '#000' }}
+                                    sx={{ bgcolor: "white", width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw', color: '#000' }}
                                     MenuProps={{ style: { height: 300 } }}
                                     renderValue={renderBrand}
                                 >
@@ -251,29 +349,59 @@ const PembelianForm = () => {
                                 <TextField
                                     type="text"
                                     size="medium"
-                                    disabled
+                                    disabled={action !== 'print'}
                                     placeholder='Kategori'
                                     value={CategoryName}
-                                    sx={{ bgcolor: "#f4f4f4", width: isMobile ? '40vw' : '25vw' }}
+                                    sx={{ bgcolor: action === 'print' ? '#fff' : "#f4f4f4", width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw' }}
                                 />
                             </Stack>
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} justifyContent={'flex-start'} gap={isMobile ? 2 : 3}>
                             <Stack direction={'column'} gap={1}>
                                 <span>*Tanggal Transaksi</span>
-                                <DatePicker
-                                    value={PurchaseData.transactionDate}
-                                    onChange={(e) => handleInput(e, 'transactionDate')}
-                                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '25vw' }}
-                                />
+                                {
+                                    action === 'print' ?
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            disabled={action !== 'print'}
+                                            placeholder='YYYY/MM/DD'
+                                            InputProps={{
+                                                readOnly: action === 'print',
+                                            }}
+                                            value={moment(PurchaseData.transactionDate).format('YYYY/MM/DD')}
+                                            sx={{ bgcolor: action === 'print' ? '#fff' : "#f4f4f4", width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw' }}
+                                        />
+                                        :
+                                        <DatePicker
+                                            value={PurchaseData.transactionDate}
+                                            onChange={(e) => handleInput(e, 'transactionDate')}
+                                            sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw' }}
+                                        />
+                                }
                             </Stack>
                             <Stack direction={'column'} gap={1}>
                                 <span>*Jatuh Tempo</span>
-                                <DatePicker
-                                    value={PurchaseData.dueDate}
-                                    onChange={(e) => handleInput(e, 'dueDate')}
-                                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '25vw' }}
-                                />
+                                {
+                                    action === 'print' ?
+                                        <TextField
+                                            type="text"
+                                            size="medium"
+                                            disabled={action !== 'print'}
+                                            placeholder='YYYY/MM/DD'
+                                            InputProps={{
+                                                readOnly: action === 'print',
+                                            }}
+                                            value={moment(PurchaseData.dueDate).format('YYYY/MM/DD')}
+                                            sx={{ bgcolor: action === 'print' ? '#fff' : "#f4f4f4", width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw' }}
+                                        />
+                                        :
+                                        <DatePicker
+                                            value={PurchaseData.dueDate}
+                                            onChange={(e) => handleInput(e, 'dueDate')}
+                                            sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw' }}
+                                        />
+                                }
                             </Stack>
                         </Stack>
                         <Stack direction={'column'} gap={1}>
@@ -285,18 +413,24 @@ const PembelianForm = () => {
                                 value={PurchaseData.shippingCostPerKg}
                                 onChange={(e) => handleInput(e, 'shippingCostPerKg')}
                                 InputProps={{
+                                    readOnly: action === 'print',
                                     endAdornment: (
                                         <InputAdornment position='end'>
                                             <span>/ Kg</span>
                                         </InputAdornment>
                                     )
                                 }}
-                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : '25vw' }}
+                                sx={{ bgcolor: "#fff", width: isMobile ? '40vw' : onPrint ? '45vw' : '25vw' }}
                             />
                         </Stack>
                         {/* ///////////////////////////////////////// */}
                         <h2 style={{ color: '#000', margin: 0 }}>Data Produk</h2>
-                        <ProdukList data={PurchaseData} products={Units} />
+                        {
+                            action === 'print' ?
+                                <PrintProdukList data={PurchaseData} onPrint={onPrint}></PrintProdukList>
+                                :
+                                <ProdukList data={PurchaseData} products={Units} />
+                        }
                     </Stack>
                 </div>
             </Box>
