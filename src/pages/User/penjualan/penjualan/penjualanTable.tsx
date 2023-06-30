@@ -13,7 +13,14 @@ import {
     Icon,
     TextField,
     InputAdornment,
-    CircularProgress
+    CircularProgress,
+    Menu,
+    FormControl,
+    FormLabel,
+    FormControlLabel,
+    RadioGroup,
+    Radio,
+    Button
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -55,6 +62,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
+
 const PenjualanTable = (props: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -69,6 +77,8 @@ const PenjualanTable = (props: any) => {
         totalBill: 0
     })
     const [search, setSearch] = React.useState("")
+    const [filterMenu, setFilterMenu] = React.useState<any>(null)
+    const [filterSelect, setFilterSelect] = React.useState<any>('tanggal')
 
     const handleSearch = (event: any) => {
         setSearch(event.target.value)
@@ -143,6 +153,44 @@ const PenjualanTable = (props: any) => {
         setItemSelected(item)
     }
 
+    const [orderdirection, setOrderDirection] = useState("asc");
+    const [valuetoorderby, setValueToOrderBy] = useState("tanggal");
+    const createSortHandler = (property: any) => (event: any) => {
+        handleRequestSort(event, property);
+    };
+
+    const handleRequestSort = (event: any, property: any) => {
+        const isAscending = valuetoorderby === property && orderdirection === "asc";
+        setValueToOrderBy(property);
+        setOrderDirection(isAscending ? "desc" : "asc");
+    };
+
+    function descendingComparator(a: any, b: any, orderBy: any) {
+        if (b[orderBy] < a[orderBy]) {
+            return -1;
+        }
+        if (b[orderBy] > a[orderBy]) {
+            return 1;
+        }
+        return 0;
+    }
+
+    function getComparator(order: any, orderBy: any) {
+        return order === "desc"
+            ? (a: any, b: any) => descendingComparator(a, b, orderBy)
+            : (a: any, b: any) => -descendingComparator(a, b, orderBy);
+    }
+
+    const sortedRowInformation = (rowArray: any, comparator: any) => {
+        const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
+        stabilizedRowArray.sort((a: any, b: any) => {
+            const order = comparator(a[0], b[0]);
+            if (order !== 0) return order;
+            return a[1] - b[1];
+        });
+        return stabilizedRowArray.map((el: any) => el[0]);
+    };
+
     return (
         <div>
             <Stack direction={'row'} justifyContent={'space-between'}>
@@ -171,10 +219,48 @@ const PenjualanTable = (props: any) => {
                     borderRadius: "10px 10px 0px 0px",
                 }}
             >
-                <Stack alignItems={"center"} gap={2} direction={"row"}>
-                    <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
-                    <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Penjualan</p>
-                </Stack>
+                <div>
+                    <Stack
+                        onClick={(e) => setFilterMenu(e.currentTarget)}
+                        sx={{
+                            padding: 1,
+                            '&:hover': {
+                                backgroundColor: '#781600',
+                                cursor: 'pointer',
+                                borderRadius: 2,
+                                transition: 'all 300ms'
+                            }, transition: 'all 300ms'
+                        }}
+                        alignItems={"center"}
+                        gap={2}
+                        direction={"row"}
+                    >
+                        <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
+                        <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Penjualan</p>
+                    </Stack>
+                    <Menu anchorEl={filterMenu} open={Boolean(filterMenu)} onClose={() => setFilterMenu(null)}>
+                        <div style={{ padding: '5px 30px' }}>
+                            <h3 style={{ color: '#000' }}>Filter Data</h3>
+                            <FormControl>
+                                <FormLabel>Urutkan Berdasarkan:</FormLabel>
+                                <RadioGroup
+                                    name="filter-group"
+                                    value={filterSelect}
+                                    onChange={(e) => setFilterSelect(e.target.value)}
+                                >
+                                    <FormControlLabel value="tanggal" control={<Radio />} label="Tanggal" />
+                                    <FormControlLabel value="status" control={<Radio />} label="Status" />
+                                    <FormControlLabel value="nama" control={<Radio />} label="Akun Bank" />
+                                </RadioGroup>
+                            </FormControl>
+                            <Box onClick={() => {
+                                createSortHandler(filterSelect);
+                                setFilterMenu(null)
+                            }} sx={{ backgroundColor: Colors.primary, borderRadius: 2, color: '#fff', cursor: 'pointer', padding: 1, ...CENTER, marginTop: 3 }}
+                            >SUBMIT</Box>
+                        </div>
+                    </Menu>
+                </div>
                 <TextField
                     type="search"
                     size="small"
@@ -230,60 +316,85 @@ const PenjualanTable = (props: any) => {
                                                     {columns.map((column: any) => (
                                                         <StyledTableCell key={column.id}>
                                                             <div style={{ width: 100 }}>
-                                                                {column.label}
+                                                                {/* <TableSortLabel
+                                                                    active={valuetoorderby === column.id}
+                                                                    direction={valuetoorderby === column.id ? "asc" : "desc"}
+                                                                >
+                                                                </TableSortLabel> */}
+                                                                {/* {column.label} */}
+                                                                <TableSortLabel
+                                                                    active={valuetoorderby === column.id}
+                                                                    direction={valuetoorderby === column.id ? "asc" : "desc"}
+                                                                    onClick={createSortHandler(column.id)}
+                                                                    sx={{
+                                                                        fontWeight: "bold",
+                                                                        whiteSpace: "nowrap",
+                                                                        "& .MuiTableSortLabel-icon": {
+                                                                            opacity: 1,
+                                                                            fontSize: 10,
+                                                                        },
+                                                                    }}
+                                                                    IconComponent={FilterList}
+                                                                >
+                                                                    {column.label}
+                                                                </TableSortLabel>
                                                             </div>
                                                         </StyledTableCell>
                                                     ))}
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {props.data.map((item: any, index: number) => {
-                                                    const isItemSelected = isSelected(item.id);
-                                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                                {
+                                                    // props.data.map((item: any, index: number) => {
+                                                    sortedRowInformation(props.data,
+                                                        getComparator(orderdirection, valuetoorderby))
+                                                        .map((item: any, index: number) => {
+                                                            const isItemSelected = isSelected(item.id);
+                                                            const labelId = `enhanced-table-checkbox-${index}`;
 
-                                                    return (
-                                                        <TableRow
-                                                            role="checkbox"
-                                                            tabIndex={-1}
-                                                            key={index}
-                                                            sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                                                        >
-                                                            <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
-                                                                <Checkbox
-                                                                    color="primary"
-                                                                    checked={isItemSelected}
-                                                                    inputProps={{
-                                                                        'aria-labelledby': labelId,
-                                                                    }}
-                                                                />
-                                                            </StyledTableCell>
-                                                            <StyledTableCell align="center">
-                                                                <div onClick={() => handlePrint(item)} style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
-                                                                    <Stack direction={'row'} spacing={1} alignItems={'center'}>
-                                                                        <Icon sx={{ color: '#fff' }} fontSize="small">file_download</Icon>
-                                                                        <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Export</span>
-                                                                    </Stack>
-                                                                </div>
-                                                            </StyledTableCell>
-                                                            <StyledTableCell align="center">{moment(item.shippingDate).format('YYYY/MM/DD')}</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.invoice}</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.customerName}</StyledTableCell>
-                                                            <StyledTableCell align="center">{item.salesType === 'LARGE' ? 'BESAR' : item.salesType}</StyledTableCell>
-                                                            <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
-                                                            <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
-                                                                {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
-                                                            </StyledTableCell>
-                                                            <StyledTableCell align="center">
-                                                                <div onClick={() => !item.isPaidOff && FormLunas(item)} style={{ ...CENTER, backgroundColor: item.isPaidOff ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
-                                                                    <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
-                                                                </div>
-                                                            </StyledTableCell>
-                                                            <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
-                                                            <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
-                                                            {/* <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell> */}
-                                                        </TableRow>
-                                                    )
-                                                })
+                                                            return (
+                                                                <TableRow
+                                                                    role="checkbox"
+                                                                    tabIndex={-1}
+                                                                    key={index}
+                                                                    sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                                                                >
+                                                                    <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
+                                                                        <Checkbox
+                                                                            color="primary"
+                                                                            checked={isItemSelected}
+                                                                            inputProps={{
+                                                                                'aria-labelledby': labelId,
+                                                                            }}
+                                                                        />
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="center">
+                                                                        <div onClick={() => handlePrint(item)} style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                            <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                                                                                <Icon sx={{ color: '#fff' }} fontSize="small">file_download</Icon>
+                                                                                <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Export</span>
+                                                                            </Stack>
+                                                                        </div>
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="center">{moment(item.shippingDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{item.invoice}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{item.customerName}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{item.salesType === 'LARGE' ? 'BESAR' : item.salesType}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                    <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
+                                                                        {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="center">
+                                                                        <div onClick={() => !item.isPaidOff && FormLunas(item)} style={{ ...CENTER, backgroundColor: item.isPaidOff ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                            <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
+                                                                        </div>
+                                                                    </StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    {/* <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell> */}
+                                                                </TableRow>
+                                                            )
+                                                        })
                                                 }
                                             </TableBody>
                                         </Table>

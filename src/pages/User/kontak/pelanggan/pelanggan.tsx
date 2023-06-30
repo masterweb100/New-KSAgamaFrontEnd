@@ -8,6 +8,8 @@ import { isMobile } from 'react-device-detect';
 import { HTTPGetCustomers } from '../../../../apis/User/contact/customer';
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'react-toastify';
+import ReactToPrint from 'react-to-print';
+import moment from 'moment';
 
 const Pelanggan = () => {
     const token = secureLocalStorage.getItem("USER_SESSION") as string
@@ -62,6 +64,49 @@ const Pelanggan = () => {
         GetCustomerTable();
     }, [init]);
 
+    const componentRef: any = React.useRef(null);
+    const onBeforeGetContentResolve: any = React.useRef(null);
+    const [onPrint, setPrint] = React.useState(false)
+
+    const reactToPrintContent = React.useCallback(() => {
+        return componentRef.current;
+    }, [componentRef.current]);
+
+    const handleAfterPrint = React.useCallback(() => {
+        setPrint(false)
+    }, []);
+
+    const handleBeforePrint = React.useCallback(() => {
+        setPrint(true)
+    }, []);
+
+    const handleOnBeforeGetContent = React.useCallback(() => {
+        setPrint(true)
+        return new Promise<void>((resolve) => {
+            onBeforeGetContentResolve.current = resolve;
+            setTimeout(() => {
+                resolve();
+            }, 2000);
+        });
+    }, [setPrint]);
+
+    React.useEffect(() => {
+        if (typeof onBeforeGetContentResolve.current === "function") {
+            onBeforeGetContentResolve.current();
+        }
+    }, [onBeforeGetContentResolve.current]);
+
+    const PrintButton = React.useCallback(() => {
+        return (
+            <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.error}`, cursor: 'pointer' }}>
+                <Stack direction={'row'} alignItems={'center'} gap={1}>
+                    <Icon sx={{ color: Colors.error, fontSize: 20 }}>file_download</Icon>
+                    <span style={{ fontSize: 13, color: Colors.error }}>PDF</span>
+                </Stack>
+            </div>
+        )
+    }, [])
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Pelanggan'} idPanel={7}></NavigationBarUser>
@@ -80,12 +125,15 @@ const Pelanggan = () => {
                                 }
                             </Stack>
                         </div>
-                        <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.error}` }}>
-                            <Stack direction={'row'} alignItems={'center'} gap={1}>
-                                <Icon sx={{ color: Colors.error, fontSize: 20 }}>file_download</Icon>
-                                <span style={{ fontSize: 13, color: Colors.error }}>PDF</span>
-                            </Stack>
-                        </div>
+                        <ReactToPrint
+                            content={reactToPrintContent}
+                            documentTitle={'Customer_' + moment().format('YYYY-MM-DD HH:mm:dd')}
+                            onAfterPrint={handleAfterPrint}
+                            onBeforeGetContent={handleOnBeforeGetContent}
+                            onBeforePrint={handleBeforePrint}
+                            removeAfterPrint
+                            trigger={PrintButton}
+                        />
                         <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.success}` }}>
                             <Stack direction={'row'} alignItems={'center'} gap={1}>
                                 <Icon sx={{ color: Colors.success, fontSize: 20 }}>file_download</Icon>
@@ -93,7 +141,7 @@ const Pelanggan = () => {
                             </Stack>
                         </div>
                     </Stack>
-                    <div style={{ marginTop: 20 }}>
+                    <div style={{ marginTop: onPrint ? 0 : 20 }} ref={componentRef}>
                         <PelangganTable
                             data={DataRole}
                             changePage={onChangePage}
@@ -102,6 +150,7 @@ const Pelanggan = () => {
                             search={onSearch}
                             loader={loader}
                             getData={GetCustomerTable}
+                            onPrint={onPrint}
                         ></PelangganTable>
                     </div>
                 </div>

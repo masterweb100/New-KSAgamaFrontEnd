@@ -8,6 +8,8 @@ import { isMobile } from 'react-device-detect';
 import secureLocalStorage from 'react-secure-storage';
 import { HTTPGetExpeditions } from '../../../../apis/User/contact/expedition';
 import { toast } from 'react-toastify';
+import moment from 'moment';
+import ReactToPrint from 'react-to-print';
 
 const Ekspedisi = () => {
     const token = secureLocalStorage.getItem("USER_SESSION") as string
@@ -62,6 +64,49 @@ const Ekspedisi = () => {
         GetExpeditionTable();
     }, [init]);
 
+    const componentRef: any = React.useRef(null);
+    const onBeforeGetContentResolve: any = React.useRef(null);
+    const [onPrint, setPrint] = React.useState(false)
+
+    const reactToPrintContent = React.useCallback(() => {
+        return componentRef.current;
+    }, [componentRef.current]);
+
+    const handleAfterPrint = React.useCallback(() => {
+        setPrint(false)
+    }, []);
+
+    const handleBeforePrint = React.useCallback(() => {
+        setPrint(true)
+    }, []);
+
+    const handleOnBeforeGetContent = React.useCallback(() => {
+        setPrint(true)
+        return new Promise<void>((resolve) => {
+            onBeforeGetContentResolve.current = resolve;
+            setTimeout(() => {
+                resolve();
+            }, 2000);
+        });
+    }, [setPrint]);
+
+    React.useEffect(() => {
+        if (typeof onBeforeGetContentResolve.current === "function") {
+            onBeforeGetContentResolve.current();
+        }
+    }, [onBeforeGetContentResolve.current]);
+
+    const PrintButton = React.useCallback(() => {
+        return (
+            <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.error}`, cursor: 'pointer' }}>
+                <Stack direction={'row'} alignItems={'center'} gap={1}>
+                    <Icon sx={{ color: Colors.error, fontSize: 20 }}>file_download</Icon>
+                    <span style={{ fontSize: 13, color: Colors.error }}>PDF</span>
+                </Stack>
+            </div>
+        )
+    }, [])
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Ekspedisi'} idPanel={7}></NavigationBarUser>
@@ -80,12 +125,15 @@ const Ekspedisi = () => {
                                 }
                             </Stack>
                         </div>
-                        <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.error}` }}>
-                            <Stack direction={'row'} alignItems={'center'} gap={1}>
-                                <Icon sx={{ color: Colors.error, fontSize: 20 }}>file_download</Icon>
-                                <span style={{ fontSize: 13, color: Colors.error }}>PDF</span>
-                            </Stack>
-                        </div>
+                        <ReactToPrint
+                            content={reactToPrintContent}
+                            documentTitle={'Expedition_' + moment().format('YYYY-MM-DD HH:mm:dd')}
+                            onAfterPrint={handleAfterPrint}
+                            onBeforeGetContent={handleOnBeforeGetContent}
+                            onBeforePrint={handleBeforePrint}
+                            removeAfterPrint
+                            trigger={PrintButton}
+                        />
                         <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.success}` }}>
                             <Stack direction={'row'} alignItems={'center'} gap={1}>
                                 <Icon sx={{ color: Colors.success, fontSize: 20 }}>file_download</Icon>
@@ -93,7 +141,7 @@ const Ekspedisi = () => {
                             </Stack>
                         </div>
                     </Stack>
-                    <div style={{ marginTop: 20 }}>
+                    <div style={{ marginTop: onPrint ? 0 : 20 }} ref={componentRef}>
                         <EkspedisiTable
                             data={DataRole}
                             changePage={onChangePage}
@@ -102,6 +150,7 @@ const Ekspedisi = () => {
                             search={onSearch}
                             loader={loader}
                             getData={GetExpeditionTable}
+                            onPrint={onPrint}
                         ></EkspedisiTable>
                     </div>
                 </div>

@@ -41,9 +41,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         textAlign: "center",
         fontWeight: '700'
     },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
 }));
 
 const EkspedisiTable = (props: any) => {
@@ -122,29 +119,34 @@ const EkspedisiTable = (props: any) => {
 
     return (
         <div>
-            <Stack direction={'row'} justifyContent={'space-between'}>
-                <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
-                    <Stack alignItems={'center'} direction={'row'} gap={1}>
-                        <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
-                        <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Ekspedisi</p>
+            {
+                props.onPrint ?
+                    null
+                    :
+                    <Stack direction={'row'} justifyContent={'space-between'}>
+                        <div onClick={FormPage} style={{ ...CENTER, backgroundColor: Colors.primary, borderRadius: 5, cursor: 'pointer', padding: '10px 30px', alignSelf: 'flex-start' }}>
+                            <Stack alignItems={'center'} direction={'row'} gap={1}>
+                                <Icon style={{ color: '#fff', fontSize: 17 }}>add</Icon>
+                                <p style={{ margin: 0, fontWeight: 500, fontSize: 15, color: '#ffff' }}>Tambah Data Ekspedisi</p>
+                            </Stack>
+                        </div>
+                        <div
+                            onClick={() => handleDelete('open')}
+                            style={{
+                                ...CENTER,
+                                backgroundColor:
+                                    selected.length === 0 ? Colors.secondary : Colors.error,
+                                borderRadius: 5,
+                                cursor: "pointer",
+                                padding: 10,
+                            }}
+                        >
+                            <Icon style={{ color: "#fff", fontSize: isMobile ? 20 : 25 }}>
+                                delete_outline
+                            </Icon>
+                        </div>
                     </Stack>
-                </div>
-                <div
-                    onClick={() => handleDelete('open')}
-                    style={{
-                        ...CENTER,
-                        backgroundColor:
-                            selected.length === 0 ? Colors.secondary : Colors.error,
-                        borderRadius: 5,
-                        cursor: "pointer",
-                        padding: 10,
-                    }}
-                >
-                    <Icon style={{ color: "#fff", fontSize: isMobile ? 20 : 25 }}>
-                        delete_outline
-                    </Icon>
-                </div>
-            </Stack>
+            }
             <Stack
                 direction={isMobile ? "column" : "row"}
                 alignItems={"center"}
@@ -162,20 +164,25 @@ const EkspedisiTable = (props: any) => {
                     <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
                     <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>Daftar Data Ekspedisi</p>
                 </Stack>
-                <TextField
-                    type="search"
-                    size="small"
-                    placeholder="Cari..."
-                    onChange={handleSearch}
-                    sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Icon>search</Icon>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                {
+                    props.onPrint ?
+                        null
+                        :
+                        <TextField
+                            type="search"
+                            size="small"
+                            placeholder="Cari..."
+                            onChange={handleSearch}
+                            sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Icon>search</Icon>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                }
             </Stack>
             <Box sx={{
                 overflow: "auto",
@@ -204,16 +211,21 @@ const EkspedisiTable = (props: any) => {
                                             <Table stickyHeader aria-label="sticky table">
                                                 <TableHead>
                                                     <TableRow>
-                                                        <StyledTableCell>
-                                                            <Checkbox
-                                                                color="primary"
-                                                                indeterminate={selected.length > 0 && selected.length < props.data.length}
-                                                                checked={props.data.length > 0 && selected.length === props.data.length}
-                                                                onChange={handleSelectAllClick}
-                                                            />
-                                                        </StyledTableCell>
+                                                        {
+                                                            props.onPrint ?
+                                                                null
+                                                                :
+                                                                <StyledTableCell>
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        indeterminate={selected.length > 0 && selected.length < props.data.length}
+                                                                        checked={props.data.length > 0 && selected.length === props.data.length}
+                                                                        onChange={handleSelectAllClick}
+                                                                    />
+                                                                </StyledTableCell>
+                                                        }
                                                         {columns.map((column: any) => (
-                                                            <StyledTableCell key={column.id}>
+                                                            <StyledTableCell key={column.id} sx={{ fontSize: props.onPrint ? 12 : 14 }}>
                                                                 {column.label}
                                                             </StyledTableCell>
                                                         ))}
@@ -232,20 +244,25 @@ const EkspedisiTable = (props: any) => {
                                                                 key={index}
                                                                 sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
                                                             >
-                                                                <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
-                                                                    <Checkbox
-                                                                        color="primary"
-                                                                        checked={isItemSelected}
-                                                                        inputProps={{
-                                                                            'aria-labelledby': labelId,
-                                                                        }}
-                                                                    />
-                                                                </StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">{item.nameExpedition}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">0{item.phone}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">{item.address}</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">-</StyledTableCell>
-                                                                <StyledTableCell onClick={DetailData} align="center">-</StyledTableCell>
+                                                                {
+                                                                    props.onPrint ?
+                                                                        null
+                                                                        :
+                                                                        <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
+                                                                            <Checkbox
+                                                                                color="primary"
+                                                                                checked={isItemSelected}
+                                                                                inputProps={{
+                                                                                    'aria-labelledby': labelId,
+                                                                                }}
+                                                                            />
+                                                                        </StyledTableCell>
+                                                                }
+                                                                <StyledTableCell sx={{ fontSize: props.onPrint ? 12 : 14 }} onClick={DetailData} align="center">{item.nameExpedition}</StyledTableCell>
+                                                                <StyledTableCell sx={{ fontSize: props.onPrint ? 12 : 14 }} onClick={DetailData} align="center">0{item.phone}</StyledTableCell>
+                                                                <StyledTableCell sx={{ fontSize: props.onPrint ? 12 : 14 }} onClick={DetailData} align="center">{item.address}</StyledTableCell>
+                                                                <StyledTableCell sx={{ fontSize: props.onPrint ? 12 : 14 }} onClick={DetailData} align="center">-</StyledTableCell>
+                                                                <StyledTableCell sx={{ fontSize: props.onPrint ? 12 : 14 }} onClick={DetailData} align="center">-</StyledTableCell>
                                                             </TableRow>
                                                         )
                                                     })
@@ -257,7 +274,9 @@ const EkspedisiTable = (props: any) => {
                             </>
                     }
                 </Box>
-                {props.data !== undefined && (
+                {props.onPrint ?
+                    null
+                    :
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
@@ -267,7 +286,7 @@ const EkspedisiTable = (props: any) => {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                )}
+                }
                 <EkspedisiDialog isOpen={isDetailOpen} setOpen={() => setDetailOpen(false)} />
             </Box>
             <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
