@@ -6,7 +6,7 @@ import { pembelianData } from '../dummy';
 import PembelianTable from './pembelianTable';
 import { isMobile } from 'react-device-detect';
 import secureLocalStorage from 'react-secure-storage';
-import { HTTPGetPurchases } from '../../../../apis/User/purchase/purchase';
+import { HTTPGetPurchases, HTTPGetTotalBillPurchases } from '../../../../apis/User/purchase/purchase';
 import { toast } from 'react-toastify';
 
 const CustomTabs = styled(Tabs)({
@@ -32,6 +32,10 @@ const Pembelian = () => {
     const [pagination, setPagination] = React.useState({})
     const [search, setSearch] = React.useState('')
     const [loader, setLoader] = React.useState(true)
+    const [bill, setBill] = React.useState({
+        subTotal: 0,
+        total: 0,
+    })
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         event.preventDefault()
@@ -78,8 +82,26 @@ const Pembelian = () => {
         }
     };
 
+    const GetTotalPrice = async () => {
+        try {
+            const resp = await HTTPGetTotalBillPurchases({
+                limit: limit.toString(),
+                page: page.toString(),
+                token: token
+            })
+            setBill(resp.data.data)
+        } catch (error: any) {
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
+        }
+    }
+
     React.useEffect(() => {
-        GetPurchasesTable();
+        GetPurchasesTable().then().catch();
+        GetTotalPrice().then().catch();
     }, [init]);
 
     return (
@@ -114,6 +136,7 @@ const Pembelian = () => {
                             search={onSearch}
                             loader={loader}
                             getData={GetPurchasesTable}
+                            totalBill={bill}
                         ></PembelianTable>
                     </div>
                 </div>

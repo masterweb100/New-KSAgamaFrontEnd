@@ -29,8 +29,9 @@ import { CENTER } from "../../../../utils/stylesheet";
 import { isMobile } from "react-device-detect";
 import secureLocalStorage from "react-secure-storage";
 import moment from "moment";
-import { HTTPDeleteCategory, HTTPGetCategories, HTTPUpdateCategory } from "../../../../apis/User/product/category";
+import { HTTPAddCategoryXLSX, HTTPDeleteCategory, HTTPGetCategories, HTTPUpdateCategory } from "../../../../apis/User/product/category";
 import DeleteModal from "../../../../components/deleteModal";
+import { useFilePicker } from 'use-file-picker';
 
 const columns = [
   { id: "id", label: "ID Kategori" },
@@ -189,34 +190,70 @@ const KategoriTable = () => {
     }
   };
 
+  const [openFile, { filesContent, loading, errors }] = useFilePicker({
+    accept: '.xlsx',
+    multiple: false,
+    onFilesSuccessfulySelected: async ({ plainFiles }) => {
+      setLoader(true)
+      try {
+        let Forms = new FormData()
+        Forms.append('file', plainFiles[0])
+        await HTTPAddCategoryXLSX({ form: Forms, token: token })
+        toast.success('Berhasil menambahkan Kategori!')
+        await GetCategory()
+        setLoader(false)
+      } catch (error: any) {
+        setLoader(false)
+        if (error.status === 500) {
+          toast.error('Server sedang mengalami gangguan!')
+        } else {
+          toast.error('Terjadi Kesalahan!')
+        }
+      }
+    },
+  })
+
   return (
     <div>
       <Stack direction={"row"} justifyContent={"space-between"}>
-        <div
-          onClick={FormAddKategori}
-          style={{
-            ...CENTER,
-            backgroundColor: Colors.primary,
-            borderRadius: 5,
-            cursor: "pointer",
-            padding: isMobile ? "12px 15px" : "10px 30px",
-            alignSelf: "flex-start",
-          }}
-        >
-          <Stack alignItems={"center"} direction={"row"} gap={1}>
-            <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
-            <p
-              style={{
-                margin: 0,
-                fontWeight: 500,
-                fontSize: isMobile ? 13 : 15,
-                color: "#fff",
-              }}
-            >
-              Tambah Data Kategori Produk
-            </p>
-          </Stack>
-        </div>
+        <Stack direction={"row"} alignItems={"center"} gap={isMobile ? 1 : 2}>
+          <div
+            onClick={FormAddKategori}
+            style={{
+              ...CENTER,
+              backgroundColor: Colors.primary,
+              borderRadius: 5,
+              cursor: "pointer",
+              padding: isMobile ? "12px 15px" : "10px 30px",
+              alignSelf: "flex-start",
+            }}
+          >
+            <Stack alignItems={"center"} direction={"row"} gap={1}>
+              <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
+              <p
+                style={{
+                  margin: 0,
+                  fontWeight: 500,
+                  fontSize: isMobile ? 13 : 15,
+                  color: "#fff",
+                }}
+              >
+                Tambah Data Kategori Produk
+              </p>
+            </Stack>
+          </div>
+          <div onClick={openFile} style={{ backgroundColor: '#fff', padding: isMobile ? "12px 15px" : "10px 30px", borderRadius: 5, border: `1px solid ${Colors.primary}`, cursor: 'pointer' }}>
+            <Stack direction={'row'} alignItems={'center'} gap={1}>
+              <Icon sx={{ color: Colors.primary, fontSize: 20 }}>file_upload</Icon>
+              {
+                isMobile ?
+                  <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
+                  :
+                  <span style={{ fontSize: 15, color: Colors.primary }}>Import Data Kontak</span>
+              }
+            </Stack>
+          </div>
+        </Stack>
         <Stack direction={"row"} alignItems={"center"} gap={isMobile ? 1 : 2}>
           <div
             onClick={() => handleDelete('open')}

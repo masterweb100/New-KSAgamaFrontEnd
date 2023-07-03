@@ -33,7 +33,7 @@ import PelunasanDialog from "../../../../components/pelunasanDialog";
 import { isMobile } from 'react-device-detect';
 import DeleteModal from "../../../../components/deleteModal";
 import moment from "moment";
-import { HTTPDeleteSales } from "../../../../apis/User/sales/sales";
+import { HTTPDeleteSales, HTTPGetTotalBillSales } from "../../../../apis/User/sales/sales";
 import secureLocalStorage from "react-secure-storage";
 import { useDispatch } from "react-redux";
 import { setSalesData } from "../../../../stores/reduxes/sales";
@@ -62,6 +62,31 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
+function descendingComparator(a: any, b: any, orderBy: any) {
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
+
+function getComparator(order: any, orderBy: any) {
+    return order === "desc"
+        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
+        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
+}
+
+const sortedRowInformation = (rowArray: any, comparator: any) => {
+    const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
+    stabilizedRowArray.sort((a: any, b: any) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+    return stabilizedRowArray.map((el: any) => el[0]);
+};
 
 const PenjualanTable = (props: any) => {
     const navigate = useNavigate();
@@ -163,32 +188,6 @@ const PenjualanTable = (props: any) => {
         const isAscending = valuetoorderby === property && orderdirection === "asc";
         setValueToOrderBy(property);
         setOrderDirection(isAscending ? "desc" : "asc");
-    };
-
-    function descendingComparator(a: any, b: any, orderBy: any) {
-        if (b[orderBy] < a[orderBy]) {
-            return -1;
-        }
-        if (b[orderBy] > a[orderBy]) {
-            return 1;
-        }
-        return 0;
-    }
-
-    function getComparator(order: any, orderBy: any) {
-        return order === "desc"
-            ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-            : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-    }
-
-    const sortedRowInformation = (rowArray: any, comparator: any) => {
-        const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
-        stabilizedRowArray.sort((a: any, b: any) => {
-            const order = comparator(a[0], b[0]);
-            if (order !== 0) return order;
-            return a[1] - b[1];
-        });
-        return stabilizedRowArray.map((el: any) => el[0]);
     };
 
     return (
@@ -345,56 +344,56 @@ const PenjualanTable = (props: any) => {
                                             </TableHead>
                                             <TableBody>
                                                 {
-                                                    // props.data.map((item: any, index: number) => {
-                                                    sortedRowInformation(props.data,
-                                                        getComparator(orderdirection, valuetoorderby))
-                                                        .map((item: any, index: number) => {
-                                                            const isItemSelected = isSelected(item.id);
-                                                            const labelId = `enhanced-table-checkbox-${index}`;
+                                                    // sortedRowInformation(props.data,
+                                                    //     getComparator(orderdirection, valuetoorderby))
+                                                    //     .map((item: any, index: number) => {
+                                                    props.data.map((item: any, index: number) => {
+                                                        const isItemSelected = isSelected(item.id);
+                                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                                            return (
-                                                                <TableRow
-                                                                    role="checkbox"
-                                                                    tabIndex={-1}
-                                                                    key={index}
-                                                                    sx={{ "&:hover": { bgcolor: Colors.inherit } }}
-                                                                >
-                                                                    <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
-                                                                        <Checkbox
-                                                                            color="primary"
-                                                                            checked={isItemSelected}
-                                                                            inputProps={{
-                                                                                'aria-labelledby': labelId,
-                                                                            }}
-                                                                        />
-                                                                    </StyledTableCell>
-                                                                    <StyledTableCell align="center">
-                                                                        <div onClick={() => handlePrint(item)} style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
-                                                                            <Stack direction={'row'} spacing={1} alignItems={'center'}>
-                                                                                <Icon sx={{ color: '#fff' }} fontSize="small">file_download</Icon>
-                                                                                <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Export</span>
-                                                                            </Stack>
-                                                                        </div>
-                                                                    </StyledTableCell>
-                                                                    <StyledTableCell align="center">{moment(item.shippingDate).format('YYYY/MM/DD')}</StyledTableCell>
-                                                                    <StyledTableCell align="center">{item.invoice}</StyledTableCell>
-                                                                    <StyledTableCell align="center">{item.customerName}</StyledTableCell>
-                                                                    <StyledTableCell align="center">{item.salesType === 'LARGE' ? 'BESAR' : item.salesType}</StyledTableCell>
-                                                                    <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
-                                                                    <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
-                                                                        {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
-                                                                    </StyledTableCell>
-                                                                    <StyledTableCell align="center">
-                                                                        <div onClick={() => !item.isPaidOff && FormLunas(item)} style={{ ...CENTER, backgroundColor: item.isPaidOff ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
-                                                                            <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
-                                                                        </div>
-                                                                    </StyledTableCell>
-                                                                    <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
-                                                                    <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
-                                                                    {/* <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell> */}
-                                                                </TableRow>
-                                                            )
-                                                        })
+                                                        return (
+                                                            <TableRow
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={index}
+                                                                sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                                                            >
+                                                                <StyledTableCell onClick={(e) => handleClick(e, item.id)} align="center" padding="checkbox">
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        checked={isItemSelected}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': labelId,
+                                                                        }}
+                                                                    />
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">
+                                                                    <div onClick={() => handlePrint(item)} style={{ ...CENTER, backgroundColor: Colors.error, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                        <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                                                                            <Icon sx={{ color: '#fff' }} fontSize="small">file_download</Icon>
+                                                                            <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Export</span>
+                                                                        </Stack>
+                                                                    </div>
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{moment(item.shippingDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.invoice}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.customerName}</StyledTableCell>
+                                                                <StyledTableCell align="center">{item.salesType === 'LARGE' ? 'BESAR' : item.salesType}</StyledTableCell>
+                                                                <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                <StyledTableCell align="center" sx={{ color: item.isPaidOff ? Colors.success : Colors.error }}>
+                                                                    {item.isPaidOff ? 'Lunas' : 'Belum Lunas'}
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">
+                                                                    <div onClick={() => !item.isPaidOff && FormLunas(item)} style={{ ...CENTER, backgroundColor: item.isPaidOff ? '#ababab' : Colors.success, borderRadius: 5, cursor: 'pointer', padding: isMobile ? '10px 6px' : 10 }}>
+                                                                        <span style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>Set Lunas</span>
+                                                                    </div>
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{(item.bill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                <StyledTableCell align="center">{(item.totalBill).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                {/* <StyledTableCell align="center">{item.updatedBy === null ? '-' : item.updatedBy}</StyledTableCell> */}
+                                                            </TableRow>
+                                                        )
+                                                    })
                                                 }
                                             </TableBody>
                                         </Table>
@@ -406,12 +405,12 @@ const PenjualanTable = (props: any) => {
                 <Stack direction={'column'} gap={1} sx={{ backgroundColor: '#f8f8f8', border: '1px solid #909090' }} padding={3}>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={1} sx={{ backgroundColor: '#f8f8f8' }}>
                         <span><b>Sub Total Barang Masuk</b></span>
-                        <span><b>8.960</b></span>
+                        <span><b>{(props.totalBill.subTotal).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
                     </Stack>
                     <div style={{ width: '100%', backgroundColor: '#000', height: 1 }}></div>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={1} sx={{ backgroundColor: '#f8f8f8' }}>
                         <span><b>Total Barang Masuk</b></span>
-                        <span><b>18.960</b></span>
+                        <span><b>{(props.totalBill.total).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
                     </Stack>
                 </Stack>
                 {props.data !== undefined && (

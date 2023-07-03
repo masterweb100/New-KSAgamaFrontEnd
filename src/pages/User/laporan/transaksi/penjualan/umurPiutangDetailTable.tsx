@@ -12,7 +12,8 @@ import {
     Icon,
     TextField,
     InputAdornment,
-    Toolbar
+    Toolbar,
+    CircularProgress
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -23,81 +24,90 @@ import NavigationBarUser from '../../../../../components/appBarUser';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { piutangData } from "../../dummy";
 import { isMobile } from 'react-device-detect';
+import secureLocalStorage from "react-secure-storage";
+import moment from "moment";
+import { CENTER } from "../../../../../utils/stylesheet";
+import { HTTPReportsSalesDebtByID } from "../../../../../apis/User/reports/sale";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../stores/rootReducer";
 
 const columns = [
     { id: 'tanggal', label: 'Tanggal' },
     { id: 'jatuhtempo', label: 'Tanggal Jatuh Tempo' },
     { id: 'id', label: 'ID Invoice' },
     { id: 'tempo', label: 'Belum Jatuh Tempo' },
-    { id: 'less1bulan', label: '< 1 Bulan' },
     { id: 'sebulan', label: '1 Bulan' },
     { id: 'duabulan', label: '2 Bulan' },
     { id: 'tigabulan', label: '3 Bulan' },
-    { id: 'more3bulan', label: '> 3 Bulan' },
+    { id: 'empatnbulan', label: '4 Bulan' },
+    { id: 'tunggakan', label: 'Total Tunggakan' },
 ];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         textAlign: "center",
-        // borderBottomWidth: 1,
+        fontWeight: '700'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
 }));
 
-function descendingComparator(a: any, b: any, orderBy: any) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order: any, orderBy: any) {
-    return order === "desc"
-        ? (a: any, b: any) => descendingComparator(a, b, orderBy)
-        : (a: any, b: any) => -descendingComparator(a, b, orderBy);
-}
-
-const sortedRowInformation = (rowArray: any, comparator: any) => {
-    const stabilizedRowArray = rowArray.map((el: any, index: number) => [el, index]);
-    stabilizedRowArray.sort((a: any, b: any) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedRowArray.map((el: any) => el[0]);
-};
-
-const UmurPiutangDetailTable = (props: any) => {
+const UmurPiutangDetailTable = () => {
+    const SalesData = useSelector((state: RootState) => state.debtsData.data)
+    const token = secureLocalStorage.getItem('USER_SESSION') as string
     const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(5);
-    const [dateFrom, setDateFrom] = React.useState<any>(null);
-    const [dateTo, setDateTo] = React.useState<any>(null);
+    const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [dateFrom, setDateFrom] = React.useState<any>(moment().startOf('month'));
+    const [dateTo, setDateTo] = React.useState<any>(moment().endOf('month'));
+    const [pagination, setPagination] = React.useState<any>({})
+    const [init, setInit] = React.useState(false)
+    const [DebtData, setDebtData] = React.useState<any>({})
+    const [loader, setLoader] = React.useState(true)
+    const [search, setSearch] = React.useState("")
+
+    const handleSearch = (event: any) => {
+        setSearch(event.target.value)
+        setInit(!init)
+    }
 
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
+        setInit(!init)
     };
 
     const handleChangeRowsPerPage = (event: any) => {
         setItemsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setPage(1);
+        setInit(!init)
     };
 
-    const [orderdirection, setOrderDirection] = useState("asc");
-    const [valuetoorderby, setValueToOrderBy] = useState("first_name");
-    const createSortHandler = (property: any) => (event: any) => {
-        handleRequestSort(event, property);
-    };
+    const GetDebtReport = async () => {
+        setLoader(true)
+        try {
+            const resp = await HTTPReportsSalesDebtByID({
+                from: moment(dateFrom).format('YYYY/MM/DD'),
+                to: moment(dateTo).format('YYYY/MM/DD'),
+                limit: itemsPerPage.toString(),
+                page: page.toString(),
+                q: search.length === 0 ? undefined : search,
+                token: token,
+                salesId: SalesData.id
+            })
+            setDebtData(resp.data.data)
+            setPagination(resp.data.pagination)
+            setLoader(false)
+        } catch (error: any) {
+            setLoader(false)
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
+        }
+    }
 
-    const handleRequestSort = (event: any, property: any) => {
-        const isAscending = valuetoorderby === property && orderdirection === "asc";
-        setValueToOrderBy(property);
-        setOrderDirection(isAscending ? "desc" : "asc");
-    };
+    React.useEffect(() => { GetDebtReport() }, [init])
 
     return (
         <div style={{ display: 'flex' }}>
@@ -124,19 +134,19 @@ const UmurPiutangDetailTable = (props: any) => {
                         <Stack direction={'row'} width={'100%'} justifyContent={isMobile ? 'space-between' : 'flex-end'} alignItems={'center'} gap={1}>
                             <DatePicker
                                 value={dateFrom}
-                                onChange={(date) => setDateFrom(date)}
+                                onChange={(date) => { setDateFrom(date); setDateTo(null) }}
                                 sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                             <Icon sx={{ color: Colors.secondary, fontSize: 25 }}>east</Icon>
                             <DatePicker
                                 value={dateTo}
-                                onChange={(date) => setDateTo(date)}
+                                onChange={(date) => { setDateTo(date); setInit(!init) }}
                                 sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '40vw' : '15vw' }}
                             />
                         </Stack>
                     </Stack>
                 </div>
-                <h3 style={{ margin: '20px 0' }}>Edi Sucipto</h3>
+                <h3 style={{ margin: '20px 0' }}>{SalesData.name}</h3>
                 <Stack
                     direction={isMobile ? "column" : "row"}
                     alignItems={"center"}
@@ -158,6 +168,8 @@ const UmurPiutangDetailTable = (props: any) => {
                         type="search"
                         size="small"
                         placeholder="Cari..."
+                        value={search}
+                        onChange={handleSearch}
                         sx={{ bgcolor: "white", borderRadius: 1, width: isMobile ? '90%' : '20vw' }}
                         InputProps={{
                             startAdornment: (
@@ -178,79 +190,77 @@ const UmurPiutangDetailTable = (props: any) => {
                 }}
                 >
                     <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-                        <TableContainer>
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column: any) => (
-                                            <StyledTableCell key={column.id}>
-                                                <TableSortLabel
-                                                    active={valuetoorderby === column.id}
-                                                    direction={valuetoorderby === column.id ? "asc" : "desc"}
-                                                    onClick={createSortHandler(column.id)}
-                                                    sx={{
-                                                        fontWeight: "bold",
-                                                        whiteSpace: "nowrap",
-                                                        "& .MuiTableSortLabel-icon": {
-                                                            opacity: 1,
-                                                            fontSize: 10,
-                                                        },
-                                                    }}
-                                                    IconComponent={FilterList}
-                                                >
-                                                    {column.label}
-                                                </TableSortLabel>
-                                            </StyledTableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-
-                                <TableBody>
-                                    {piutangData !== undefined
-                                        ? sortedRowInformation(piutangData,
-                                            getComparator(orderdirection, valuetoorderby))
-                                            .slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage)
-                                            .map((item: any, index: number) => {
-                                                return (
-                                                    <TableRow
-                                                        key={index}
-                                                        sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
-                                                    >
-                                                        <StyledTableCell align="center">22/03/2021</StyledTableCell>
-                                                        <StyledTableCell align="center">31/03/2022</StyledTableCell>
-                                                        <StyledTableCell align="center">INV/00{index + 1}</StyledTableCell>
-                                                        <StyledTableCell align="center">{item.tempo}</StyledTableCell>
-                                                        <StyledTableCell align="center">{item.less1bulan}</StyledTableCell>
-                                                        <StyledTableCell align="center">{item.sebulan}</StyledTableCell>
-                                                        <StyledTableCell align="center">{item.duabulan}</StyledTableCell>
-                                                        <StyledTableCell align="center">{item.tigabulan}</StyledTableCell>
-                                                        <StyledTableCell align="center">{item.more3bulan}</StyledTableCell>
-                                                    </TableRow>
-                                                )
-                                            })
-                                        : null}
-                                    <TableRow sx={{ backgroundColor: '#f8f8f8' }}>
-                                        <StyledTableCell align="left">Total</StyledTableCell>
-                                        <StyledTableCell align="center">{' '}</StyledTableCell>
-                                        <StyledTableCell align="center">{' '}</StyledTableCell>
-                                        <StyledTableCell align="center">3.200.000</StyledTableCell>
-                                        <StyledTableCell align="center">1.500.000</StyledTableCell>
-                                        <StyledTableCell align="center">800.000</StyledTableCell>
-                                        <StyledTableCell align="center">200.000</StyledTableCell>
-                                        <StyledTableCell align="center">0</StyledTableCell>
-                                        <StyledTableCell align="center">0</StyledTableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        {
+                            loader ?
+                                <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
+                                    <CircularProgress size={40} color={'error'} />
+                                </div>
+                                :
+                                <>
+                                    {
+                                        DebtData.items.length === 0 ?
+                                            <div style={{ ...CENTER, padding: '20px 0' }}>
+                                                <span>Tidak ada data</span>
+                                            </div>
+                                            :
+                                            <TableContainer>
+                                                <Table stickyHeader aria-label="sticky table">
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            {columns.map((column: any) => (
+                                                                <StyledTableCell key={column.id}>
+                                                                    <div style={{ whiteSpace: 'nowrap' }}>
+                                                                        {column.label}
+                                                                    </div>
+                                                                </StyledTableCell>
+                                                            ))}
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {DebtData.items.map((item: any, index: number) => {
+                                                            return (
+                                                                <TableRow
+                                                                    key={index}
+                                                                    sx={{ "&:hover": { bgcolor: Colors.inherit }, cursor: 'pointer' }}
+                                                                >
+                                                                    <StyledTableCell align="center">{moment(item.transactionDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{moment(item.dueDate).format('YYYY/MM/DD')}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{item.invoice}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.totalInDueDate).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.totalExceedOneMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.totalExceedTwoMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.totalExceedThreeMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.totalExceedFourMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                    <StyledTableCell align="center">{(item.totalExceed).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                        }
+                                                        <TableRow sx={{ backgroundColor: '#f8f8f8' }}>
+                                                            <StyledTableCell align="left">Total</StyledTableCell>
+                                                            <StyledTableCell align="center">{' '}</StyledTableCell>
+                                                            <StyledTableCell align="center">{' '}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(DebtData.totalInDueDate).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(DebtData.totalExceedOneMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(DebtData.totalExceedTwoMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(DebtData.totalExceedThreeMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(DebtData.totalExceedFourMonth).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                            <StyledTableCell align="center">{(DebtData.totalExceed).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</StyledTableCell>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                    }
+                                </>
+                        }
                     </Box>
-                    {piutangData !== undefined && (
+                    {DebtData !== undefined && (
                         <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, 100]}
+                            rowsPerPageOptions={[5, 10, 25]}
                             component="div"
-                            count={piutangData.length}
+                            count={pagination.totalItem === undefined ? 0 : pagination.totalItem}
                             rowsPerPage={itemsPerPage}
-                            page={page}
+                            page={page - 1}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />

@@ -67,6 +67,26 @@ export function HTTPGetPurchasesByID(param: {
   });
 }
 
+export function HTTPGetTotalBillPurchases(param: {
+  token: string;
+  page: string;
+  limit: string;
+}): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await AxiosNormal(param.token).get(`${uri}/bill`, {
+        params: {
+          page: param.page,
+          limit: param.limit,
+        },
+      });
+      return resolve(response);
+    } catch (error: any) {
+      return reject(error);
+    }
+  });
+}
+
 export function HTTPAddPurchase(param: AddPurchase): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
