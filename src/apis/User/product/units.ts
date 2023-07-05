@@ -1,5 +1,6 @@
 import QueryString from "qs";
 import { AxiosNormal } from "../../../utils/interceptors";
+import { AxiosRequestConfig } from "axios";
 
 const uri = "product-units";
 export function HTTPGenerateUnitsID(): Promise<any> {
@@ -141,6 +142,31 @@ export function HTTPDeleteUnits(param: {
           },
         },
       });
+      return resolve(response);
+    } catch (error: any) {
+      return reject(error);
+    }
+  });
+}
+
+export function HTTPAddUnitsXLSX(param: { form: FormData, token: any }): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const config: AxiosRequestConfig = {
+        method: "post",
+        url: `${uri}/import`,
+        responseType: "json",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+        transformRequest: (data, headers) => {
+          return data;
+        },
+        data: param.form,
+      };
+
+      const response = await AxiosNormal(param.token).request(config);
       return resolve(response);
     } catch (error: any) {
       return reject(error);

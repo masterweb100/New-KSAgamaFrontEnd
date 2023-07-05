@@ -4849,6 +4849,13 @@
   dependencies:
     "tslib" "^2.4.0"
 
+"file-selector@0.2.4":
+  "integrity" "sha512-ZDsQNbrv6qRi1YTDOEWzf5J2KjZ9KMI1Q2SGeTkCJmNNW25Jg4TW4UMcmoqcg4WrAyKRcpBXdbWRxkfrOzVRbA=="
+  "resolved" "https://registry.npmjs.org/file-selector/-/file-selector-0.2.4.tgz"
+  "version" "0.2.4"
+  dependencies:
+    "tslib" "^2.0.3"
+
 "filelist@^1.0.1":
   "integrity" "sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q=="
   "resolved" "https://registry.npmjs.org/filelist/-/filelist-1.0.4.tgz"
@@ -9403,6 +9410,13 @@
   dependencies:
     "querystringify" "^2.1.1"
     "requires-port" "^1.0.0"
+
+"use-file-picker@^1.7.0":
+  "integrity" "sha512-YjVbRuSL0eHPni5yCBuaHRo08txRs+LZXvM7V8UtmM450uEWqLWEEw2SLfwgdrcZorKTc5H9jTNvXziX846sjA=="
+  "resolved" "https://registry.npmjs.org/use-file-picker/-/use-file-picker-1.7.0.tgz"
+  "version" "1.7.0"
+  dependencies:
+    "file-selector" "0.2.4"
 
 "use-sync-external-store@^1.0.0":
   "integrity" "sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA=="

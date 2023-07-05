@@ -30,10 +30,11 @@ import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 import { isMobile } from "react-device-detect";
 import secureLocalStorage from "react-secure-storage";
-import { HTTPDeleteTypes, HTTPGetTypes, HTTPUpdateType } from "../../../../apis/User/product/types";
+import { HTTPAddTypesXLSX, HTTPDeleteTypes, HTTPGetTypes, HTTPUpdateType } from "../../../../apis/User/product/types";
 import moment from "moment";
 import { HTTPGetBrands } from "../../../../apis/User/product/brand";
 import DeleteModal from "../../../../components/deleteModal";
+import { useFilePicker } from 'use-file-picker';
 
 const columns = [
   { id: "id", label: "ID Jenis Produk" },
@@ -227,43 +228,79 @@ const JenisTable = () => {
     }
   };
 
+  const [openFile, { filesContent, loading, errors }] = useFilePicker({
+    accept: '.xlsx',
+    multiple: false,
+    onFilesSuccessfulySelected: async ({ plainFiles }) => {
+      setLoader(true)
+      try {
+        let Forms = new FormData()
+        Forms.append('file', plainFiles[0])
+        await HTTPAddTypesXLSX({ form: Forms, token: token })
+        toast.success('Berhasil menambahkan Kategori!')
+        await GetTypes()
+        setLoader(false)
+      } catch (error: any) {
+        setLoader(false)
+        if (error.status === 500) {
+          toast.error('Server sedang mengalami gangguan!')
+        } else {
+          toast.error('Terjadi Kesalahan!')
+        }
+      }
+    },
+  })
+
   return (
     <div>
       <Stack direction={"row"} justifyContent={"space-between"}>
-        <Tooltip
-          title={"Brand Produk belum tersedia"}
-          placement="right"
-          open={tooltipOpen}
-          onOpen={handleOpen}
-          onClose={() => setTooltipOpen(false)}
-        >
-          <div
-            onClick={FormAddJenis}
-            style={{
-              ...CENTER,
-              backgroundColor:
-                BrandData.length === 0 ? "#ababab" : Colors.primary,
-              borderRadius: 5,
-              cursor: "pointer",
-              padding: isMobile ? "12px 15px" : "10px 30px",
-              alignSelf: "flex-start",
-            }}
+        <Stack direction={"row"} alignItems={"center"} gap={isMobile ? 1 : 2}>
+          <Tooltip
+            title={"Brand Produk belum tersedia"}
+            placement="right"
+            open={tooltipOpen}
+            onOpen={handleOpen}
+            onClose={() => setTooltipOpen(false)}
           >
-            <Stack alignItems={"center"} direction={"row"} gap={1}>
-              <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
-              <p
-                style={{
-                  margin: 0,
-                  fontWeight: 500,
-                  fontSize: isMobile ? 13 : 15,
-                  color: "#fff",
-                }}
-              >
-                Tambah Data Jenis Produk
-              </p>
+            <div
+              onClick={FormAddJenis}
+              style={{
+                ...CENTER,
+                backgroundColor:
+                  BrandData.length === 0 ? "#ababab" : Colors.primary,
+                borderRadius: 5,
+                cursor: "pointer",
+                padding: isMobile ? "12px 15px" : "10px 30px",
+                alignSelf: "flex-start",
+              }}
+            >
+              <Stack alignItems={"center"} direction={"row"} gap={1}>
+                <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: 500,
+                    fontSize: isMobile ? 13 : 15,
+                    color: "#fff",
+                  }}
+                >
+                  Tambah Data Jenis Produk
+                </p>
+              </Stack>
+            </div>
+          </Tooltip>
+          <div onClick={openFile} style={{ backgroundColor: '#fff', padding: isMobile ? "12px 15px" : "10px 30px", borderRadius: 5, border: `1px solid ${Colors.primary}`, cursor: 'pointer' }}>
+            <Stack direction={'row'} alignItems={'center'} gap={1}>
+              <Icon sx={{ color: Colors.primary, fontSize: 20 }}>file_upload</Icon>
+              {
+                isMobile ?
+                  <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
+                  :
+                  <span style={{ fontSize: 15, color: Colors.primary }}>Import Data Kontak</span>
+              }
             </Stack>
           </div>
-        </Tooltip>
+        </Stack>
         <Stack direction={"row"} alignItems={"center"} gap={isMobile ? 1 : 2}>
           <div
             onClick={() => handleDelete("open")}

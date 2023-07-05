@@ -6,6 +6,7 @@ import { UserPermissions } from "./reduxes/userPermissions";
 import { OpnamesData } from "./reduxes/opname";
 import { SalesData } from "./reduxes/sales";
 import { PurchasesData } from "./reduxes/purchase";
+import { DebtsData } from "./reduxes/debt";
 
 const rootReducer = combineReducers({
   userData: UsersData,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   OpnamesData: OpnamesData,
   salesData: SalesData,
   purchasesData: PurchasesData,
+  debtsData: DebtsData,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

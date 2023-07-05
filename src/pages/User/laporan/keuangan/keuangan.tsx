@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { HTTPReportsMonetary } from "../../../../apis/User/reports/monetary";
 import secureLocalStorage from "react-secure-storage";
 import { CENTER } from "../../../../utils/stylesheet";
+import ReactToPrint from "react-to-print";
 
 const LapKeuangan = () => {
   const token = secureLocalStorage.getItem('USER_SESSION') as string
@@ -60,6 +61,59 @@ const LapKeuangan = () => {
     setInit(!init)
   }
 
+  const componentRef: any = React.useRef(null);
+  const onBeforeGetContentResolve: any = React.useRef(null);
+  const [onPrint, setPrint] = React.useState(false)
+
+  const reactToPrintContent = React.useCallback(() => {
+    return componentRef.current;
+  }, [componentRef.current]);
+
+  const handleAfterPrint = React.useCallback(() => {
+    setPrint(false)
+  }, []);
+
+  const handleBeforePrint = React.useCallback(() => {
+    setPrint(true)
+  }, []);
+
+  const handleOnBeforeGetContent = React.useCallback(() => {
+    setPrint(true)
+    return new Promise<void>((resolve) => {
+      onBeforeGetContentResolve.current = resolve;
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+  }, [setPrint]);
+
+  React.useEffect(() => {
+    if (typeof onBeforeGetContentResolve.current === "function") {
+      onBeforeGetContentResolve.current();
+    }
+  }, [onBeforeGetContentResolve.current]);
+
+  const PrintButton = () => {
+    return (
+      <div
+        style={{
+          backgroundColor: "#fff",
+          padding: "7px 15px",
+          borderRadius: 5,
+          border: `1px solid ${Colors.error}`,
+          cursor: 'pointer'
+        }}
+      >
+        <Stack direction={"row"} alignItems={"center"} gap={1}>
+          <Icon sx={{ color: Colors.error, fontSize: 20 }}>
+            file_download
+          </Icon>
+          <span style={{ fontSize: 13, color: Colors.error }}>PDF</span>
+        </Stack>
+      </div>
+    )
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <NavigationBarUser
@@ -73,46 +127,43 @@ const LapKeuangan = () => {
         sx={{ bgcolor: "#f4f5ff", p: 5, width: "100vw", minHeight: "100vh" }}
       >
         <Toolbar />
-        <div style={{ maxWidth: isMobile ? "100vw" : "78vw" }}>
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"flex-end"}
-            gap={2}
-          >
-            <div
-              style={{
-                backgroundColor: "#fff",
-                padding: "7px 15px",
-                borderRadius: 5,
-                border: `1px solid ${Colors.error}`,
-              }}
+        <div ref={componentRef} style={{ maxWidth: isMobile ? "100vw" : onPrint ? '100%' : "78vw", padding: onPrint ? '5%' : 0 }}>
+          {
+            !onPrint &&
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"flex-end"}
+              gap={2}
             >
-              <Stack direction={"row"} alignItems={"center"} gap={1}>
-                <Icon sx={{ color: Colors.error, fontSize: 20 }}>
-                  file_download
-                </Icon>
-                <span style={{ fontSize: 13, color: Colors.error }}>PDF</span>
-              </Stack>
-            </div>
-            <div
-              style={{
-                backgroundColor: "#fff",
-                padding: "7px 15px",
-                borderRadius: 5,
-                border: `1px solid ${Colors.success}`,
-              }}
-            >
-              <Stack direction={"row"} alignItems={"center"} gap={1}>
-                <Icon sx={{ color: Colors.success, fontSize: 20 }}>
-                  file_download
-                </Icon>
-                <span style={{ fontSize: 13, color: Colors.success }}>
-                  Excel
-                </span>
-              </Stack>
-            </div>
-          </Stack>
+              <ReactToPrint
+                content={reactToPrintContent}
+                documentTitle={'Supplier_' + moment().format('YYYY-MM-DD HH:mm:dd')}
+                onAfterPrint={handleAfterPrint}
+                onBeforeGetContent={handleOnBeforeGetContent}
+                onBeforePrint={handleBeforePrint}
+                removeAfterPrint
+                trigger={PrintButton}
+              />
+              <div
+                style={{
+                  backgroundColor: "#fff",
+                  padding: "7px 15px",
+                  borderRadius: 5,
+                  border: `1px solid ${Colors.success}`,
+                }}
+              >
+                <Stack direction={"row"} alignItems={"center"} gap={1}>
+                  <Icon sx={{ color: Colors.success, fontSize: 20 }}>
+                    file_download
+                  </Icon>
+                  <span style={{ fontSize: 13, color: Colors.success }}>
+                    Excel
+                  </span>
+                </Stack>
+              </div>
+            </Stack>
+          }
           <Stack
             direction={isMobile ? "column" : "row"}
             alignItems={isMobile ? "flex-start" : "center"}
@@ -134,7 +185,7 @@ const LapKeuangan = () => {
                 sx={{
                   bgcolor: "white",
                   borderRadius: 1,
-                  width: isMobile ? "40vw" : "15vw",
+                  width: isMobile ? "40vw" : onPrint ? "25vw" : "15vw",
                 }}
               />
               <Icon sx={{ color: Colors.secondary, fontSize: 25 }}>east</Icon>
@@ -144,7 +195,7 @@ const LapKeuangan = () => {
                 sx={{
                   bgcolor: "white",
                   borderRadius: 1,
-                  width: isMobile ? "40vw" : "15vw",
+                  width: isMobile ? "40vw" : onPrint ? "25vw" : "15vw",
                 }}
               />
             </Stack>
@@ -173,7 +224,7 @@ const LapKeuangan = () => {
                 </p>
               </Stack>
               <Stack direction={"column"} gap={0}>
-                <div>
+                <div style={{ border: '1px solid #000' }}>
                   <div className={"list"} style={{ color: "#000" }}>
                     <h3 style={{ margin: 0 }}>Penjualan</h3>
                   </div>
@@ -237,7 +288,7 @@ const LapKeuangan = () => {
                 </p>
               </Stack>
               <Stack direction={"column"} gap={0}>
-                <div>
+                <div style={{ border: '1px solid #000' }}>
                   <div className={"list"} style={{ color: "#000" }}>
                     <h3 style={{ margin: 0 }}>Pembelian</h3>
                   </div>

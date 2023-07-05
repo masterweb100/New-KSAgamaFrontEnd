@@ -1,4 +1,4 @@
-import { Box, Icon, Stack, Toolbar } from '@mui/material';
+import { Box, Icon, Input, Stack, Toolbar } from '@mui/material';
 import React from 'react'
 import NavigationBarUser from '../../../../components/appBarUser';
 import { Colors } from '../../../../utils/colors';
@@ -10,6 +10,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'react-toastify';
 import ReactToPrint from 'react-to-print';
 import moment from 'moment';
+import { useFilePicker } from 'use-file-picker';
 
 const Pelanggan = () => {
     const token = secureLocalStorage.getItem("USER_SESSION") as string
@@ -107,6 +108,14 @@ const Pelanggan = () => {
         )
     }, [])
 
+    const [openFile, { filesContent, loading, errors }] = useFilePicker({
+        accept: '.xlsx',
+        multiple: false,
+        onFilesSuccessfulySelected: ({ plainFiles }) => {
+            console.log('onFilesSuccessfulySelected', plainFiles);
+        },
+    })
+
     return (
         <div style={{ display: 'flex' }}>
             <NavigationBarUser title={'Kontak'} isChild={false} name={'Pelanggan'} idPanel={7}></NavigationBarUser>
@@ -114,7 +123,7 @@ const Pelanggan = () => {
                 <Toolbar />
                 <div style={{ maxWidth: isMobile ? '100vw' : '78vw' }}>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={isMobile ? 'space-between' : 'flex-end'} gap={2}>
-                        <div style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.primary}` }}>
+                        <div onClick={openFile} style={{ backgroundColor: '#fff', padding: '7px 15px', borderRadius: 5, border: `1px solid ${Colors.primary}`, cursor: 'pointer' }}>
                             <Stack direction={'row'} alignItems={'center'} gap={1}>
                                 <Icon sx={{ color: Colors.primary, fontSize: 20 }}>file_upload</Icon>
                                 {
@@ -125,6 +134,7 @@ const Pelanggan = () => {
                                 }
                             </Stack>
                         </div>
+                        {/* <Input style={{}} type='file' onChange={(e) => console.log(e)}></Input> */}
                         <ReactToPrint
                             content={reactToPrintContent}
                             documentTitle={'Customer_' + moment().format('YYYY-MM-DD HH:mm:dd')}

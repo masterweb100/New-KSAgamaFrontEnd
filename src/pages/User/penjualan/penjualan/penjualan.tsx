@@ -4,7 +4,7 @@ import NavigationBarUser from '../../../../components/appBarUser';
 import { penjualanData } from '../dummy';
 import PenjualanTable from './penjualanTable';
 import { isMobile } from 'react-device-detect';
-import { HTTPGetSales } from '../../../../apis/User/sales/sales';
+import { HTTPGetSales, HTTPGetTotalBillSales } from '../../../../apis/User/sales/sales';
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'react-toastify';
 
@@ -15,6 +15,10 @@ const Penjualan = () => {
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1)
     const [pagination, setPagination] = React.useState({})
+    const [bill, setBill] = React.useState({
+        subTotal: 0,
+        total: 0,
+    })
     const [search, setSearch] = React.useState('')
     const [loader, setLoader] = React.useState(true)
 
@@ -57,8 +61,26 @@ const Penjualan = () => {
         }
     };
 
+    const GetTotalPrice = async () => {
+        try {
+            const resp = await HTTPGetTotalBillSales({
+                limit: limit.toString(),
+                page: page.toString(),
+                token: token
+            })
+            setBill(resp.data.data)
+        } catch (error: any) {
+            if (error.status === 500) {
+                toast.error('Server sedang mengalami gangguan!')
+            } else {
+                toast.error('Terjadi Kesalahan!')
+            };
+        }
+    }
+
     React.useEffect(() => {
-        GetSalesTable();
+        GetSalesTable().then().catch();
+        GetTotalPrice().then().catch();
     }, [init]);
 
     return (
@@ -75,6 +97,7 @@ const Penjualan = () => {
                         search={onSearch}
                         loader={loader}
                         getData={GetSalesTable}
+                        totalBill={bill}
                     ></PenjualanTable>
                 </div>
             </Box>

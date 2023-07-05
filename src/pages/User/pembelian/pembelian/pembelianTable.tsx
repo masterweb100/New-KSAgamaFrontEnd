@@ -329,12 +329,12 @@ const PembelianTable = (props: any) => {
                 <Stack direction={'column'} gap={1} sx={{ backgroundColor: '#f8f8f8', border: '1px solid #909090' }} padding={3}>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={1} sx={{ backgroundColor: '#f8f8f8' }}>
                         <span><b>Sub Total Barang Masuk</b></span>
-                        <span><b>8.960</b></span>
+                        <span><b>{(props.totalBill.subTotal).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
                     </Stack>
                     <div style={{ width: '100%', backgroundColor: '#000', height: 1 }}></div>
                     <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} gap={1} sx={{ backgroundColor: '#f8f8f8' }}>
                         <span><b>Total Barang Masuk</b></span>
-                        <span><b>18.960</b></span>
+                        <span><b>{(props.totalBill.total).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</b></span>
                     </Stack>
                 </Stack>
                 {props.data !== undefined && (
