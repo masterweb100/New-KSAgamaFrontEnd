@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import {
   TablePagination,
   Box,
@@ -56,14 +56,15 @@ const AkunTable = (props: any) => {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
-  const [DataCategory, setDataCategory] = React.useState([])
-  const [init, setInit] = React.useState(false)
-  const token = secureLocalStorage.getItem('USER_SESSION')
-  const [tooltipOpen, setTooltipOpen] = React.useState(false)
-  const [editModal, setEditModal] = React.useState(false)
-  const [itemSelected, setItemSelected] = React.useState<any>({})
-  const [onSend, setSend] = React.useState(false)
-  const [search, setSearch] = React.useState("")
+  const [DataCategory, setDataCategory] = React.useState([]);
+  const [init, setInit] = React.useState(false);
+  const token = secureLocalStorage.getItem("USER_SESSION");
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
+  const [editModal, setEditModal] = React.useState(false);
+  const [itemSelected, setItemSelected] = React.useState<any>({});
+  const [selected, setSelected] = useState<any[]>([]);
+  const [onSend, setSend] = React.useState(false);
+  const [search, setSearch] = React.useState("");
 
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage + 1);
@@ -80,98 +81,133 @@ const AkunTable = (props: any) => {
     if (DataCategory.length !== 0) {
       navigate("/akun/form-akun");
     }
-  }
+  };
   const KategoriPage = () => navigate("/akun/kategori-akun");
   const DetailPage = () => navigate("/akun/detail-akun");
 
   const GetCategoryTable = async () => {
     try {
       const response = await HTTPGetAccountCategory({
-        limit: '10',
-        page: '1',
+        limit: "10",
+        page: "1",
         q: undefined,
         token: token as string,
       });
       setDataCategory(response.data.data);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       if (error.status === 500) {
-        toast.error('Server sedang mengalami gangguan!')
+        toast.error("Server sedang mengalami gangguan!");
       } else {
-        toast.error('Terjadi Kesalahan!')
-      };
+        toast.error("Terjadi Kesalahan!");
+      }
     }
   };
 
   const handleOpen = () => {
     if (DataCategory.length === 0) {
-      setTooltipOpen(true)
+      setTooltipOpen(true);
     } else {
-      setTooltipOpen(false)
+      setTooltipOpen(false);
     }
-  }
+  };
 
   const handleClose = () => {
-    setTooltipOpen(false)
-  }
+    setTooltipOpen(false);
+  };
 
   React.useEffect(() => {
     GetCategoryTable();
   }, [init]);
 
   const handleEdit = () => {
-    setEditModal(!editModal)
-  }
+    setEditModal(!editModal);
+  };
 
   const handleSearch = (event: any) => {
-    setSearch(event.target.value)
-    props.search(event.target.value)
-  }
+    setSearch(event.target.value);
+    props.search(event.target.value);
+  };
 
   const Formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       name: itemSelected.accountName,
-      code: itemSelected.accountCode
+      code: itemSelected.accountCode,
     },
     onSubmit: async (values) => {
-      setSend(true)
+      setSend(true);
       try {
         const resp = await HTTPUpdateAccounts({
           accountCode: values.code,
           accountName: values.name,
           id: itemSelected.id,
-          token: token as string
-        })
-        setSend(false)
-        handleEdit()
-        props.getData()
+          token: token as string,
+        });
+        setSend(false);
+        handleEdit();
+        props.getData();
       } catch (error: any) {
-        setSend(false)
-        console.log(error)
+        setSend(false);
+        console.log(error);
         if (error.status === 500) {
-          toast.error('Server sedang mengalami gangguan!')
+          toast.error("Server sedang mengalami gangguan!");
         } else {
-          toast.error('Terjadi Kesalahan!')
+          toast.error("Terjadi Kesalahan!");
         }
       }
-    }
-  })
+    },
+  });
 
   return (
     <div>
-      <Stack
-        direction={isMobile ? "column" : "row"}
-        justifyContent={"flex-start"}
-        alignItems={"center"}
-        gap={2}
-      >
-        <Tooltip title="Kategori Akun belum tersedia" placement="bottom" open={tooltipOpen} onOpen={handleOpen} onClose={handleClose}>
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Stack
+          direction={isMobile ? "column" : "row"}
+          justifyContent={"flex-start"}
+          alignItems={"center"}
+          gap={2}
+        >
+          <Tooltip
+            title="Kategori Akun belum tersedia"
+            placement="bottom"
+            open={tooltipOpen}
+            onOpen={handleOpen}
+            onClose={handleClose}
+          >
+            <div
+              onClick={FormPage}
+              style={{
+                ...CENTER,
+                backgroundColor:
+                  DataCategory.length === 0 ? "#ababab" : Colors.primary,
+                borderRadius: 5,
+                cursor: "pointer",
+                padding: "10px 30px",
+                alignSelf: "flex-start",
+                width: isMobile ? "100%" : "auto",
+              }}
+            >
+              <Stack alignItems={"center"} direction={"row"} gap={1}>
+                <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: 500,
+                    fontSize: 15,
+                    color: "#ffff",
+                  }}
+                >
+                  Tambah Data Akun
+                </p>
+              </Stack>
+            </div>
+          </Tooltip>
           <div
-            onClick={FormPage}
+            onClick={KategoriPage}
             style={{
               ...CENTER,
-              backgroundColor: DataCategory.length === 0 ? "#ababab" : Colors.primary,
+              border: `1px solid ${Colors.primary}`,
               borderRadius: 5,
               cursor: "pointer",
               padding: "10px 30px",
@@ -179,45 +215,35 @@ const AkunTable = (props: any) => {
               width: isMobile ? "100%" : "auto",
             }}
           >
-            <Stack alignItems={"center"} direction={"row"} gap={1}>
-              <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
-              <p
-                style={{
-                  margin: 0,
-                  fontWeight: 500,
-                  fontSize: 15,
-                  color: "#ffff",
-                }}
-              >
-                Tambah Data Akun
-              </p>
-            </Stack>
+            <p
+              style={{
+                margin: 0,
+                fontWeight: 500,
+                fontSize: 15,
+                color: Colors.primary,
+              }}
+            >
+              List Kategori Akun
+            </p>
           </div>
-        </Tooltip>
+        </Stack>
         <div
-          onClick={KategoriPage}
+          // onClick={() => handleDelete("open")}
           style={{
             ...CENTER,
-            border: `1px solid ${Colors.primary}`,
+            backgroundColor:
+              selected.length === 0 ? Colors.secondary : Colors.error,
             borderRadius: 5,
             cursor: "pointer",
-            padding: "10px 30px",
-            alignSelf: "flex-start",
-            width: isMobile ? "100%" : "auto",
+            padding: 10,
           }}
         >
-          <p
-            style={{
-              margin: 0,
-              fontWeight: 500,
-              fontSize: 15,
-              color: Colors.primary,
-            }}
-          >
-            List Kategori Akun
-          </p>
+          <Icon style={{ color: "#fff", fontSize: isMobile ? 20 : 25 }}>
+            delete_outline
+          </Icon>
         </div>
       </Stack>
+
       <Stack
         direction={isMobile ? "column" : "row"}
         alignItems={"center"}
@@ -268,66 +294,87 @@ const AkunTable = (props: any) => {
         }}
       >
         <Box sx={{ border: 1, borderColor: Colors.secondary }}>
-          {
-            props.loader ?
-              <div style={{ ...CENTER, backgroundColor: '#fff', padding: 20 }}>
-                <CircularProgress size={40} color={'error'} />
-              </div>
-              :
-              <>
-                {
-                  props.data.length === 0 ?
-                    <div style={{ ...CENTER, padding: '20px 0' }}>
-                      <span>Tidak ada data</span>
-                    </div>
-                    :
-                    <TableContainer>
-                      <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                          <TableRow>
-                            {columns.map((column: any) => (
-                              <StyledTableCell key={column.id}>
-                                {column.label}
-                              </StyledTableCell>
-                            ))}
-                          </TableRow>
-                        </TableHead>
+          {props.loader ? (
+            <div style={{ ...CENTER, backgroundColor: "#fff", padding: 20 }}>
+              <CircularProgress size={40} color={"error"} />
+            </div>
+          ) : (
+            <>
+              {props.data.length === 0 ? (
+                <div style={{ ...CENTER, padding: "20px 0" }}>
+                  <span>Tidak ada data</span>
+                </div>
+              ) : (
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {columns.map((column: any) => (
+                          <StyledTableCell key={column.id}>
+                            {column.label}
+                          </StyledTableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
 
-                        <TableBody>
-                          {props.data.map((item: any, index: number) => {
-                            return (
-                              <TableRow
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={index}
-                                sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                    <TableBody>
+                      {props.data.map((item: any, index: number) => {
+                        return (
+                          <TableRow
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                            sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                          >
+                            <StyledTableCell align="center">
+                              {item.accountCode}
+                            </StyledTableCell>
+                            <StyledTableCell
+                              align="center"
+                              sx={{ color: Colors.info }}
+                            >
+                              {item.accountName}
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              {item.accountCategoryName}
+                            </StyledTableCell>
+                            <StyledTableCell
+                              align="center"
+                              sx={{
+                                color:
+                                  item.balance < 0
+                                    ? Colors.error
+                                    : Colors.success,
+                              }}
+                            >
+                              {item.balance.toLocaleString("id-ID", {
+                                style: "currency",
+                                currency: "IDR",
+                              })}
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              <Button
+                                onClick={() => {
+                                  setItemSelected(item);
+                                  handleEdit();
+                                }}
+                                variant={"contained"}
+                                color={"success"}
                               >
-                                <StyledTableCell align="center">
-                                  {item.accountCode}
-                                </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ color: Colors.info }}>
-                                  {item.accountName}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                  {item.accountCategoryName}
-                                </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ color: item.balance < 0 ? Colors.error : Colors.success }}>
-                                  {(item.balance).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                  <Button onClick={() => { setItemSelected(item); handleEdit() }} variant={'contained'} color={'success'}>
-                                    <Icon sx={{ color: '#fff' }} fontSize="medium">border_color</Icon>
-                                  </Button>
-                                </StyledTableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                }
-              </>
-          }
+                                <Icon sx={{ color: "#fff" }} fontSize="medium">
+                                  border_color
+                                </Icon>
+                              </Button>
+                            </StyledTableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </>
+          )}
         </Box>
         {props.data !== undefined && (
           <TablePagination
@@ -345,17 +392,30 @@ const AkunTable = (props: any) => {
           />
         )}
       </Box>
-      <Dialog open={editModal} onClose={handleEdit} PaperProps={{ style: { maxWidth: '100vw' } }}>
+      <Dialog
+        open={editModal}
+        onClose={handleEdit}
+        PaperProps={{ style: { maxWidth: "100vw" } }}
+      >
         <DialogTitle>
-          <Stack direction={'row'} width={'100%'} alignItems={'center'} justifyContent={'space-between'}>
-            <strong><span>Form Edit Data Akun</span></strong>
+          <Stack
+            direction={"row"}
+            width={"100%"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+          >
+            <strong>
+              <span>Form Edit Data Akun</span>
+            </strong>
             <IconButton onClick={handleEdit}>
-              <Icon sx={{ color: '#ababab' }} fontSize="medium">close</Icon>
+              <Icon sx={{ color: "#ababab" }} fontSize="medium">
+                close
+              </Icon>
             </IconButton>
           </Stack>
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={Formik.handleSubmit} >
+          <form onSubmit={Formik.handleSubmit}>
             <Stack
               direction={isMobile ? "column" : "row"}
               alignItems={"center"}
@@ -422,9 +482,7 @@ const AkunTable = (props: any) => {
                   {onSend === true ? (
                     <CircularProgress size={20} color={"inherit"} />
                   ) : (
-                    <span style={{ fontSize: 13, color: "#fff" }}>
-                      SIMPAN
-                    </span>
+                    <span style={{ fontSize: 13, color: "#fff" }}>SIMPAN</span>
                   )}
                 </div>
               </button>

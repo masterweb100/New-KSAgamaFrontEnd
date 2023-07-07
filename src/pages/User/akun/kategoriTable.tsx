@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import {
   TablePagination,
   Box,
@@ -43,7 +43,8 @@ const KategoriTable = (props: any) => {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(1);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
-  const [search, setSearch] = React.useState("")
+  const [search, setSearch] = React.useState("");
+  const [selected, setSelected] = useState<any[]>([]);
 
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage + 1);
@@ -57,44 +58,61 @@ const KategoriTable = (props: any) => {
   };
 
   const handleSearch = (event: any) => {
-    setSearch(event.target.value)
-    props.search(event.target.value)
-  }
+    setSearch(event.target.value);
+    props.search(event.target.value);
+  };
 
   const FormPage = () => navigate("/akun/form-kategori");
 
   return (
     <div>
-      <Stack
-        direction={"row"}
-        justifyContent={"flex-start"}
-        alignItems={"center"}
-        gap={2}
-      >
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Stack
+          direction={"row"}
+          justifyContent={"flex-start"}
+          alignItems={"center"}
+          gap={2}
+        >
+          <div
+            onClick={FormPage}
+            style={{
+              ...CENTER,
+              backgroundColor: Colors.primary,
+              borderRadius: 5,
+              cursor: "pointer",
+              padding: isMobile ? "12px 10px" : "10px 30px",
+              alignSelf: "flex-start",
+            }}
+          >
+            <Stack alignItems={"center"} direction={"row"} gap={1}>
+              <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
+              <p
+                style={{
+                  margin: 0,
+                  fontWeight: 500,
+                  fontSize: isMobile ? 13 : 15,
+                  color: "#fff",
+                }}
+              >
+                Tambah Data Kategori Akun
+              </p>
+            </Stack>
+          </div>
+        </Stack>
         <div
-          onClick={FormPage}
+          // onClick={() => handleDelete("open")}
           style={{
             ...CENTER,
-            backgroundColor: Colors.primary,
+            backgroundColor:
+              selected.length === 0 ? Colors.secondary : Colors.error,
             borderRadius: 5,
             cursor: "pointer",
-            padding: isMobile ? "12px 10px" : "10px 30px",
-            alignSelf: "flex-start",
+            padding: 10,
           }}
         >
-          <Stack alignItems={"center"} direction={"row"} gap={1}>
-            <Icon style={{ color: "#fff", fontSize: 17 }}>add</Icon>
-            <p
-              style={{
-                margin: 0,
-                fontWeight: 500,
-                fontSize: isMobile ? 13 : 15,
-                color: "#fff",
-              }}
-            >
-              Tambah Data Kategori Akun
-            </p>
-          </Stack>
+          <Icon style={{ color: "#fff", fontSize: isMobile ? 20 : 25 }}>
+            delete_outline
+          </Icon>
         </div>
       </Stack>
       <Stack
