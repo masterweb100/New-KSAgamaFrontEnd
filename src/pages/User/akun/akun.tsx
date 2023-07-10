@@ -44,7 +44,6 @@ const Akun = () => {
         q: search.length === 0 ? undefined : search,
         token: token,
       });
-      console.log(response);
       setDataCategory(response.data.data);
       setPagination(response.data.pagination);
       setLoader(false);

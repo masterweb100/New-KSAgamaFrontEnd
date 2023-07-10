@@ -32,7 +32,8 @@ import { isMobile } from "react-device-detect";
 import secureLocalStorage from "react-secure-storage";
 import { HTTPGetAccountCategory } from "../../../apis/User/account/accountCategory";
 import { useFormik } from "formik";
-import { HTTPUpdateAccounts } from "../../../apis/User/account/account";
+import { HTTPDeleteAccounts, HTTPUpdateAccounts } from "../../../apis/User/account/account";
+import DeleteModal from "../../../components/deleteModal";
 
 const columns = [
   { id: "kode", label: "Kode Akun" },
@@ -65,6 +66,23 @@ const AkunTable = (props: any) => {
   const [selected, setSelected] = useState<any[]>([]);
   const [onSend, setSend] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const [isDeleteModal, setDeleteModal] = React.useState(false);
+
+  const handleDelete = async (param: string) => {
+    if (selected.length > 0) {
+      if (param === 'yes') {
+        await HTTPDeleteAccounts({
+          ids: selected,
+          token: token as string
+        })
+        setDeleteModal(!isDeleteModal);
+        props.getData()
+        setSelected([])
+      } else {
+        setDeleteModal(!isDeleteModal);
+      }
+    }
+  };
 
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage + 1);
@@ -77,11 +95,43 @@ const AkunTable = (props: any) => {
     setPage(1);
   };
 
+  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected: any[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = props.data.map((item: any) => item.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const isSelected = (name: any) => selected.indexOf(name) !== -1;
+
   const FormPage = () => {
     if (DataCategory.length !== 0) {
       navigate("/akun/form-akun");
     }
   };
+
   const KategoriPage = () => navigate("/akun/kategori-akun");
   const DetailPage = () => navigate("/akun/detail-akun");
 
@@ -228,7 +278,7 @@ const AkunTable = (props: any) => {
           </div>
         </Stack>
         <div
-          // onClick={() => handleDelete("open")}
+          onClick={() => handleDelete("open")}
           style={{
             ...CENTER,
             backgroundColor:
@@ -309,6 +359,14 @@ const AkunTable = (props: any) => {
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                       <TableRow>
+                        <StyledTableCell>
+                          <Checkbox
+                            color="primary"
+                            indeterminate={selected.length > 0 && selected.length < props.data.length}
+                            checked={props.data.length > 0 && selected.length === props.data.length}
+                            onChange={handleSelectAllClick}
+                          />
+                        </StyledTableCell>
                         {columns.map((column: any) => (
                           <StyledTableCell key={column.id}>
                             {column.label}
@@ -319,13 +377,26 @@ const AkunTable = (props: any) => {
 
                     <TableBody>
                       {props.data.map((item: any, index: number) => {
+                        const isItemSelected = isSelected(item.id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+
                         return (
                           <TableRow
                             role="checkbox"
                             tabIndex={-1}
                             key={index}
                             sx={{ "&:hover": { bgcolor: Colors.inherit } }}
+                            onClick={(e) => handleClick(e, item.id)}
                           >
+                            <StyledTableCell align="center" padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                inputProps={{
+                                  'aria-labelledby': labelId,
+                                }}
+                              />
+                            </StyledTableCell>
                             <StyledTableCell align="center">
                               {item.accountCode}
                             </StyledTableCell>
@@ -392,6 +463,7 @@ const AkunTable = (props: any) => {
           />
         )}
       </Box>
+      <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
       <Dialog
         open={editModal}
         onClose={handleEdit}

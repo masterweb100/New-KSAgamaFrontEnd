@@ -51,7 +51,6 @@ const ReturnPenjualanForm = () => {
             })
             const result: any = ProductData.filter((value: any) => value.id === event.target.value)
             setSelectedProduct(result[0])
-            console.log(result[0])
         } else {
             setReturnData({
                 ...ReturnData,

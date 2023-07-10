@@ -23,6 +23,9 @@ import { FilterList } from "@mui/icons-material";
 import { Colors } from "../../../utils/colors";
 import { CENTER } from "../../../utils/stylesheet";
 import { isMobile } from "react-device-detect";
+import secureLocalStorage from "react-secure-storage";
+import { HTTPDeleteAccountCategory } from "../../../apis/User/account/accountCategory";
+import DeleteModal from "../../../components/deleteModal";
 
 const columns = [
   { id: "id", label: "ID Kategori" },
@@ -45,7 +48,24 @@ const KategoriTable = (props: any) => {
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
   const [selected, setSelected] = useState<any[]>([]);
+  const [isDeleteModal, setDeleteModal] = React.useState(false);
+  const token = secureLocalStorage.getItem("USER_SESSION") as string
 
+  const handleDelete = async (param: string) => {
+    if (selected.length > 0) {
+      if (param === 'yes') {
+        await HTTPDeleteAccountCategory({
+          ids: selected,
+          token: token
+        })
+        setDeleteModal(!isDeleteModal);
+        props.getData()
+        setSelected([])
+      } else {
+        setDeleteModal(!isDeleteModal);
+      }
+    }
+  };
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage + 1);
     props.changePage(newPage + 1);
@@ -62,6 +82,36 @@ const KategoriTable = (props: any) => {
     props.search(event.target.value);
   };
 
+  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected: any[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = props.data.map((item: any) => item.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const isSelected = (name: any) => selected.indexOf(name) !== -1;
   const FormPage = () => navigate("/akun/form-kategori");
 
   return (
@@ -100,7 +150,7 @@ const KategoriTable = (props: any) => {
           </div>
         </Stack>
         <div
-          // onClick={() => handleDelete("open")}
+          onClick={() => handleDelete("open")}
           style={{
             ...CENTER,
             backgroundColor:
@@ -180,6 +230,14 @@ const KategoriTable = (props: any) => {
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                       <TableRow>
+                        <StyledTableCell>
+                          <Checkbox
+                            color="primary"
+                            indeterminate={selected.length > 0 && selected.length < props.data.length}
+                            checked={props.data.length > 0 && selected.length === props.data.length}
+                            onChange={handleSelectAllClick}
+                          />
+                        </StyledTableCell>
                         {columns.map((column: any) => (
                           <StyledTableCell key={column.id}>
                             {column.label}
@@ -190,6 +248,9 @@ const KategoriTable = (props: any) => {
 
                     <TableBody>
                       {props.data.map((item: any, index: number) => {
+                        const isItemSelected = isSelected(item.id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+
                         return (
                           <TableRow
                             role="checkbox"
@@ -199,7 +260,17 @@ const KategoriTable = (props: any) => {
                               "&:hover": { bgcolor: Colors.inherit },
                               cursor: "pointer",
                             }}
+                            onClick={(e) => handleClick(e, item.id)}
                           >
+                            <StyledTableCell align="center" padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                inputProps={{
+                                  'aria-labelledby': labelId,
+                                }}
+                              />
+                            </StyledTableCell>
                             <StyledTableCell align="center">
                               {item.genId}
                             </StyledTableCell>
@@ -232,6 +303,7 @@ const KategoriTable = (props: any) => {
           />
         )}
       </Box>
+      <DeleteModal isOpen={isDeleteModal} setOpen={handleDelete} />
     </div>
   );
 };

@@ -86,6 +86,7 @@ const KategoriAkun = () => {
             pagination={pagination}
             search={onSearch}
             loader={loader}
+            getData={GetCategoryTable}
           ></KategoriTable>
         </div>
       </Box>
