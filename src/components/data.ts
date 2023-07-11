@@ -190,6 +190,13 @@ export const ListUser = [
         icon: "local_shipping",
         navigate: "/kontak/ekspedisi",
       },
+      {
+        id: 7.4,
+        label: "Akun Bank",
+        name: "BANKS",
+        icon: "local_shipping",
+        navigate: "/kontak/akun-bank",
+      },
     ],
   },
   {
