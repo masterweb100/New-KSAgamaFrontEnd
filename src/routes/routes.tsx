@@ -89,6 +89,8 @@ import PeranSettings from "../pages/User/pengaturan/peran/peranSettings";
 import ProtectedRoutes from "./protectedRoutes";
 import UserRoutes from "./userRoutes";
 import AdminRoutes from "./adminRoutes";
+import AkunBank from "../pages/User/kontak/akun-bank/akun-banks";
+import AkunBankForm from "../pages/User/kontak/akun-bank/akun-bankForm";
 
 const PageRouter = () => {
   return (
@@ -253,6 +255,11 @@ const PageRouter = () => {
             <Route
               path="/kontak/ekspedisi/form-ekspedisi"
               element={<EkspedisiForm />}
+            />
+            <Route path="/kontak/akun-bank" element={<AkunBank />} />
+            <Route
+              path="/kontak/akun-bank/form-akunbank"
+              element={<AkunBankForm />}
             />
 
             <Route path="/approval/gudang" element={<AppGudang />} />
