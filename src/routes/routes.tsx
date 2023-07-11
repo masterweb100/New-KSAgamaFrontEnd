@@ -36,11 +36,13 @@ import SatuanForm from "../pages/User/gudang/listProduk/satuanForm";
 
 import Penjualan from "../pages/User/penjualan/penjualan/penjualan";
 import PenjualanForm from "../pages/User/penjualan/penjualan/penjualanForm";
+import PenjualanPrint from "../pages/User/penjualan/penjualan/penjualanPrint";
 import ReturnPenjualan from "../pages/User/penjualan/returnPenjualan/returnPenjualan";
 import ReturnPenjualanForm from "../pages/User/penjualan/returnPenjualan/returnPenjualanForm";
 
 import Pembelian from "../pages/User/pembelian/pembelian/pembelian";
 import PembelianForm from "../pages/User/pembelian/pembelian/pembelianForm";
+import PembelianPrint from "../pages/User/pembelian/pembelian/pembelianPrint";
 import PembelianDetail from "../pages/User/pembelian/pembelian/pembelianDetail";
 import PembelianDetailForm from "../pages/User/pembelian/pembelian/pembelianDetailForm";
 import Tracking from "../pages/User/pembelian/tracking/tracking";
@@ -147,6 +149,10 @@ const PageRouter = () => {
               element={<PenjualanForm />}
             />
             <Route
+              path="/penjualan/penjualan/print-penjualan/"
+              element={<PenjualanPrint />}
+            />
+            <Route
               path="/penjualan/return-penjualan"
               element={<ReturnPenjualan />}
             />
@@ -159,6 +165,10 @@ const PageRouter = () => {
             <Route
               path="/pembelian/pembelian/form-pembelian/:action"
               element={<PembelianForm />}
+            />
+            <Route
+              path="/pembelian/pembelian/print-pembelian/"
+              element={<PembelianPrint />}
             />
             <Route
               path="/pembelian/pembelian/detail"

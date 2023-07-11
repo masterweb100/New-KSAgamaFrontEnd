@@ -153,6 +153,7 @@ const PembelianForm = () => {
                 token: token,
                 id: PurchaseRedux.id
             })
+            console.log(resp)
             setPurchaseData(resp.data.data)
         } catch (error: any) {
             if (error.status === 500) {

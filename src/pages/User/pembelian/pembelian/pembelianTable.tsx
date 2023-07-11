@@ -154,7 +154,7 @@ const PembelianTable = (props: any) => {
     const DetailPage = () => navigate('/pembelian/pembelian/detail')
     const handlePrint = React.useCallback((data: any) => {
         dispatch(setPurchasesData({ data: data }))
-        navigate('/pembelian/pembelian/form-pembelian/print')
+        navigate('/pembelian/pembelian/print-pembelian')
     }, [])
 
     return (

@@ -170,7 +170,7 @@ const PenjualanTable = (props: any) => {
     const FormAdd = () => navigate('/penjualan/penjualan/form-penjualan/add')
     const handlePrint = React.useCallback((data: any) => {
         dispatch(setSalesData({ data: data }))
-        navigate('/penjualan/penjualan/form-penjualan/print')
+        navigate('/penjualan/penjualan/print-penjualan/')
     }, [])
 
     const FormLunas = (item: any) => {

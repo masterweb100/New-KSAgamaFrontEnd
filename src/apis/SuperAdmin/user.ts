@@ -33,7 +33,7 @@ export function HTTPGenerateUserID(): Promise<any> {
   });
 }
 
-export function HTTPGetUserID(param: { id: number }): Promise<any> {
+export function HTTPGetUserID(param: { id: any }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await AxiosNormal().get(`users/${param.id}`);

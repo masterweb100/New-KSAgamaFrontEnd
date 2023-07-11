@@ -11,6 +11,7 @@ export const penjualanData = {
       total: "90.000",
       updatedBy: "Gudang M23",
     },
+
     {
       tanggal: "20/11/2029",
       id: "INV/0039",

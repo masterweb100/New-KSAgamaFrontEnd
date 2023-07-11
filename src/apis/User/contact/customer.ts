@@ -63,12 +63,10 @@ export function HTTPAddCustomer(param: {
   });
 }
 
-export function HTTPGetCustomerID(param: { id: number }): Promise<any> {
+export function HTTPGetCustomerID(param: { id: string }): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await AxiosNormal().get(uri, {
-        params: { id: param.id },
-      });
+      const response = await AxiosNormal().get(`${uri}/${param.id}`)
       return resolve(response);
     } catch (error: any) {
       return reject(error);
