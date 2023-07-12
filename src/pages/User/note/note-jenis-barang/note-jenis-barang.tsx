@@ -1,14 +1,14 @@
 import { Box, Icon, Stack, Toolbar } from "@mui/material";
 import React from "react";
-import NavigationBarUser from "../../../components/appBarUser";
+import NavigationBarUser from "../../../../components/appBarUser";
 import { Store } from "@mui/icons-material/";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
-import { Colors } from "../../../utils/colors";
+import { Colors } from "../../../../utils/colors";
 import { useFilePicker } from "use-file-picker";
 import "./style.css";
 import { isMobile } from "react-device-detect";
 
-const NoteKategori = () => {
+const NoteJenisBarang = () => {
   const [openFile, { filesContent, loading, errors }] = useFilePicker({
     accept: ".xlsx",
     multiple: false,
@@ -32,12 +32,14 @@ const NoteKategori = () => {
     // },
   });
 
+  const Template = require("../../../../assets/template/Import Jenis.xlsx");
+
   return (
     <div style={{ display: "flex" }}>
       <NavigationBarUser
-        title={"Note Import Kategori"}
-        isChild={false}
-        name={"Note Import Kategori"}
+        title={"Note Import Jenis Barang"}
+        isChild={true}
+        name={"List Produk"}
         idPanel={1}
       ></NavigationBarUser>
       <Box
@@ -81,9 +83,11 @@ const NoteKategori = () => {
                     >
                       Mulai dengan mendownload file template produk dalam format
                       Excel. Format ini mempunyai format yang dibutuhkan untuk
-                      mengimport detail data {"Kategori"} Produkmu.
+                      mengimport detail data {"Jenis Barang"}.
                     </p>
-                    <a href="#">Download File Template</a>
+                    <a href={Template} download="Import Jenis.xlsx">
+                      Download File Template
+                    </a>
                   </li>
                   <br />
                   <li>
@@ -141,7 +145,7 @@ const NoteKategori = () => {
                         </span>
                       ) : (
                         <span style={{ fontSize: 15, color: Colors.primary }}>
-                          Import Data Kontak
+                          Import Data Jenis Barang
                         </span>
                       )}
                     </Stack>
@@ -156,4 +160,4 @@ const NoteKategori = () => {
   );
 };
 
-export default NoteKategori;
+export default NoteJenisBarang;

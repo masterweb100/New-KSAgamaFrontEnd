@@ -91,7 +91,10 @@ import UserRoutes from "./userRoutes";
 import AdminRoutes from "./adminRoutes";
 import AkunBank from "../pages/User/kontak/akun-bank/akun-banks";
 import AkunBankForm from "../pages/User/kontak/akun-bank/akun-bankForm";
-import NoteKategori from "../pages/User/note/note-kategori";
+import NoteKategori from "../pages/User/note/note-kategori/note-kategori";
+import NoteBrand from "../pages/User/note/note-brand/note-brand";
+import NoteJenisBarang from "../pages/User/note/note-jenis-barang/note-jenis-barang";
+import NoteSatuanProduk from "../pages/User/note/note-satuan-produk/note-satuan-produk";
 
 const PageRouter = () => {
   return (
@@ -277,6 +280,9 @@ const PageRouter = () => {
             />
 
             <Route path="/note-kategori" element={<NoteKategori />} />
+            <Route path="/note-brand" element={<NoteBrand />} />
+            <Route path="/note-barang" element={<NoteJenisBarang />} />
+            <Route path="/note-satuan" element={<NoteSatuanProduk />} />
           </Route>
         </Route>
       </Routes>

@@ -271,7 +271,7 @@ const KategoriTable = () => {
                 </span>
               ) : (
                 <span style={{ fontSize: 15, color: Colors.primary }}>
-                  Import Data Kontak
+                  Import Data Kategori
                 </span>
               )}
             </Stack>

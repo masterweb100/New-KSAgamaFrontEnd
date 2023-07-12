@@ -30,16 +30,21 @@ import { Colors } from "../../../../utils/colors";
 import { CENTER } from "../../../../utils/stylesheet";
 import { isMobile } from "react-device-detect";
 import secureLocalStorage from "react-secure-storage";
-import { HTTPAddTypesXLSX, HTTPDeleteTypes, HTTPGetTypes, HTTPUpdateType } from "../../../../apis/User/product/types";
+import {
+  HTTPAddTypesXLSX,
+  HTTPDeleteTypes,
+  HTTPGetTypes,
+  HTTPUpdateType,
+} from "../../../../apis/User/product/types";
 import moment from "moment";
 import { HTTPGetBrands } from "../../../../apis/User/product/brand";
 import DeleteModal from "../../../../components/deleteModal";
-import { useFilePicker } from 'use-file-picker';
+import { useFilePicker } from "use-file-picker";
 
 const columns = [
-  { id: "id", label: "ID Jenis Produk" },
+  { id: "id", label: "ID Jenis Barang" },
   { id: "brand", label: "Nama Brand" },
-  { id: "jenis", label: "Nama Jenis Produk" },
+  { id: "jenis", label: "Nama Jenis Barang" },
   { id: "edit", label: "Edit" },
   { id: "updatedBy", label: "Updated By" },
 ];
@@ -56,27 +61,27 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const JenisTable = () => {
   const navigate = useNavigate();
-  const token = secureLocalStorage.getItem("USER_SESSION") as string
-  const [selected, setSelected] = useState<any[]>([])
+  const token = secureLocalStorage.getItem("USER_SESSION") as string;
+  const [selected, setSelected] = useState<any[]>([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
   const [TypesData, setTypesData] = React.useState([]);
   const [BrandData, setBrandData] = React.useState([]);
-  const [init, setInit] = React.useState(false)
+  const [init, setInit] = React.useState(false);
   const [limit, setLimit] = React.useState(10);
   const [page, setPage] = React.useState(1);
   const [pagination, setPagination] = React.useState<any>({});
-  const [search, setSearch] = React.useState('');
+  const [search, setSearch] = React.useState("");
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
-  const [onSend, setSend] = React.useState(false)
-  const [editModal, setEditModal] = React.useState(false)
-  const [itemSelected, setItemSelected] = React.useState<any>({})
-  const [loader, setLoader] = React.useState(false)
+  const [onSend, setSend] = React.useState(false);
+  const [editModal, setEditModal] = React.useState(false);
+  const [itemSelected, setItemSelected] = React.useState<any>({});
+  const [loader, setLoader] = React.useState(false);
   const [isDeleteModal, setDeleteModal] = React.useState(false);
 
   const handleSearch = (event: any) => {
-    setSearch(event.target.value)
-    setInit(!init)
-  }
+    setSearch(event.target.value);
+    setInit(!init);
+  };
 
   const GetTypes = async () => {
     setLoader(true);
@@ -104,8 +109,8 @@ const JenisTable = () => {
   const GetBrand = async () => {
     try {
       const resp = await HTTPGetBrands({
-        limit: '10',
-        page: '1',
+        limit: "10",
+        page: "1",
         q: undefined,
         token: token,
       });
@@ -229,27 +234,29 @@ const JenisTable = () => {
   };
 
   const [openFile, { filesContent, loading, errors }] = useFilePicker({
-    accept: '.xlsx',
+    accept: ".xlsx",
     multiple: false,
     onFilesSuccessfulySelected: async ({ plainFiles }) => {
-      setLoader(true)
+      setLoader(true);
       try {
-        let Forms = new FormData()
-        Forms.append('file', plainFiles[0])
-        await HTTPAddTypesXLSX({ form: Forms, token: token })
-        toast.success('Berhasil menambahkan Kategori!')
-        await GetTypes()
-        setLoader(false)
+        let Forms = new FormData();
+        Forms.append("file", plainFiles[0]);
+        await HTTPAddTypesXLSX({ form: Forms, token: token });
+        toast.success("Berhasil menambahkan Kategori!");
+        await GetTypes();
+        setLoader(false);
       } catch (error: any) {
-        setLoader(false)
+        setLoader(false);
         if (error.status === 500) {
-          toast.error('Server sedang mengalami gangguan!')
+          toast.error("Server sedang mengalami gangguan!");
         } else {
-          toast.error('Terjadi Kesalahan!')
+          toast.error("Terjadi Kesalahan!");
         }
       }
     },
-  })
+  });
+
+  const NoteNavigate = () => navigate("/note-barang");
 
   return (
     <div>
@@ -284,20 +291,34 @@ const JenisTable = () => {
                     color: "#fff",
                   }}
                 >
-                  Tambah Data Jenis Produk
+                  Tambah Data Jenis Barang
                 </p>
               </Stack>
             </div>
           </Tooltip>
-          <div onClick={openFile} style={{ backgroundColor: '#fff', padding: isMobile ? "12px 15px" : "10px 30px", borderRadius: 5, border: `1px solid ${Colors.primary}`, cursor: 'pointer' }}>
-            <Stack direction={'row'} alignItems={'center'} gap={1}>
-              <Icon sx={{ color: Colors.primary, fontSize: 20 }}>file_upload</Icon>
-              {
-                isMobile ?
-                  <span style={{ fontSize: 13, color: Colors.primary }}>Import</span>
-                  :
-                  <span style={{ fontSize: 15, color: Colors.primary }}>Import Data Kontak</span>
-              }
+          <div
+            onClick={NoteNavigate}
+            style={{
+              backgroundColor: "#fff",
+              padding: isMobile ? "12px 15px" : "10px 30px",
+              borderRadius: 5,
+              border: `1px solid ${Colors.primary}`,
+              cursor: "pointer",
+            }}
+          >
+            <Stack direction={"row"} alignItems={"center"} gap={1}>
+              <Icon sx={{ color: Colors.primary, fontSize: 20 }}>
+                file_upload
+              </Icon>
+              {isMobile ? (
+                <span style={{ fontSize: 13, color: Colors.primary }}>
+                  Import
+                </span>
+              ) : (
+                <span style={{ fontSize: 15, color: Colors.primary }}>
+                  Import Data Jenis Barang
+                </span>
+              )}
             </Stack>
           </div>
         </Stack>
@@ -335,7 +356,7 @@ const JenisTable = () => {
         <Stack alignItems={"center"} gap={2} direction={"row"}>
           <Icon sx={{ fontSize: 27, color: "#fff" }}>view_list</Icon>
           <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>
-            Daftar Data Jenis Produk
+            Daftar Data Jenis Barang
           </p>
         </Stack>
         <TextField
