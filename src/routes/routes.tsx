@@ -91,6 +91,7 @@ import UserRoutes from "./userRoutes";
 import AdminRoutes from "./adminRoutes";
 import AkunBank from "../pages/User/kontak/akun-bank/akun-banks";
 import AkunBankForm from "../pages/User/kontak/akun-bank/akun-bankForm";
+import NoteKategori from "../pages/User/note/note-kategori";
 
 const PageRouter = () => {
   return (
@@ -274,6 +275,8 @@ const PageRouter = () => {
               path="/settings/peran/set-peran"
               element={<PeranSettings />}
             />
+
+            <Route path="/note-kategori" element={<NoteKategori />} />
           </Route>
         </Route>
       </Routes>
