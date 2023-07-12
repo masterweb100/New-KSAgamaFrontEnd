@@ -64,7 +64,13 @@ const NoteKategori = () => {
                 <h3 style={{ margin: 0 }}>
                   Ikuti langkah berikut untuk mengimport produk-produkmu
                 </h3>
-                <ul style={{ margin: 0, paddingInlineStart: "15px" }}>
+                <ul
+                  style={{
+                    margin: 0,
+                    paddingInlineStart: "15px",
+                    listStyleType: "upper-greek",
+                  }}
+                >
                   <li>
                     <b>Download File Template Produk</b>
                     <p
@@ -122,6 +128,7 @@ const NoteKategori = () => {
                       borderRadius: 5,
                       border: `1px solid ${Colors.primary}`,
                       cursor: "pointer",
+                      width: "fit-content",
                     }}
                   >
                     <Stack direction={"row"} alignItems={"center"} gap={1}>
